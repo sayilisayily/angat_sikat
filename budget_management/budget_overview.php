@@ -162,7 +162,7 @@ $balance = $row['balance'];
 <!-- Modals -->
 <!-- Edit Beginning Balance Modal -->
 <div class="modal fade" id="editBeginningBalanceModal" tabindex="-1" aria-labelledby="editBeginningBalanceLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editBeginningBalanceLabel">Edit Beginning Balance</h5>
@@ -176,8 +176,16 @@ $balance = $row['balance'];
                     </div>
                     <input type="hidden" name="organization_id" value="<?php echo $organization_id; ?>">
                 </form>
+                 <!-- Success Message Alert -->
+                <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                    Beginning Balance updated successfully!
+                </div>  
+                <!-- Error Message Alert -->
+                <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                    <ul id="errorList"></ul> <!-- List for showing validation errors -->
+                </div>
             </div>
-            <div id="editMessage" class="alert d-none" role="alert"></div>
+           
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="editBeginningBalanceForm" class="btn btn-primary">Save changes</button>
@@ -189,7 +197,7 @@ $balance = $row['balance'];
 
 <!-- Edit Cash on Bank Modal -->
 <div class="modal fade" id="editCashOnBankModal" tabindex="-1" aria-labelledby="editCashOnBankLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editCashOnBankLabel">Edit Cash on Bank</h5>
@@ -203,8 +211,16 @@ $balance = $row['balance'];
                     </div>
                     <input type="hidden" name="organization_id" value="<?php echo $organization_id; ?>">
                 </form>
+                <!-- Success Message Alert -->
+                <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                    Cash on Bank updated successfully!
+                </div>  
+                <!-- Error Message Alert -->
+                <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                    <ul id="errorList"></ul> <!-- List for showing validation errors -->
+                </div>
             </div>
-            <div id="editMessage" class="alert d-none" role="alert"></div>
+            
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="editCashOnBankForm" class="btn btn-primary">Save changes</button>
@@ -216,7 +232,7 @@ $balance = $row['balance'];
 
 <!-- Edit Cash on Hand Modal -->
 <div class="modal fade" id="editCashOnHandModal" tabindex="-1" aria-labelledby="editCashOnHandLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editCashOnHandLabel">Edit Cash on Hand</h5>
@@ -230,19 +246,28 @@ $balance = $row['balance'];
                     </div>
                     <input type="hidden" name="organization_id" value="<?php echo $organization_id; ?>">
                 </form>
+
+                 <!-- Success Message Alert -->
+                 <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                    Cash on Hand updated successfully!
+                </div>  
+                <!-- Error Message Alert -->
+                <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                    <ul id="errorList"></ul> <!-- List for showing validation errors -->
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="editCashOnHandForm" class="btn btn-primary">Save changes</button>
             </div>
-            <div id="editMessage" class="alert d-none" role="alert"></div>
+            
         </div>
     </div>
 </div>
 
 <!-- Edit Budget Modal -->
 <div class="modal fade" id="editBudgetModal" tabindex="-1" aria-labelledby="editBudgetModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editBudgetModalLabel">Edit Budget</h5>
@@ -255,216 +280,28 @@ $balance = $row['balance'];
                         <label for="allocated_budget" class="form-label">Allocated Budget</label>
                         <input type="number" class="form-control" id="allocated_budget" name="allocated_budget" required>
                     </div>
+                    <input type="hidden" name="organization_id" value="<?php echo $organization_id; ?>">
                 </form>
+                <!-- Success Message Alert -->
+                <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                        Budget updated successfully!
+                </div>  
+                <!-- Error Message Alert -->
+                <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                    <ul id="errorList"></ul> <!-- List for showing validation errors -->
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" form="editBudgetForm" class="btn btn-primary">Save changes</button>
             </div>
-            <div id="editMessage" class="alert d-none" role="alert"></div>
+            
         </div>
     </div>
 </div>
 
-<script>
+<script src="js/budget_overview.js">
 
-$(document).ready(function () {
-    // Trigger the modal opening
-    $('#editBeginningBalanceModal').on('show.bs.modal', function (event) {
-        var modal = $(this);
-        var organization_id = modal.find('input[name="organization_id"]').val();
-
-        // Fetch current beginning balance
-        $.ajax({
-            url: 'get_beginning_balance.php', // PHP script to fetch the balance
-            type: 'POST',
-            dataType: 'json',
-            data: { organization_id: organization_id },
-            success: function (response) {
-                if (response.success) {
-                    // Populate the input field with the current balance
-                    modal.find('#beginningBalance').val(response.beginning_balance);
-                } else {
-                    $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text(response.message);
-                }
-            },
-            error: function () {
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error fetching beginning balance.');
-            }
-        });
-    });
-
-    // Submit the form via AJAX
-    $('#editBeginningBalanceForm').on('submit', function (e) {
-        e.preventDefault();
-
-        var form_data = $(this).serialize();
-
-        $.ajax({
-            url: 'update_beginning_balance.php', // PHP script to update the balance
-            type: 'POST',
-            data: form_data,
-            success: function (response) {
-                // Handle success response
-                $('#editMessage').removeClass('d-none alert-danger').addClass('alert-success').text('Beginning balance updated successfully.');
-                // Optionally, close the modal after a short delay
-                setTimeout(function() {
-                    $('#editBeginningBalanceModal').modal('hide');
-                    location.reload(); 
-                }, 2000);
-            },
-            error: function () {
-                // Handle error response
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error updating beginning balance.');
-            }
-        });
-    });
-
-
-    $('#editCashOnBankModal').on('show.bs.modal', function (event) {
-        var modal = $(this);
-        var organization_id = modal.find('input[name="organization_id"]').val();
-
-        $.ajax({
-            url: 'get_cash_on_bank.php',
-            type: 'POST',
-            dataType: 'json',
-            data: { organization_id: organization_id },
-            success: function (response) {
-                if (response.success) {
-                    modal.find('#cashOnBank').val(response.cash_on_bank);
-                } else {
-                    $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text(response.message);
-                }
-            },
-            error: function () {
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error fetching Cash on Bank.');
-            }
-        });
-    });
-
-    // Fetch and populate Cash on Hand
-    $('#editCashOnHandModal').on('show.bs.modal', function (event) {
-        var modal = $(this);
-        var organization_id = modal.find('input[name="organization_id"]').val();
-
-        $.ajax({
-            url: 'get_cash_on_hand.php',
-            type: 'POST',
-            dataType: 'json',
-            data: { organization_id: organization_id },
-            success: function (response) {
-                if (response.success) {
-                    modal.find('#cashOnHand').val(response.cash_on_hand);
-                } else {
-                    $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text(response.message);
-                }
-            },
-            error: function () {
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error fetching Cash on Hand.');
-            }
-        });
-    });
-
-    // Submit Cash on Bank form
-    $('#editCashOnBankForm').on('submit', function (e) {
-        e.preventDefault();
-
-        var form_data = $(this).serialize();
-
-        $.ajax({
-            url: 'update_balance.php',
-            type: 'POST',
-            data: form_data,
-            success: function (response) {
-                $('#editMessage').removeClass('d-none alert-danger').addClass('alert-success').text('Cash on Bank updated successfully.');
-                setTimeout(function() {
-                    $('#editCashOnBankModal').modal('hide');
-                    location.reload(); 
-                }, 2000);
-            },
-            error: function () {
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error updating Cash on Bank.');
-            }
-        });
-    });
-
-    // Submit Cash on Hand form
-    $('#editCashOnHandForm').on('submit', function (e) {
-        e.preventDefault();
-
-        var form_data = $(this).serialize();
-
-        $.ajax({
-            url: 'update_balance.php',
-            type: 'POST',
-            data: form_data,
-            success: function (response) {
-                $('#editMessage').removeClass('d-none alert-danger').addClass('alert-success').text('Cash on Hand updated successfully.');
-                setTimeout(function() {
-                    $('#editCashOnHandModal').modal('hide');
-                    location.reload(); 
-                }, 2000);
-            },
-            error: function () {
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error updating Cash on Hand.');
-            }
-        });
-    });
-
-});
-
-$(document).on('click', '.edit-btn', function() {
-        var allocationId = $(this).data('id');
-
-        // Use AJAX to get the budget allocation data
-        $.ajax({
-            url: 'get_budget_allocation.php',  // Modify to match your actual PHP file path
-            type: 'POST',
-            data: {allocation_id: allocationId},
-            dataType: 'json',
-            success: function(response) {
-                if (response.success) {
-                    // Populate the form fields in the modal
-                    $('#allocated_budget').val(response.allocated_budget);
-                    $('#allocationId').val(allocationId); // Ensure this input exists in your modal
-                    
-                    // Show the modal
-                    $('#editBudgetModal').modal('show');
-                } else {
-                    alert('Failed to fetch data for editing.');
-                }
-            },
-            error: function() {
-                alert('Error occurred while fetching budget allocation data.');
-            }
-        });
-    });
-    
-    $('#editBudgetForm').on('submit', function(e) {
-        e.preventDefault(); // Prevent the default form submission behavior
-
-        var formData = $(this).serialize();
-
-        $.ajax({
-            url: 'update_budget.php', 
-            type: 'POST',
-            data: formData,
-            success: function (response) {
-                // Handle success response
-                $('#editMessage').removeClass('d-none alert-danger').addClass('alert-success').text('Budget Allocation updated successfully.');
-                // Optionally, close the modal after a short delay
-                setTimeout(function() {
-                    $('#editBudgetModal').modal('hide');
-                    location.reload(); 
-                }, 2000);
-            },
-            error: function () {
-                // Handle error response
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error updating beginning balance.');
-            }
-        });
-    });
 </script>
 
 <script type="text/javascript">
