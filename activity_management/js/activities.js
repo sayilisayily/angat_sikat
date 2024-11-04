@@ -30,7 +30,7 @@ $(document).ready(function() {
 
   // Handle Add Event Form Submission
   $('#addEventForm').on('submit', function(event) {
-      event.preventDefault(); // Prevent the form from submitting the default way
+      event.preventDefault(); 
 
       $.ajax({
           url: 'add_event.php',
@@ -40,6 +40,7 @@ $(document).ready(function() {
               try {
                   // Parse the JSON response (in case it's returned as a string)
                   response = JSON.parse(response);
+                  console.log(response);
 
                   if (response.success) {
                       // Hide any existing error messages
@@ -102,10 +103,6 @@ $(document).ready(function() {
                   $('#editEventEndDate').val(response.data.event_end_date);
                   $('#editEventType').val(response.data.event_type);
 
-                  // Hidden fields for event and accomplishment status
-                  $('#editEventStatus').val(response.data.event_status);
-                  $('#editAccomplishmentStatus').val(response.data.accomplishment_status);
-
                   // Show the modal
                   $('#editEventModal').modal('show');
               } else {
@@ -121,47 +118,52 @@ $(document).ready(function() {
 
 // Handle Edit Event Form Submission
 $('#editEventForm').on('submit', function(event) {
-    event.preventDefault(); // Prevent the form from submitting the default way
-
-    // Get the form data
-    var formData = $(this).serialize();
+    event.preventDefault(); 
 
     $.ajax({
-        url: 'update_event.php', // PHP script that handles updating the event in the database
+        url: 'update_event.php', 
         type: 'POST',
-        data: formData,  // Send form data to update_event.php
+        data: $(this).serialize(), 
         success: function(response) {
             try {
                 // Parse the JSON response (ensure it's valid JSON)
                 response = JSON.parse(response);
+                console.log(response);
 
                 if (response.success) {
                     // Hide any existing error messages
                     $('#errorMessage').addClass('d-none');
 
                     // Show success message
-                    $('#successMessage').removeClass('d-none').text(response.message);
+                    $('#successMessage').removeClass('d-none');
 
                     // Close the modal after a short delay
                     setTimeout(function() {
-                        $('#editEventModal').modal('hide'); // Hide the modal
+                        $('#editEventModal').modal('hide'); 
 
-                        // Option 1: Reload the page to reflect the changes
+                        // Reset the form and hide the success message
+                        $('#editEventForm')[0].reset();
+                        $('#successMessage').addClass('d-none');
                         location.reload(); 
-
-                        // Option 2: Reload the DataTable without refreshing the page (uncomment if you are using DataTables)
-                        // $('#eventsTable').DataTable().ajax.reload(null, false);
-                    }, 2000); // Adjust delay as needed (e.g., 2 seconds)
+                    }, 2000); 
                 } else {
                     // Show validation errors
-                    $('#errorMessage').removeClass('d-none').html(response.errors);
+                    $('#editsuccessMessage').addClass('d-none');
+
+                    $('#errorMessage').removeClass('d-none');
+                      let errorHtml = '';
+                      for (let field in response.errors) {
+                          errorHtml += `<li>${response.errors[field]}</li>`;
+                      }
+                      $('#errorList').html(errorHtml);
                 }
             } catch (error) {
-                console.error('Error parsing JSON response:', error);
+                console.error('Error parsing JSON:', error);
             }
         },
         error: function(xhr, status, error) {
             console.error('Error updating event:', error);
+            console.log(xhr.responseText);
         }
     });
 });

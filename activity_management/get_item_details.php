@@ -5,8 +5,8 @@ if (isset($_POST['item_id'])) {
     $item_id = $_POST['item_id'];
 
     // Prepare the SQL query
-    $sql = "SELECT * FROM event_items WHERE item_id = ?";
-    $stmt = $conn->prepare($sql);
+    $query = "SELECT * FROM event_items WHERE item_id = ?";
+    $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $item_id);
     $stmt->execute();
     $result = $stmt->get_result();

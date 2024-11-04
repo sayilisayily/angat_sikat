@@ -25,32 +25,54 @@ $(document).ready(function () {
         });
     });
 
-    // Submit the form via AJAX
+    // Submit Beginning Balance Form
     $('#editBeginningBalanceForm').on('submit', function (e) {
         e.preventDefault();
-
-        var form_data = $(this).serialize();
 
         $.ajax({
             url: 'update_beginning_balance.php', // PHP script to update the balance
             type: 'POST',
-            data: form_data,
-            success: function (response) {
-                // Handle success response
-                $('#editMessage').removeClass('d-none alert-danger').addClass('alert-success').text('Beginning balance updated successfully.');
-                // Optionally, close the modal after a short delay
-                setTimeout(function() {
-                    $('#editBeginningBalanceModal').modal('hide');
-                    location.reload(); 
-                }, 2000);
+            data: $(this).serialize(),
+            success: function(response) {
+                try {
+                    // Parse the JSON response (ensure it's valid JSON)
+                    response = JSON.parse(response);
+                    console.log(response);
+
+                    if (response.success) {
+                        // Hide any existing error messages
+                        $('#errorMessage').addClass('d-none');
+    
+                        // Show success message
+                        $('#successMessage').removeClass('d-none');
+    
+                        // Close the modal after a short delay
+                        setTimeout(function() {
+                            $('#editBeginningBalanceModal').modal('hide');      
+                            location.reload(); 
+                        }, 2000);
+                    } else {
+                        // Hide any existing success messages
+                        $('#successMessage').addClass('d-none');
+
+                        // Show validation errors
+                        $('#errorMessage').removeClass('d-none');
+                        let errorHtml = '';
+                        for (let field in response.errors) {
+                            errorHtml += `<li>${response.errors[field]}</li>`;
+                        }
+                        $('#errorList').html(errorHtml);
+                    }
+                } catch (error) {
+                    console.error('Error parsing JSON response:', error);
+                }
             },
-            error: function () {
-                // Handle error response
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error updating beginning balance.');
+            error: function(xhr, status, error) {
+                console.error('Error updating event:', error);
+                console.log(response);
             }
         });
     });
-
 
     $('#editCashOnBankModal').on('show.bs.modal', function (event) {
         var modal = $(this);
@@ -101,21 +123,47 @@ $(document).ready(function () {
     $('#editCashOnBankForm').on('submit', function (e) {
         e.preventDefault();
 
-        var form_data = $(this).serialize();
-
         $.ajax({
             url: 'update_cash_on_bank.php',
             type: 'POST',
-            data: form_data,
+            data: $(this).serialize(),
             success: function (response) {
-                $('#editMessage').removeClass('d-none alert-danger').addClass('alert-success').text('Cash on Bank updated successfully.');
-                setTimeout(function() {
-                    $('#editCashOnBankModal').modal('hide');
-                    location.reload(); 
-                }, 2000);
+                try {
+                    // Parse the JSON response (ensure it's valid JSON)
+                    response = JSON.parse(response);
+                    console.log(response);
+
+                    if (response.success) {
+                        // Hide any existing error messages
+                        $('#errorMessage').addClass('d-none');
+    
+                        // Show success message
+                        $('#successMessage').removeClass('d-none');
+    
+                        // Close the modal after a short delay
+                        setTimeout(function() {
+                            $('#editCashOnBankModal').modal('hide');      
+                            location.reload(); 
+                        }, 2000);
+                    } else {
+                        // Hide any existing success messages
+                        $('#successMessage').addClass('d-none');
+
+                        // Show validation errors
+                        $('#errorMessage').removeClass('d-none');
+                        let errorHtml = '';
+                        for (let field in response.errors) {
+                            errorHtml += `<li>${response.errors[field]}</li>`;
+                        }
+                        $('#errorList').html(errorHtml);
+                    }
+                } catch (error) {
+                    console.error('Error parsing JSON response:', error);
+                }
             },
-            error: function () {
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error updating Cash on Bank.');
+            error: function(xhr, status, error) {
+                console.error('Error updating event:', error);
+                console.log(response);
             }
         });
     });
@@ -124,21 +172,47 @@ $(document).ready(function () {
     $('#editCashOnHandForm').on('submit', function (e) {
         e.preventDefault();
 
-        var form_data = $(this).serialize();
-
         $.ajax({
             url: 'update_cash_on_hand.php',
             type: 'POST',
-            data: form_data,
+            data: form_data = $(this).serialize(),
             success: function (response) {
-                $('#editMessage').removeClass('d-none alert-danger').addClass('alert-success').text('Cash on Hand updated successfully.');
-                setTimeout(function() {
-                    $('#editCashOnHandModal').modal('hide');
-                    location.reload(); 
-                }, 2000);
+                try {
+                    // Parse the JSON response (ensure it's valid JSON)
+                    response = JSON.parse(response);
+                    console.log(response);
+
+                    if (response.success) {
+                        // Hide any existing error messages
+                        $('#errorMessage').addClass('d-none');
+    
+                        // Show success message
+                        $('#successMessage').removeClass('d-none');
+    
+                        // Close the modal after a short delay
+                        setTimeout(function() {
+                            $('#editCashOnHandModal').modal('hide');      
+                            location.reload(); 
+                        }, 2000);
+                    } else {
+                        // Hide any existing success messages
+                        $('#successMessage').addClass('d-none');
+
+                        // Show validation errors
+                        $('#errorMessage').removeClass('d-none');
+                        let errorHtml = '';
+                        for (let field in response.errors) {
+                            errorHtml += `<li>${response.errors[field]}</li>`;
+                        }
+                        $('#errorList').html(errorHtml);
+                    }
+                } catch (error) {
+                    console.error('Error parsing JSON response:', error);
+                }
             },
-            error: function () {
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error updating Cash on Hand.');
+            error: function(xhr, status, error) {
+                console.error('Error updating event:', error);
+                console.log(response);
             }
         });
     });
@@ -172,27 +246,51 @@ $(document).on('click', '.edit-btn', function() {
         });
     });
     
+    //Submit Budget Allocation Form
     $('#editBudgetForm').on('submit', function(e) {
         e.preventDefault(); // Prevent the default form submission behavior
-
-        var formData = $(this).serialize();
 
         $.ajax({
             url: 'update_budget.php', 
             type: 'POST',
-            data: formData,
+            data: $(this).serialize(),
             success: function (response) {
-                // Handle success response
-                $('#editMessage').removeClass('d-none alert-danger').addClass('alert-success').text('Budget Allocation updated successfully.');
-                // Optionally, close the modal after a short delay
-                setTimeout(function() {
-                    $('#editBudgetModal').modal('hide');
-                    location.reload(); 
-                }, 2000);
+                try {
+                    // Parse the JSON response (ensure it's valid JSON)
+                    response = JSON.parse(response);
+                    console.log(response);
+
+                    if (response.success) {
+                        // Hide any existing error messages
+                        $('#errorMessage').addClass('d-none');
+    
+                        // Show success message
+                        $('#successMessage').removeClass('d-none');
+    
+                        // Close the modal after a short delay
+                        setTimeout(function() {
+                            $('#editBudgetModal').modal('hide');      
+                            location.reload(); 
+                        }, 2000);
+                    } else {
+                        // Hide any existing success messages
+                        $('#successMessage').addClass('d-none');
+
+                        // Show validation errors
+                        $('#errorMessage').removeClass('d-none');
+                        let errorHtml = '';
+                        for (let field in response.errors) {
+                            errorHtml += `<li>${response.errors[field]}</li>`;
+                        }
+                        $('#errorList').html(errorHtml);
+                    }
+                } catch (error) {
+                    console.error('Error parsing JSON response:', error);
+                }
             },
-            error: function () {
-                // Handle error response
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error updating beginning balance.');
+            error: function(xhr, status, error) {
+                console.error('Error updating budget:', error);
+                console.log(response);
             }
         });
     });

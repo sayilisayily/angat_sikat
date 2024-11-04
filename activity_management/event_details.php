@@ -171,8 +171,8 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
         </div>
 
         <!-- Edit Item Modal -->
-        <div class="modal fade" id="editItemModal" tabindex="-1" aria-labelledby="editItemModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editItemModalLabel">Edit Item</h5>
@@ -180,23 +180,36 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
             </div>
             <form id="editItemForm">
                 <div class="modal-body">
-                <input type="hidden" id="edit_item_id" name="item_id">
+                <input type="text" id="edit_item_id" name="item_id">
                 <input type="hidden" id="edit_event_id" name="event_id" value="<?php echo $event_id; ?>"> <!-- Add event_id -->
-                <div class="mb-3">
-                    <label for="edit_description" class="form-label">Description</label>
-                    <input type="text" class="form-control" id="edit_description" name="description" required>
+                <div class="form-group row mb-2">
+                    <div class="col">
+                        <label for="edit_description" class="form-label">Description</label>
+                        <input type="text" class="form-control" id="edit_description" name="description" required>
+                    </div>
+                    <div class="col">
+                        <label for="edit_quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="edit_quantity" name="quantity" required>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="edit_quantity" class="form-label">Quantity</label>
-                    <input type="number" class="form-control" id="edit_quantity" name="quantity" required>
+                <div class="form-group row mb-2">
+                    <div class="col">
+                        <label for="edit_unit" class="form-label">Unit</label>
+                        <input type="text" class="form-control" id="edit_unit" name="unit" required>
+                    </div>
+                    <div class="col">
+                        <label for="edit_amount" class="form-label">Amount</label>
+                        <input type="number" step="0.01" class="form-control" id="edit_amount" name="amount" required>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="edit_unit" class="form-label">Unit</label>
-                    <input type="text" class="form-control" id="edit_unit" name="unit" required>
-                </div>
-                <div class="mb-3">
-                    <label for="edit_amount" class="form-label">Amount</label>
-                    <input type="number" step="0.01" class="form-control" id="edit_amount" name="amount" required>
+                
+                <!-- Success Message Alert -->
+                <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                    Item updated successfully!
+                </div>  
+                <!-- Error Message Alert -->
+                <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                    <ul id="errorList"></ul> <!-- List for showing validation errors -->
                 </div>
                 </div>
                 <div class="modal-footer">
@@ -244,7 +257,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
 
     <script>
 $(document).ready(function () {
-
+    //Submit Add Item Form
     $('#addItemForm').on('submit', function(event) {
             event.preventDefault(); // Prevent the form from submitting in the traditional way
 
@@ -299,8 +312,8 @@ $(document).ready(function () {
     });
     // Fetch and populate Edit Item Modal
     $('.edit-btn').on('click', function() {
-        var purchaseId = $(this).data('id'); // Get purchase_id from the button
-        console.log("Selected Item ID:", itemId); // Log the event ID for debugging
+        var itemId = $(this).data('id'); // Corrected to retrieve item_id from the button
+        console.log("Selected Item ID:", itemId); // Log the item ID for debugging
 
         $.ajax({
             url: 'get_item_details.php', // Your PHP script for fetching the item details
@@ -308,6 +321,7 @@ $(document).ready(function () {
             data: {item_id: itemId},
             dataType: 'json',
             success: function (response) {
+                console.log(response);
                 if (response.success) {
                     // Populate the modal fields with the item data
                     $('#edit_item_id').val(response.data.item_id);
@@ -315,14 +329,18 @@ $(document).ready(function () {
                     $('#edit_quantity').val(response.data.quantity);
                     $('#edit_unit').val(response.data.unit);
                     $('#edit_amount').val(response.data.amount);
+
+                    // Show the modal
+                    $('#editItemModal').modal('show');
                 } else {
                     // Display an error message if fetching failed
-                    $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text(response.message);
+                    console.log("Error fetching data: ", response.message);
                 }
             },
-            error: function () {
-                // Display an error message if there is an issue with the request
-                $('#editMessage').removeClass('d-none alert-success').addClass('alert-danger').text('Error fetching item details.');
+            error: function (xhr, status, error) {
+                console.error("AJAX Error: ", error);
+                console.log("Status:", status);
+                console.log("Response Text:", xhr.responseText); // Log full response for debugging
             }
         });
     });
@@ -330,32 +348,46 @@ $(document).ready(function () {
 
         // Handle form submission for updating the item
         $('#editItemForm').on('submit', function(e) {
-            e.preventDefault(); // Prevent default form submission
-
-            var formData = $(this).serialize(); // Serialize the form data
+            e.preventDefault();
 
             $.ajax({
                 url: 'update_item.php', // URL of your PHP script for updating the item
                 type: 'POST',
-                data: formData,
+                data: $(this).serialize(),
                 success: function(response) {
                     // Parse the JSON response
                     var result = JSON.parse(response);
-                    
+                    console.log(response);
+
                     if (result.success) {
+                        // Hide any existing error messages
+                        $('#errorMessage').addClass('d-none');
+
                         // Show success message
+                        $('#successMessage').removeClass('d-none');
                         
                         setTimeout(function() {
                             $('#editItemModal').modal('hide');
+
+                            // Reset the form and hide the success message
+                            $('#editItemForm')[0].reset();
+                            $('#successMessage').addClass('d-none');
                             location.reload();
-                        }, 2000); // Reload the page or update the table with new data
+                        }, 2000); 
                     } else {
-                        // Show error message
-                        alert(result.message);
+                        // Show validation errors
+                        $('#editsuccessMessage').addClass('d-none');
+
+                        $('#errorMessage').removeClass('d-none');
+                        let errorHtml = '';
+                        for (let field in response.errors) {
+                            errorHtml += `<li>${response.errors[field]}</li>`;
+                        }
+                        $('#errorList').html(errorHtml);
                     }
                 },
                 error: function() {
-                    alert('Error updating item.');
+                    console.error('Error updating event:', error);
                 }
             });
         });

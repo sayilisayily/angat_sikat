@@ -1,7 +1,12 @@
 <?php
 include('connection.php');
 
+// Initialize an array to hold validation errors
+$errors = [];
+$data = [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve POST variables
     $item_id = $_POST['item_id'];
     $description = $_POST['description'];
     $quantity = $_POST['quantity'];
@@ -10,21 +15,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate input
     if (empty($description) || empty($quantity) || empty($unit) || empty($amount)) {
-        echo json_encode(['success' => false, 'message' => 'All fields are required.']);
+        $errors[] = 'All fields are required.';
+    }
+
+    // Check for validation errors before proceeding
+    if (!empty($errors)) {
+        $data['success'] = false;
+        $data['errors'] = $errors;
+        echo json_encode($data);
         exit;
-    }
-
-    // Update the item in the database
-    $query = "UPDATE event_items SET description = ?, quantity = ?, unit = ?, amount = ? WHERE item_id = ?";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param('sdssi', $description, $quantity, $unit, $amount, $item_id);
-
-    if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Item updated successfully!']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error updating item.']);
-    }
+        // Prepare the SQL query using a prepared statement
+        $query = "UPDATE event_items SET description = ?, quantity = ?, unit = ?, amount = ? WHERE item_id = ?";
+        $stmt = $conn->prepare($query);
 
-    $stmt->close();
+        if ($stmt) {
+            // Bind parameters and execute the query
+            $stmt->bind_param('sidsi', $description, $quantity, $unit, $amount, $item_id);
+
+            if ($stmt->execute()) {
+                $data['success'] = true;
+                $data['message'] = 'Item updated successfully!';
+            } else {
+                $data['success'] = false;
+                $data['errors'] = ['database' => 'Failed to update item in the database.'];
+            }
+
+            $stmt->close();
+        } else {
+            $data['success'] = false;
+            $data['errors'] = ['database' => 'Failed to prepare the update statement.'];
+        }
+    }
 }
+
+// Output the JSON response
+echo json_encode($data);
 ?>

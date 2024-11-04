@@ -91,7 +91,7 @@ $result = $conn->query($sql);
 
 <!-- Add Event Modal -->
 <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <form id="addEventForm">
         <div class="modal-header">
@@ -150,9 +150,9 @@ $result = $conn->query($sql);
 
 <!-- Edit Event Modal -->
 <div class="modal fade" id="editEventModal" tabindex="-1" role="dialog" aria-labelledby="editEventModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <form id="editEventForm" action="update_event.php" method="POST">
+      <form id="editEventForm">
         <div class="modal-header">
           <h5 class="modal-title" id="editEventModalLabel">Edit Event</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -162,39 +162,46 @@ $result = $conn->query($sql);
           <input type="hidden" id="editEventId" name="event_id">
 
           <!-- Other form fields -->
-          <div class="form-group">
-            <label for="editEventTitle">Event Title</label>
-            <input type="text" class="form-control" id="editEventTitle" name="title" required>
+          <div class="form-group row mb-2">
+            <div class="col">
+              <label for="editEventTitle">Event Title</label>
+              <input type="text" class="form-control" id="editEventTitle" name="title" required>
+            </div>
+            <div class="col">
+              <label for="editEventVenue">Event Venue</label>
+              <input type="text" class="form-control" id="editEventVenue" name="event_venue" required>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="editEventVenue">Event Venue</label>
-            <input type="text" class="form-control" id="editEventVenue" name="event_venue" required>
+          <div class="form-group row mb-2">
+            <div class="col">
+              <label for="editEventStartDate">Start Date</label>
+              <input type="date" class="form-control" id="editEventStartDate" name="event_start_date" required>
+            </div>
+            <div class="col">
+              <label for="editEventEndDate">End Date</label>
+              <input type="date" class="form-control" id="editEventEndDate" name="event_end_date" required>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="editEventStartDate">Start Date</label>
-            <input type="date" class="form-control" id="editEventStartDate" name="event_start_date" required>
-          </div>
-          <div class="form-group">
-            <label for="editEventEndDate">End Date</label>
-            <input type="date" class="form-control" id="editEventEndDate" name="event_end_date" required>
-          </div>
-          <div class="form-group">
+          <div class="form-group row mb-2">
+            <div class="col">
             <label for="editEventType">Event Type</label>
-            <select class="form-control" id="editEventType" name="event_type" required>
-              <option value="Income">Income</option>
-              <option value="Expense">Expense</option>
-            </select>
+              <select class="form-control" id="editEventType" name="event_type" required>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+              </select>
+            </div>
           </div>
           <input type="hidden" id="editEventStatus" name="event_status">
           <input type="hidden" id="editAccomplishmentStatus" name="accomplishment_status">
-        </div>
-        <!-- Success Message Alert -->
-        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-          Event updated successfully!
-        </div>  
-        <!-- Error Message Alert -->
-        <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
-          <ul id="errorList"></ul> <!-- List for showing validation errors -->
+
+          <!-- Success Message Alert -->
+          <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+            Event updated successfully!
+          </div>  
+          <!-- Error Message Alert -->
+          <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+            <ul id="errorList"></ul> <!-- List for showing validation errors -->
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

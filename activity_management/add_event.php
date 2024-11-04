@@ -5,7 +5,7 @@ include 'connection.php';
 $errors = [];
 $data = [];
 
-// Validate the event title (make sure it's not a duplicate)
+// Validate the event title 
 if (empty($_POST['title'])) {
     $errors['title'] = 'Event title is required.';
 } else {
@@ -31,6 +31,11 @@ if (empty($_POST['start_date'])) {
 
 if (empty($_POST['end_date'])) {
     $errors['end_date'] = 'Event end date is required.';
+}
+
+if ((strtotime($_POST['start_date'])) > (strtotime($_POST['end_date'])))
+{
+    $errors['date'] = 'Invalid event start and end date.';
 }
 
 // If there are no errors, proceed to insert the event
