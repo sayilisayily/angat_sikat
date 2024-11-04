@@ -89,7 +89,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
         </li>
     </ul>
 
-    <div class="tab-content mt-4">
+    <div class="tab-content mt-4 mx-3">
         <!-- Financial Plan Tab -->
         <div class="tab-pane fade show active" id="financial-plan" role="tabpanel" aria-labelledby="financial-plan-tab">
             <h4>Items<button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addItemModal"><i class="fa-solid fa-plus"></i> Add Item</button></h4>
@@ -132,7 +132,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
         <!-- Financial Summary Tab -->
         <div class="tab-pane fade" id="financial-summary" role="tabpanel" aria-labelledby="financial-summary-tab">
             <?php if ($event['accomplishment_status'] === 1): ?>
-                <h4>Summary Items</h4>
+                <h4>Items<button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#summaryAddItemModal"><i class="fa-solid fa-plus"></i> Add Item</button></h4>
                 <table class="table">
                     <thead>
                         <tr>
@@ -156,8 +156,8 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                         <td>{$item['amount']}</td>
                                         <td>{$total_amount}</td>
                                         <td>
-                                        <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
-                                        <button class='btn edit-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
+                                        <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
+                                        <button class='btn edit-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
                                         </td>
                                       </tr>";
                             }
@@ -176,7 +176,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
             <button type="button" class="btn btn-secondary me-1" onclick="history.back()"> Cancel </button>
             <button type="button" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save </button>
     </div>
-</div>
+
 
         <!-- Add Item Modal -->
         <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
@@ -301,10 +301,108 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                 </div>
             </div>
         </div>
-
-        
-
+                <!-- Add Item Modal for Summary Tab -->
+<div class="modal fade" id="summaryAddItemModal" tabindex="-1" aria-labelledby="summaryAddItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="summaryAddItemForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="summaryAddItemModalLabel">Add Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
+                    <div class="form-group">
+                        <label for="summary_description">Description</label>
+                        <input type="text" class="form-control" id="summary_description" name="description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="summary_quantity">Quantity</label>
+                        <input type="number" class="form-control" id="summary_quantity" name="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="summary_unit">Unit</label>
+                        <input type="text" class="form-control" id="summary_unit" name="unit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="summary_amount">Amount</label>
+                        <input type="number" step="0.01" class="form-control" id="summary_amount" name="amount" required>
+                    </div>
+                    <div id="summarySuccessMessage" class="alert alert-success d-none mt-3" role="alert">Item added successfully!</div>
+                    <div id="summaryErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                        <ul id="summaryErrorList"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add Item</button>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
+
+<!-- Edit Item Modal for Summary Tab -->
+<div class="modal fade" id="summaryEditItemModal" tabindex="-1" aria-labelledby="summaryEditItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="summaryEditItemForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="summaryEditItemModalLabel">Edit Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="summary_edit_item_id" name="item_id">
+                    <input type="hidden" id="summary_edit_event_id" name="event_id" value="<?php echo $event_id; ?>">
+                    <div class="form-group">
+                        <label for="summary_edit_description">Description</label>
+                        <input type="text" class="form-control" id="summary_edit_description" name="description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="summary_edit_quantity">Quantity</label>
+                        <input type="number" class="form-control" id="summary_edit_quantity" name="quantity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="summary_edit_unit">Unit</label>
+                        <input type="text" class="form-control" id="summary_edit_unit" name="unit" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="summary_edit_amount">Amount</label>
+                        <input type="number" step="0.01" class="form-control" id="summary_edit_amount" name="amount" required>
+                    </div>
+                    <div id="summaryEditSuccessMessage" class="alert alert-success d-none mt-3" role="alert">Item updated successfully!</div>
+                    <div id="summaryEditErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                        <ul id="summaryEditErrorList"></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Item Modal for Summary Tab -->
+<div class="modal fade" id="summaryDeleteItemModal" tabindex="-1" aria-labelledby="summaryDeleteItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="summaryDeleteItemModalLabel">Delete Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this item?</p>
+                <form id="summaryDeleteItemForm">
+                    <input type="hidden" name="item_id" id="summary_delete_item_id">
+                    <input type="hidden" name="event_id" id="summary_delete_event_id" value="<?php echo $event_id; ?>">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
