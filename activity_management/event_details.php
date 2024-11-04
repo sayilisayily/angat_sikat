@@ -67,6 +67,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
 <html lang="en">
 <head>
     <?php include 'head.php'; ?>
+
     <title>Event Financial Details</title>
 </head>
 <body>
@@ -116,8 +117,8 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                     <td>{$item['amount']}</td>
                                     <td>{$total_amount}</td>
                                     <td>
-                                        <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
-                                        <button class='btn edit-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
+                                        <button class='btn edit-btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
+                                        <button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
                                     </td>
                                   </tr>";
                         }
@@ -178,7 +179,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
     </div>
 
 
-        <!-- Add Item Modal -->
+        <!-- Plan Add Item Modal -->
         <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -191,25 +192,25 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                         
                             <!-- Modal content for adding item -->
                             <input type="hidden" name="event_id" value="<?php echo $event_id; ?>"> <!-- Event ID -->
-
-                            <div class="form-group">
-                                <label for="description">Description</label>
-                                <input type="text" class="form-control" id="description" name="description" required>
+                            <div class="form-group row mb-2">
+                                <div class="col">
+                                    <label for="description">Description</label>
+                                    <input type="text" class="form-control" id="description" name="description" required>
+                                </div>
+                                <div class="col">
+                                    <label for="quantity">Quantity</label>
+                                    <input type="number" class="form-control" id="quantity" name="quantity" required>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="quantity">Quantity</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="unit">Unit</label>
-                                <input type="text" class="form-control" id="unit" name="unit" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="amount">Amount</label>
-                                <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+                            <div class="form-group row mb-2">
+                                <div class="col">
+                                    <label for="unit">Unit</label>
+                                    <input type="text" class="form-control" id="unit" name="unit" required>
+                                </div>
+                                <div class="col">
+                                    <label for="amount">Amount</label>
+                                    <input type="number" step="0.01" class="form-control" id="amount" name="amount" required>
+                                </div>                             
                             </div>
 
                             <!-- Success Message Alert -->
@@ -404,161 +405,6 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
 
 </div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- jQuery (needed to handle modals) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script>
-$(document).ready(function () {
-    //Submit Add Item Form
-    $('#addItemForm').on('submit', function(event) {
-            event.preventDefault(); // Prevent the form from submitting in the traditional way
-
-            $.ajax({
-                url: 'add_item.php', // The PHP file that processes adding the item
-                type: 'POST',
-                data: $(this).serialize(), // Serialize the form data
-                success: function(response) {
-                    try {
-                        // Parse the JSON response
-                        response = JSON.parse(response);
-
-                        if (response.success) {
-                            // Hide any error messages
-                            $('#errorMessage').addClass('d-none');
-
-                            // Show success message
-                            $('#successMessage').removeClass('d-none');
-
-                            // Close the modal after a short delay
-                            setTimeout(function() {
-                                $('#addItemModal').modal('hide');
-
-                                // Reset the form and hide the success message
-                                $('#addItemForm')[0].reset();
-                                $('#successMessage').addClass('d-none');
-
-                                // Reload the page to reflect the new item
-                                location.reload();
-                            }, 2000); // Adjust the delay as needed
-                        } else {
-                            // Hide any success messages
-                            $('#successMessage').addClass('d-none');
-
-                            // Show error messages
-                            $('#errorMessage').removeClass('d-none');
-                            let errorHtml = '';
-                            for (let field in response.errors) {
-                                errorHtml += `<li>${response.errors[field]}</li>`;
-                            }
-                            $('#errorList').html(errorHtml);
-                        }
-                    } catch (error) {
-                        console.error('Error parsing JSON:', error);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error adding item:', error);
-                }
-            });
-        });
-    });
-    // Fetch and populate Edit Item Modal
-    $('.edit-btn').on('click', function() {
-        var itemId = $(this).data('id'); // Corrected to retrieve item_id from the button
-        console.log("Selected Item ID:", itemId); // Log the item ID for debugging
-
-        $.ajax({
-            url: 'get_item_details.php', // Your PHP script for fetching the item details
-            type: 'POST',
-            data: {item_id: itemId},
-            dataType: 'json',
-            success: function (response) {
-                console.log(response);
-                if (response.success) {
-                    // Populate the modal fields with the item data
-                    $('#edit_item_id').val(response.data.item_id);
-                    $('#edit_description').val(response.data.description);
-                    $('#edit_quantity').val(response.data.quantity);
-                    $('#edit_unit').val(response.data.unit);
-                    $('#edit_amount').val(response.data.amount);
-
-                    // Show the modal
-                    $('#editItemModal').modal('show');
-                } else {
-                    // Display an error message if fetching failed
-                    console.log("Error fetching data: ", response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("AJAX Error: ", error);
-                console.log("Status:", status);
-                console.log("Response Text:", xhr.responseText); // Log full response for debugging
-            }
-        });
-    });
-
-
-        // Handle form submission for updating the item
-        $('#editItemForm').on('submit', function(e) {
-            e.preventDefault();
-
-            $.ajax({
-                url: 'update_item.php', // URL of your PHP script for updating the item
-                type: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    // Parse the JSON response
-                    var result = JSON.parse(response);
-                    console.log(response);
-
-                    if (result.success) {
-                        // Hide any existing error messages
-                        $('#errorMessage').addClass('d-none');
-
-                        // Show success message
-                        $('#successMessage').removeClass('d-none');
-                        
-                        setTimeout(function() {
-                            $('#editItemModal').modal('hide');
-
-                            // Reset the form and hide the success message
-                            $('#editItemForm')[0].reset();
-                            $('#successMessage').addClass('d-none');
-                            location.reload();
-                        }, 2000); 
-                    } else {
-                        // Show validation errors
-                        $('#editsuccessMessage').addClass('d-none');
-
-                        $('#errorMessage').removeClass('d-none');
-                        let errorHtml = '';
-                        for (let field in response.errors) {
-                            errorHtml += `<li>${response.errors[field]}</li>`;
-                        }
-                        $('#errorList').html(errorHtml);
-                    }
-                },
-                error: function() {
-                    console.error('Error updating event:', error);
-                }
-            });
-        });
-
-        // Pass data to Delete Modal
-        $('#deleteItemModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var itemId = button.data('id');
-            var eventId = button.data('event-id'); // Get the event_id
-
-            // Update the modal's field
-            var modal = $(this);
-            modal.find('#delete_item_id').val(itemId);
-            modal.find('#delete_event_id').val(eventId); // Pass event_id to the form if needed
-        });
-    
-    </script>
+<script src="js/event_details.js"></script>
 </body>
 </html>
