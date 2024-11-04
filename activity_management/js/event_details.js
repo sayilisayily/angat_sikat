@@ -88,60 +88,83 @@ $(document).ready(function () {
     });
 
 
-        // Handle form submission for updating the item
-        $('#editItemForm').on('submit', function(e) {
-            e.preventDefault();
-
-            $.ajax({
-                url: 'update_item.php', // URL of your PHP script for updating the item
-                type: 'POST',
-                data: $(this).serialize(),
-                success: function(response) {
-                    // Parse the JSON response
-                    var result = JSON.parse(response);
-                    console.log(response);
-
-                    if (result.success) {
-                        // Hide any existing error messages
-                        $('#errorMessage').addClass('d-none');
-
-                        // Show success message
-                        $('#successMessage').removeClass('d-none');
-                        
-                        setTimeout(function() {
-                            $('#editItemModal').modal('hide');
-
-                            // Reset the form and hide the success message
-                            $('#editItemForm')[0].reset();
-                            $('#successMessage').addClass('d-none');
-                            location.reload();
-                        }, 2000); 
-                    } else {
-                        // Show validation errors
-                        $('#editsuccessMessage').addClass('d-none');
-
-                        $('#errorMessage').removeClass('d-none');
-                        let errorHtml = '';
-                        for (let field in response.errors) {
-                            errorHtml += `<li>${response.errors[field]}</li>`;
-                        }
-                        $('#errorList').html(errorHtml);
-                    }
-                },
-                error: function() {
-                    console.error('Error updating event:', error);
+// Handle form submission for updating the item
+$('#editItemForm').on('submit', function(e) {
+    e.preventDefault()
+    $.ajax({
+        url: 'update_item.php', // URL of your PHP script for updating the item
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function(response) {
+            // Parse the JSON response
+            var result = JSON.parse(response);
+            console.log(response);
+            if (result.success) {
+                // Hide any existing error messages
+                $('#errorMessage').addClass('d-none')
+                // Show success message
+                $('#successMessage').removeClass('d-none');
+                
+                setTimeout(function() {
+                    $('#editItemModal').modal('hide')
+                    // Reset the form and hide the success message
+                    $('#editItemForm')[0].reset();
+                    $('#successMessage').addClass('d-none');
+                    location.reload();
+                }, 2000); 
+            } else {
+                // Show validation errors
+                $('#editsuccessMessage').addClass('d-none')
+                $('#errorMessage').removeClass('d-none');
+                let errorHtml = '';
+                for (let field in response.errors) {
+                    errorHtml += `<li>${response.errors[field]}</li>`;
                 }
-            });
-        });
+                $('#errorList').html(errorHtml);
+            }
+        },
+        error: function() {
+            console.error('Error updating event:', error);
+        }
+    });
+});
 
-        // Pass data to Delete Modal
-        $('#deleteItemModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var itemId = button.data('id');
-            var eventId = button.data('event-id'); // Get the event_id
+// JavaScript for the delete button click event
+$(document).on("click", ".delete-btn", function () {
+    var itemId = $(this).data("id");  // Retrieve item_id from button's data attribute
+    $("#delete_item_id").val(itemId);        // Set item_id in the modal form's hidden input field
+    console.log('Selected Item ID: ' + itemId);
+});
 
-            // Update the modal's field
-            var modal = $(this);
-            modal.find('#delete_item_id').val(itemId);
-            modal.find('#delete_event_id').val(eventId); // Pass event_id to the form if needed
-        });
+// JavaScript for handling the delete form submission
+$("#deleteItemForm").on("submit", function (e) {
+    e.preventDefault();
+    
+    const itemId = $("#delete_item_id").val();  // Get the item_id from the hidden input field
+    
+
+    $.ajax({
+        type: "POST",
+        url: "delete_item.php",
+        data: $(this).serialize(),  // Send only item_id to the PHP file
+        success: function (response) {
+            var result = JSON.parse(response);
+            console.log('Item ID: ' + itemId);
+            console.log(response);
+            if (response.success) {
+                
+                setTimeout(function() {
+                    $("#deleteItemModal").modal("hide");
+                    location.reload();
+                }, 2000); 
+            } else {
+                console.log(response.message);
+            }
+        },
+        error: function () {
+            console.log(response.message);
+        }
+    });
+});
+
+

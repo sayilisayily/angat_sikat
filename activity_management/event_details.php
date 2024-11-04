@@ -118,7 +118,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                     <td>{$total_amount}</td>
                                     <td>
                                         <button class='btn edit-btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
-                                        <button class='btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
+                                        <button class='btn delete-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
                                     </td>
                                   </tr>";
                         }
@@ -157,8 +157,8 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                         <td>{$item['amount']}</td>
                                         <td>{$total_amount}</td>
                                         <td>
-                                        <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
-                                        <button class='btn edit-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
+                                        <button class='btn edit-btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
+                                        <button class='btn delete-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
                                         </td>
                                       </tr>";
                             }
@@ -241,7 +241,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
             </div>
             <form id="editItemForm">
                 <div class="modal-body">
-                <input type="text" id="edit_item_id" name="item_id">
+                <input type="hidden" id="edit_item_id" name="item_id">
                 <input type="hidden" id="edit_event_id" name="event_id" value="<?php echo $event_id; ?>"> <!-- Add event_id -->
                 <div class="form-group row mb-2">
                     <div class="col">
@@ -285,7 +285,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
 
         <!-- Delete Item Modal -->
         <div class="modal fade" id="deleteItemModal" tabindex="-1" aria-labelledby="deleteItemModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="deleteItemModalLabel">Delete Item</h5>
@@ -293,11 +293,23 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                     </div>
                     <div class="modal-body">
                         <p>Are you sure you want to delete this item?</p>
-                        <form id="deleteItemForm" action="delete_item.php" method="POST">
+                        <form id="deleteItemForm">
                             <input type="hidden" name="item_id" id="delete_item_id">
-                            <input type="hidden" id="delete_event_id" name="event_id">
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <input type="hidden" id="delete_event_id" name="event_id" value="<?php echo $event_id; ?>">
+                            
                         </form>
+                        <!-- Success Message Alert -->
+                        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                            Item deleted successfully!
+                        </div>  
+                        <!-- Error Message Alert -->
+                        <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                            <ul id="errorList"></ul> <!-- List for showing validation errors -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </div>
                 </div>
             </div>
