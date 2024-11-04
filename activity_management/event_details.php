@@ -8,12 +8,9 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
 
     // Prepare SQL query to fetch event details
     $stmt = $conn->prepare("SELECT * FROM events WHERE event_id = ?");
-    
     if ($stmt === false) {
         die('Prepare failed: ' . $conn->error);
     }
-
-    // Bind parameters
     $stmt->bind_param("i", $event_id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -26,28 +23,40 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
         exit;
     }
 
-    // Fetch the items associated with the event
+    // Fetch the items for Financial Plan
     $itemStmt = $conn->prepare("SELECT * FROM event_items WHERE event_id = ?");
-    
     if ($itemStmt === false) {
         die('Prepare for items failed: ' . $conn->error);
     }
-
     $itemStmt->bind_param("i", $event_id);
     $itemStmt->execute();
     $itemsResult = $itemStmt->get_result();
-
-    // Store items in an array
     $items = [];
     if ($itemsResult->num_rows > 0) {
         while ($row = $itemsResult->fetch_assoc()) {
             $items[] = $row;
         }
     }
-
-    // Close the statements
     $stmt->close();
     $itemStmt->close();
+
+    // Fetch items for Financial Summary only if the event is accomplished
+    if ($event['accomplishment_status'] === 1) {
+        $summaryStmt = $conn->prepare("SELECT * FROM event_items WHERE event_id = ?");
+        if ($summaryStmt === false) {
+            die('Prepare for summary items failed: ' . $conn->error);
+        }
+        $summaryStmt->bind_param("i", $event_id);
+        $summaryStmt->execute();
+        $summaryResult = $summaryStmt->get_result();
+        $summaryItems = [];
+        if ($summaryResult->num_rows > 0) {
+            while ($row = $summaryResult->fetch_assoc()) {
+                $summaryItems[] = $row;
+            }
+        }
+        $summaryStmt->close();
+    }
 } else {
     echo "No event ID provided.";
     exit;
@@ -56,67 +65,118 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <?php include 'head.php'; ?>
-        <title> Events Table </title>
-    </head>
+<head>
+    <?php include 'head.php'; ?>
+    <title>Event Financial Details</title>
+</head>
 <body>
-<body>
-    <div class="container mt-5 p-4">
-        <h2>Financial Plan</h2>
+<div class="container mt-5 p-4"> 
+    <h2>Event Financial Details</h2>
 
-        <h4>Title: <?php echo $event['title']; ?></h4>
-        <p>Venue: <?php echo $event['event_venue']; ?></p>
-        <p>Start Date: <?php echo $event['event_start_date']; ?></p>
-        <p>End Date: <?php echo $event['event_end_date']; ?></p>
+    <!-- Event Information -->
+    <h4>Title: <?php echo $event['title']; ?></h4>
+    <p>Venue: <?php echo $event['event_venue']; ?></p>
+    <p>Start Date: <?php echo $event['event_start_date']; ?></p>
+    <p>End Date: <?php echo $event['event_end_date']; ?></p>
 
-        <h4>Items<button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addItemModal"><i class="fa-solid fa-plus"></i> Add Item</button></h4>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Description</th>
-                    <th>Quantity</th>
-                    <th>Unit</th>
-                    <th>Amount</th>
-                    <th>Total Amount</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if (!empty($items)) {
-                    foreach ($items as $item) {
-                        $total_amount = $item['quantity'] * $item['amount'];
-                        echo "<tr>
-                                <td>{$item['description']}</td>
-                                <td>{$item['quantity']}</td>
-                                <td>{$item['unit']}</td>
-                                <td>{$item['amount']}</td>
-                                <td>{$total_amount}</td>
-                                <td>
-                                    <button class='btn btn-primary btn-sm' 
-                                        data-bs-toggle='modal' 
-                                        data-bs-target='#editItemModal' 
-                                        data-id='{$item['item_id']}'
-                                        data-description='{$item['description']}'
-                                        data-quantity='{$item['quantity']}'
-                                        data-unit='{$item['unit']}'
-                                        data-amount='{$item['amount']}'
-                                    ><i class='fa-solid fa-pen'></i> Edit</button>
-                                    <button class='btn edit-btn btn-danger btn-sm' 
-                                        data-bs-toggle='modal' 
-                                        data-bs-target='#deleteItemModal' 
-                                        data-id='{$item['item_id']}'
-                                    ><i class='fa-solid fa-trash'></i> Delete</button>
-                                </td>
-                              </tr>";
+    <!-- Tabs for Financial Plan and Financial Summary -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="financial-plan-tab" data-bs-toggle="tab" href="#financial-plan" role="tab" aria-controls="financial-plan" aria-selected="true">Financial Plan</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="financial-summary-tab" data-bs-toggle="tab" href="#financial-summary" role="tab" aria-controls="financial-summary" aria-selected="false">Financial Summary</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-4">
+        <!-- Financial Plan Tab -->
+        <div class="tab-pane fade show active" id="financial-plan" role="tabpanel" aria-labelledby="financial-plan-tab">
+            <h4>Items<button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addItemModal"><i class="fa-solid fa-plus"></i> Add Item</button></h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Amount</th>
+                        <th>Total Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if (!empty($items)) {
+                        foreach ($items as $item) {
+                            $total_amount = $item['quantity'] * $item['amount'];
+                            echo "<tr>
+                                    <td>{$item['description']}</td>
+                                    <td>{$item['quantity']}</td>
+                                    <td>{$item['unit']}</td>
+                                    <td>{$item['amount']}</td>
+                                    <td>{$total_amount}</td>
+                                    <td>
+                                        <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
+                                        <button class='btn edit-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
+                                    </td>
+                                  </tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='6' class='text-center'>No items found</td></tr>";
                     }
-                } else {
-                    echo "<tr><td colspan='6' class='text-center'>No items found</td></tr>";
-                }
-                ?>
-            </tbody>
-        </table>
+                    ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Financial Summary Tab -->
+        <div class="tab-pane fade" id="financial-summary" role="tabpanel" aria-labelledby="financial-summary-tab">
+            <?php if ($event['accomplishment_status'] === 1): ?>
+                <h4>Summary Items</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Unit</th>
+                            <th>Amount</th>
+                            <th>Total Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        if (!empty($summaryItems)) {
+                            foreach ($summaryItems as $item) {
+                                $total_amount = $item['quantity'] * $item['amount'];
+                                echo "<tr>
+                                        <td>{$item['description']}</td>
+                                        <td>{$item['quantity']}</td>
+                                        <td>{$item['unit']}</td>
+                                        <td>{$item['amount']}</td>
+                                        <td>{$total_amount}</td>
+                                        <td>
+                                        <button class='btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
+                                        <button class='btn edit-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
+                                        </td>
+                                      </tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='5' class='text-center'>No summary items found</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <p>This event has not been accomplished yet. The financial summary will be available once the event is marked as accomplished.</p>
+            <?php endif; ?>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-secondary me-1" onclick="history.back()"> Cancel </button>
+            <button type="button" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save </button>
+    </div>
+</div>
 
         <!-- Add Item Modal -->
         <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
@@ -242,10 +302,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
             </div>
         </div>
 
-        <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-secondary me-1" onclick="history.back()"> Cancel </button>
-            <button type="button" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save </button>
-        </div>
+        
 
     </div>
 
