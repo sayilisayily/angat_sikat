@@ -72,14 +72,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
 </head>
 <body>
 <div class="container mt-5 p-4"> 
-    <h2>Event Financial Details</h2>
-
-    <!-- Event Information -->
-    <h4>Title: <?php echo $event['title']; ?></h4>
-    <p>Venue: <?php echo $event['event_venue']; ?></p>
-    <p>Start Date: <?php echo $event['event_start_date']; ?></p>
-    <p>End Date: <?php echo $event['event_end_date']; ?></p>
-
+    <h2>Event Details</h2>
     <!-- Tabs for Financial Plan and Financial Summary -->
     <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
@@ -89,10 +82,18 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
             <a class="nav-link" id="financial-summary-tab" data-bs-toggle="tab" href="#financial-summary" role="tab" aria-controls="financial-summary" aria-selected="false">Financial Summary</a>
         </li>
     </ul>
+    
 
     <div class="tab-content mt-4 mx-3">
         <!-- Financial Plan Tab -->
         <div class="tab-pane fade show active" id="financial-plan" role="tabpanel" aria-labelledby="financial-plan-tab">
+
+            <!-- Event Information -->
+            <h4>Title: <?php echo $event['title']; ?></h4>
+            <p>Venue: <?php echo $event['event_venue']; ?></p>
+            <p>Start Date: <?php echo $event['event_start_date']; ?></p>
+            <p>End Date: <?php echo $event['event_end_date']; ?></p>
+
             <h4>Items<button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addItemModal"><i class="fa-solid fa-plus"></i> Add Item</button></h4>
             <table class="table">
                 <thead>
@@ -133,6 +134,12 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
         <!-- Financial Summary Tab -->
         <div class="tab-pane fade" id="financial-summary" role="tabpanel" aria-labelledby="financial-summary-tab">
             <?php if ($event['accomplishment_status'] === 1): ?>
+                    <!-- Event Information -->
+                <h4>Title: <?php echo $event['title']; ?></h4>
+                <p>Venue: <?php echo $event['event_venue']; ?></p>
+                <p>Start Date: <?php echo $event['event_start_date']; ?></p>
+                <p>End Date: <?php echo $event['event_end_date']; ?></p>
+
                 <h4>Items<button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#summaryAddItemModal"><i class="fa-solid fa-plus"></i> Add Item</button></h4>
                 <table class="table">
                     <thead>
@@ -142,7 +149,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                             <th>Unit</th>
                             <th>Amount</th>
                             <th>Total Amount</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -157,8 +164,8 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                         <td>{$item['amount']}</td>
                                         <td>{$total_amount}</td>
                                         <td>
-                                        <button class='btn edit-btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
-                                        <button class='btn delete-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
+                                        <button class='btn summary-edit-btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
+                                        <button class='btn summary-delete-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
                                         </td>
                                       </tr>";
                             }
@@ -325,21 +332,25 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
-                    <div class="form-group">
-                        <label for="summary_description">Description</label>
-                        <input type="text" class="form-control" id="summary_description" name="description" required>
-                    </div>
-                    <div class="form-group">
+                    <div class="form-group row mb-2">
+                        <div class="col">
+                            <label for="summary_description">Description</label>
+                            <input type="text" class="form-control" id="summary_description" name="description" required>
+                        </div>
+                        <div class="col">
                         <label for="summary_quantity">Quantity</label>
                         <input type="number" class="form-control" id="summary_quantity" name="quantity" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="summary_unit">Unit</label>
-                        <input type="text" class="form-control" id="summary_unit" name="unit" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="summary_amount">Amount</label>
-                        <input type="number" step="0.01" class="form-control" id="summary_amount" name="amount" required>
+                    <div class="form-group row mb-2">
+                        <div class="col">
+                            <label for="summary_unit">Unit</label>
+                            <input type="text" class="form-control" id="summary_unit" name="unit" required>
+                        </div>
+                        <div class="col">
+                            <label for="summary_amount">Amount</label>
+                            <input type="number" step="0.01" class="form-control" id="summary_amount" name="amount" required>
+                        </div>
                     </div>
                     <div id="summarySuccessMessage" class="alert alert-success d-none mt-3" role="alert">Item added successfully!</div>
                     <div id="summaryErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
@@ -366,21 +377,25 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                 <div class="modal-body">
                     <input type="hidden" id="summary_edit_item_id" name="item_id">
                     <input type="hidden" id="summary_edit_event_id" name="event_id" value="<?php echo $event_id; ?>">
-                    <div class="form-group">
-                        <label for="summary_edit_description">Description</label>
-                        <input type="text" class="form-control" id="summary_edit_description" name="description" required>
+                    <div class="form-group row mb-2">
+                        <div class="col">
+                            <label for="summary_edit_description">Description</label>
+                            <input type="text" class="form-control" id="summary_edit_description" name="description" required>
+                        </div>
+                        <div class="col">
+                            <label for="summary_edit_quantity">Quantity</label>
+                            <input type="number" class="form-control" id="summary_edit_quantity" name="quantity" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="summary_edit_quantity">Quantity</label>
-                        <input type="number" class="form-control" id="summary_edit_quantity" name="quantity" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="summary_edit_unit">Unit</label>
-                        <input type="text" class="form-control" id="summary_edit_unit" name="unit" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="summary_edit_amount">Amount</label>
-                        <input type="number" step="0.01" class="form-control" id="summary_edit_amount" name="amount" required>
+                    <div class="form-group row mb-2">
+                        <div class="col">
+                            <label for="summary_edit_unit">Unit</label>
+                            <input type="text" class="form-control" id="summary_edit_unit" name="unit" required>
+                        </div>
+                        <div class="col">
+                            <label for="summary_edit_amount">Amount</label>
+                            <input type="number" step="0.01" class="form-control" id="summary_edit_amount" name="amount" required>
+                        </div>
                     </div>
                     <div id="summaryEditSuccessMessage" class="alert alert-success d-none mt-3" role="alert">Item updated successfully!</div>
                     <div id="summaryEditErrorMessage" class="alert alert-danger d-none mt-3" role="alert">

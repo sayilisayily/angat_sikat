@@ -167,4 +167,20 @@ $("#deleteItemForm").on("submit", function (e) {
     });
 });
 
+$(document).ready(function () {
+    // Check localStorage for the last active tab
+    let lastActiveTab = localStorage.getItem("lastActiveTab");
+    
+    // If a saved tab exists, activate it
+    if (lastActiveTab) {
+        $(`#${lastActiveTab}-tab`).tab("show");
+    }
+
+    // Save the active tab to localStorage on click
+    $("a[data-bs-toggle='tab']").on("shown.bs.tab", function (e) {
+        let activeTabId = $(e.target).attr("id");
+        localStorage.setItem("lastActiveTab", activeTabId);
+    });
+});
+
 
