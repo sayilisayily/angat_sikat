@@ -1,6 +1,7 @@
 <?php
 
 include 'connection.php';
+include '../session_check.php';  // Assuming session_check.php sets the organization_id in the session
 
 $errors = [];
 $data = [];
@@ -11,8 +12,8 @@ if (empty($_POST['title'])) {
 } else {
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     
-    // Check if the event with the same title already exists
-    $query = "SELECT * FROM events WHERE title = '$title'";
+    // Check if the event with the same title already exists for the organization
+    $query = "SELECT * FROM events WHERE title = '$title' AND organization_id = {$_SESSION['organization_id']}";
     $result = mysqli_query($conn, $query);
     
     if (mysqli_num_rows($result) > 0) {
@@ -33,8 +34,7 @@ if (empty($_POST['end_date'])) {
     $errors['end_date'] = 'Event end date is required.';
 }
 
-if ((strtotime($_POST['start_date'])) > (strtotime($_POST['end_date'])))
-{
+if ((strtotime($_POST['start_date'])) > (strtotime($_POST['end_date']))) {
     $errors['date'] = 'Invalid event start and end date.';
 }
 
@@ -48,9 +48,10 @@ if (!empty($errors)) {
     $start_date = mysqli_real_escape_string($conn, $_POST['start_date']);
     $end_date = mysqli_real_escape_string($conn, $_POST['end_date']);
     $type = mysqli_real_escape_string($conn, $_POST['type']);
-    
+    $organization_id = $_SESSION['organization_id'];
+
     $query = "INSERT INTO events (title, event_venue, event_start_date, event_end_date, event_type, event_status, accomplishment_status, organization_id) 
-              VALUES ('$title', '$venue', '$start_date', '$end_date', '$type', 'Pending', 0, 1)";
+              VALUES ('$title', '$venue', '$start_date', '$end_date', '$type', 'Pending', 0, $organization_id)";
     
     if (mysqli_query($conn, $query)) {
         $data['success'] = true;

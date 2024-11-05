@@ -161,7 +161,7 @@ $result = $conn->query($sql);
         </div>
         <div class="modal-body">
           <!-- Hidden field for event ID -->
-          <input type="hidden" id="editEventId" name="event_id">
+          <input type="text" id="editEventId" name="event_id">
 
           <!-- Other form fields -->
           <div class="form-group row mb-2">

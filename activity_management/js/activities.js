@@ -173,6 +173,7 @@ $('#editEventForm').on('submit', function(event) {
       var eventId = $(this).data('id'); // Get event_id from the button
       $('#archiveEventId').val(eventId); // Store the event ID in the hidden input field
       $('#archiveModal').modal('show'); // Show the archive confirmation modal
+      console.log('Selected Event ID: ' + eventId);
   });
 
   // Handle archive confirmation when "Archive" button in modal is clicked
@@ -188,7 +189,7 @@ $('#editEventForm').on('submit', function(event) {
           success: function(response) {
               if (response.success) {
                   // Show success message (optional)
-                  //alert(response.message);
+                  console.log(response.message);
 
                   // Reload the DataTable to remove the archived event from the list
                   location.reload();// Reload without resetting pagination

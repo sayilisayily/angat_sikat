@@ -305,14 +305,6 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                             <input type="hidden" id="delete_event_id" name="event_id" value="<?php echo $event_id; ?>">
                             
                         </form>
-                        <!-- Success Message Alert -->
-                        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-                            Item deleted successfully!
-                        </div>  
-                        <!-- Error Message Alert -->
-                        <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                            <ul id="errorList"></ul> <!-- List for showing validation errors -->
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
