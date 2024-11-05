@@ -1,5 +1,6 @@
 <?php                
 require 'connection.php'; // Include your database connection file
+include '../session_check.php';
 
 // Query to fetch event details
 $display_query = "SELECT * FROM events WHERE archived=0 and event_status='Approved'";             

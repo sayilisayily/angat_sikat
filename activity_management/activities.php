@@ -1,9 +1,11 @@
 <?php
 include 'connection.php';
+include '../session_check.php'; 
 
-$sql = "SELECT * FROM events WHERE archived = 0 and organization_id = 1";
+$sql = "SELECT * FROM events WHERE archived = 0 AND organization_id = $organization_id";
 $result = $conn->query($sql);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

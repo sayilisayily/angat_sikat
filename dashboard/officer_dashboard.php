@@ -4,7 +4,7 @@ include("../connection.php");
 
 // Check if user is logged in and has officer role
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
-    header("Location: login.php");
+    header("Location: ../authentication-login.html");
     exit();
 }
 
@@ -129,7 +129,7 @@ if ($result && mysqli_num_rows($result) > 0) {
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="edit_profile.php"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
-                                    <li><a class="dropdown-item" href="logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                    <li><a class="dropdown-item" href="../logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                                 </ul>
                             </div>
                     <div class="me-5">

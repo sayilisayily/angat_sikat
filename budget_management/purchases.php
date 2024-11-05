@@ -1,7 +1,8 @@
 <?php
 include 'connection.php';
+include '../session_check.php';
 
-$sql = "SELECT * FROM purchases WHERE archived = 0";
+$sql = "SELECT * FROM purchases WHERE archived = 0 AND organization_id = $organization_id";
 $result = $conn->query($sql);
 ?>
 
@@ -74,14 +75,12 @@ $result = $conn->query($sql);
 
 <!-- Add Purchase Modal -->
 <div class="modal fade" id="addPurchaseModal" tabindex="-1" role="dialog" aria-labelledby="addPurchaseLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+  <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <form id="addPurchaseForm">
         <div class="modal-header">
-          <h5 class="modal-title" id="addEventLabel">Add New Purchase</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <h5 class="modal-title" id="addPurchaseLabel">Add New Purchase</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <!-- Form fields -->
