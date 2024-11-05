@@ -1,6 +1,7 @@
 <?php
 
 include 'connection.php';
+include '../session_check.php';  // Ensure the organization ID is in the session
 
 $errors = [];
 $data = [];
@@ -11,8 +12,8 @@ if (empty($_POST['title'])) {
 } else {
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     
-    // Check if a purchase with the same title already exists
-    $query = "SELECT * FROM purchases WHERE title = '$title'";
+    // Check if a purchase with the same title already exists for this organization
+    $query = "SELECT * FROM purchases WHERE title = '$title' AND organization_id = {$_SESSION['organization_id']}";
     $result = mysqli_query($conn, $query);
 
     if (!$result) {
@@ -22,21 +23,15 @@ if (empty($_POST['title'])) {
     }
 }
 
-// Validate organization_id (ensure it exists and is a valid integer)
-if (empty($_POST['organization_id'])) {
-    $errors['organization_id'] = 'Organization ID is required.';
-} elseif (!filter_var($_POST['organization_id'], FILTER_VALIDATE_INT)) {
-    $errors['organization_id'] = 'Invalid organization ID.';
-} else {
-    $organization_id = (int) $_POST['organization_id'];
-}
-
 // If there are errors, return them in the response
 if (!empty($errors)) {
     $data['success'] = false;
     $data['errors'] = $errors;
 } else {
-    // Attempt to insert the purchase if no validation errors
+    // Prepare variables for insertion
+    $organization_id = $_SESSION['organization_id'];
+    
+    // Insert the purchase if no validation errors
     $query = "INSERT INTO purchases (title, purchase_status, completion_status, organization_id) 
               VALUES ('$title', 'Pending', 0, '$organization_id')";
     

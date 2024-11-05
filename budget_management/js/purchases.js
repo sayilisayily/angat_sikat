@@ -28,7 +28,7 @@ function toggleCompletion(purchaseId, isChecked) {
 }
 
 
-  // Handle Add Event Form Submission
+  // Handle Add purchase Form Submission
   $('#addPurchaseForm').on('submit', function(event) {
     event.preventDefault(); // Prevent the form from submitting the default way
 
@@ -56,7 +56,7 @@ function toggleCompletion(purchaseId, isChecked) {
                         $('#addPurchaseForm')[0].reset();
                         $('#successMessage').addClass('d-none');
 
-                        // Reload the page to reflect the new event
+                        // Reload the page to reflect the new purchase
                         location.reload();
                     }, 2000); // Adjust the delay as needed (2 seconds here)
 
@@ -77,25 +77,25 @@ function toggleCompletion(purchaseId, isChecked) {
             }
         },
         error: function(xhr, status, error) {
-            console.error('Error adding event:', error);
+            console.error('Error adding purchase:', error);
         }
     });
 });
 
 $('.edit-btn').on('click', function() {
-    var eventId = $(this).data('id'); // Get event_id from the button
-    console.log("Selected Event ID:", eventId); // Log the event ID for debugging
+    var purchaseId = $(this).data('id'); // Get purchase_id from the button
+    console.log("Selected Purchase ID:", purchaseId); // Log the purchase ID for debugging
 
-    // Send an AJAX request to fetch the event details using the event ID
+    // Send an AJAX request to fetch the purchase details using the purchase ID
     $.ajax({
-        url: 'get_purchase_details.php', // PHP file to fetch event data
+        url: 'get_purchase_details.php', // PHP file to fetch purchase data
         type: 'POST',
-        data: { event_id: eventId },
+        data: { purchase_id: purchaseId },
         dataType: 'json',
         success: function(response) {
             if(response.success) {
-                // Populate the form with event data
-    
+                // Populate the form with purchase data
+                
                 $('#editPurchaseTitle').val(response.data.title);  
                 
                 // Show the modal
@@ -119,9 +119,9 @@ $('#editPurchaseForm').on('submit', function(event) {
   var formData = $(this).serialize();
 
   $.ajax({
-      url: 'update_purchase.php', // PHP script that handles updating the event in the database
+      url: 'update_purchase.php', // PHP script that handles updating the purchase in the database
       type: 'POST',
-      data: formData,  // Send form data to update_event.php
+      data: formData,  // Send form data to update_purchase.php
       success: function(response) {
           try {
               // Parse the JSON response (ensure it's valid JSON)
@@ -136,7 +136,7 @@ $('#editPurchaseForm').on('submit', function(event) {
 
                   // Close the modal after a short delay
                   setTimeout(function() {
-                      $('#editEventModal').modal('hide'); // Hide the modal
+                      $('#editPurchaseModal').modal('hide'); // Hide the modal
                       location.reload();                   
                   }, 2000); // Adjust delay as needed (e.g., 2 seconds)
               } else {
@@ -148,42 +148,61 @@ $('#editPurchaseForm').on('submit', function(event) {
           }
       },
       error: function(xhr, status, error) {
-          console.error('Error updating event:', error);
+          console.error('Error updating Purchase:', error);
       }
   });
 });
 
-// Event delegation for dynamically loaded buttons (Archive)
+// Purchase delegation for dynamically loaded buttons (Archive)
+
 $(document).on('click', '.archive-btn', function() {
-    var purchaseId = $(this).data('id'); // Get event_id from the button
-    $('#archivePurchaseId').val(purchaseId); // Store the event ID in the hidden input field
-    $('#archiveModal').modal('show'); // Show the archive confirmation modal
+    var purchaseId = $(this).data('id'); // Get purchase_id from the button
+
+    // Debugging: Log the button and purchaseId
+    console.log("Archive button clicked:", this);
+    console.log("Extracted Purchase ID:", purchaseId);
+
+    // Check if purchaseId exists
+    if (purchaseId) {
+        $('#archivePurchaseId').val(purchaseId); // Store the Purchase ID in the hidden input field
+        $('#archiveModal').modal('show'); // Show the archive confirmation modal
+    } else {
+        console.error("Error: No purchase ID found on the archive button.");
+    }
 });
 
+
 // Handle archive confirmation when "Archive" button in modal is clicked
-$('#confirmArchiveBtn').on('click', function() {
-    var eventId = $('#archivePurchaseId').val(); // Get the event ID from the hidden input field
+$(document).on('click', '#confirmArchiveBtn', function() {
+    var purchaseId = $('#archivePurchaseId').val(); // Get the Purchase ID from the hidden input field
     
-    // Send an AJAX request to archive the event
+    // Confirm purchase ID is set before AJAX
+    if (!purchaseId) {
+        console.error("Error: Purchase ID not set in hidden input field.");
+        return;
+    }
+
+    // Send an AJAX request to archive the purchase
     $.ajax({
         url: 'archive_purchase.php', // PHP file to handle archiving
         type: 'POST',
         data: { purchase_id: purchaseId },
         dataType: 'json',
         success: function(response) {
-            if (response.success) {
-                
+            if (response && response.success) {
+                console.log("Purchase archived successfully!");
                 location.reload();
             } else {
-                // Show error message (optional)
-                alert("Error archiving event: " + response.message);
+                // Show error message if archiving fails
+                console.error("Error archiving purchase:", response.message || "Unknown error.");
+                alert("Error archiving purchase: " + (response.message || "Unknown error."));
             }
-
             // Close the modal after archiving
             $('#archiveModal').modal('hide');
         },
         error: function(xhr, status, error) {
-            console.error("AJAX Error: ", error);
+            console.error("AJAX Error:", error, xhr.responseText);
+            alert("AJAX request failed: " + error);
         }
     });
 });
