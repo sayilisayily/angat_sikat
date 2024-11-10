@@ -1,7 +1,8 @@
 <?php
 include '../connection.php';
+include '../session_check.php'; 
 
-$sql = "SELECT * FROM expenses WHERE organization_id = 1"; // Adjust the organization_id as needed
+$sql = "SELECT * FROM expenses WHERE organization_id = $organization_id"; // Adjust the organization_id as needed
 $result = $conn->query($sql);
 ?>
 
@@ -68,33 +69,46 @@ $result = $conn->query($sql);
 <div class="modal fade" id="addExpenseModal" tabindex="-1" role="dialog" aria-labelledby="addExpenseLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id="addExpenseForm">
+            <form id="addExpenseForm" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addExpenseLabel">Add New Expense</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <!-- Category Field -->
                     <div class="form-group">
-                        <label for="description">Item Description</label>
-                        <input type="text" class="form-control" id="description" name="description" required>
+                        <label for="category">Category</label>
+                        <select class="form-control" id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="activities">Activities</option>
+                            <option value="purchases">Purchases</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="quantity">Quantity</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" required>
+                    
+                    <!-- Title Field -->
+                    <div class="form-group mt-3">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
                     </div>
-                    <div class="form-group">
-                        <label for="unit">Unit</label>
-                        <input type="text" class="form-control" id="unit" name="unit" required>
-                    </div>
-                    <div class="form-group">
+                    
+                    <!-- Amount Field -->
+                    <div class="form-group mt-3">
                         <label for="amount">Amount</label>
                         <input type="number" class="form-control" id="amount" name="amount" step="0.01" required>
+                    </div>
+                    
+                    <!-- Reference (File Upload) Field -->
+                    <div class="form-group mt-3">
+                        <label for="reference">Reference (File Upload)</label>
+                        <input type="file" class="form-control" id="reference" name="reference" accept=".pdf,.jpg,.png,.doc,.docx" required>
                     </div>
 
                     <!-- Success Message Alert -->
                     <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
                         Expense added successfully!
                     </div>  
+
                     <!-- Error Message Alert -->
                     <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
                         <ul id="errorList"></ul>
@@ -109,11 +123,12 @@ $result = $conn->query($sql);
     </div>
 </div>
 
+
 <!-- Edit Expense Modal -->
 <div class="modal fade" id="editExpenseModal" tabindex="-1" role="dialog" aria-labelledby="editExpenseModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form id="editExpenseForm" action="update_expense.php" method="POST">
+            <form id="editExpenseForm" action="update_expense.php" method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editExpenseModalLabel">Edit Expense</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -122,26 +137,31 @@ $result = $conn->query($sql);
                     <input type="hidden" id="editItemId" name="item_id">
 
                     <div class="form-group">
-                        <label for="editDescription">Item Description</label>
-                        <input type="text" class="form-control" id="editDescription" name="description" required>
+                        <label for="editCategory">Category</label>
+                        <select class="form-control" id="editCategory" name="category" required>
+                            <option value="" disabled selected>Select a category</option>
+                            <option value="activities">Activities</option>
+                            <option value="purchases">Purchases</option>
+                            <option value="maintenance">Maintenance</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="editQuantity">Quantity</label>
-                        <input type="number" class="form-control" id="editQuantity" name="quantity" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editUnit">Unit</label>
-                        <input type="text" class="form-control" id="editUnit" name="unit" required>
+                        <label for="editTitle">Title</label>
+                        <input type="text" class="form-control" id="editTitle" name="title" required>
                     </div>
                     <div class="form-group">
                         <label for="editAmount">Amount</label>
                         <input type="number" class="form-control" id="editAmount" name="amount" step="0.01" required>
                     </div>
+                    <div class="form-group">
+                        <label for="editReference">Reference (Upload File)</label>
+                        <input type="file" class="form-control" id="editReference" name="reference">
+                    </div>
 
                     <!-- Success Message Alert -->
                     <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
                         Expense updated successfully!
-                    </div>  
+                    </div>
                     <!-- Error Message Alert -->
                     <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
                         <ul id="errorList"></ul>
@@ -155,6 +175,7 @@ $result = $conn->query($sql);
         </div>
     </div>
 </div>
+
 
 <!-- Archive Confirmation Modal -->
 <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
@@ -177,7 +198,157 @@ $result = $conn->query($sql);
 </div>
 
 <!-- BackEnd -->
-<script src="expenses.js"></script>
+<script>
+    $(document).ready(function() {
+    $('#expensesTable').DataTable({
+        "paging": true,
+        "searching": true,
+        "info": true,
+        "lengthChange": true,
+        "pageLength": 10,
+        "ordering": true,
+        "order": [],
+    });
+});
+
+// Handle Add Expense Form Submission
+$('#addExpenseForm').on('submit', function(event) {
+    event.preventDefault(); 
+
+    $.ajax({
+        url: 'add_expense.php',
+        type: 'POST',
+        data: $(this).serialize(), // Required for FormData
+        success: function(response) {
+            try {
+                // Parse the JSON response (in case it's returned as a string)
+                response = JSON.parse(response);
+                console.log(response);
+
+                if (response.success) {
+                    // Hide any existing error messages
+                    $('#errorMessage').addClass('d-none');
+
+                    // Show success message
+                    $('#successMessage').removeClass('d-none');
+
+                    // Close the modal after a short delay
+                    setTimeout(function() {
+                        $('#addExpenseModal').modal('hide');
+
+                        // Reset the form and hide the success message
+                        $('#addExpenseForm')[0].reset();
+                        $('#successMessage').addClass('d-none');
+
+                        // Reload the page to reflect the new expense
+                        location.reload();
+                    }, 2000); // Adjust the delay as needed (2 seconds here)
+
+                } else {
+                    // Hide any existing success messages
+                    $('#successMessage').addClass('d-none');
+
+                    // Show error messages
+                    $('#errorMessage').removeClass('d-none');
+                    let errorHtml = '';
+                    for (let field in response.errors) {
+                        errorHtml += `<li>${response.errors[field]}</li>`;
+                    }
+                    $('#errorList').html(errorHtml);
+                }
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error adding expense:', error);
+        }
+    });
+});
+
+$('.edit-btn').on('click', function() {
+      var expenseId = $(this).data('id'); // Get expense_id from the button
+      console.log("Selected Expense ID:", expenseId); // Log the event ID for debugging
+
+      // Send an AJAX request to fetch the event details using the expense ID
+      $.ajax({
+          url: 'get_expense_details.php', // PHP file to fetch expense data
+          type: 'POST',
+          data: { expense_id: expenseId },
+          dataType: 'json',
+          success: function(response) {
+              if(response.success) {
+                  // Populate the form with expense data
+                  $('#editExpenseId').val(response.data.expense_id);  // Hidden field for event ID
+                  $('#editTitle').val(response.data.title);  
+                  $('#editAmount').val(response.data.amount);
+                  $('#editReference').val(response.data.reference);
+                  // Show the modal
+                  $('#editExpensetModal').modal('show');
+              } else {
+                  console.log("Error fetching data: ", response.message);
+              }
+          },
+          error: function(xhr, status, error) {
+              console.error("AJAX Error: ", error);
+          }
+      });
+  });
+ 
+
+// Handle Edit Event Form Submission
+$('#editExpenseForm').on('submit', function(event) {
+    event.preventDefault(); 
+
+    $.ajax({
+        url: 'update_expense.php', 
+        type: 'POST',
+        data: $(this).serialize(), 
+        success: function(response) {
+            try {
+                // Parse the JSON response (ensure it's valid JSON)
+                response = JSON.parse(response);
+                console.log(response);
+
+                if (response.success) {
+                    // Hide any existing error messages
+                    $('#errorMessage').addClass('d-none');
+
+                    // Show success message
+                    $('#successMessage').removeClass('d-none');
+
+                    // Close the modal after a short delay
+                    setTimeout(function() {
+                        $('#editExpenseModal').modal('hide'); 
+
+                        // Reset the form and hide the success message
+                        $('#editExpenseForm')[0].reset();
+                        $('#successMessage').addClass('d-none');
+                        location.reload(); 
+                    }, 2000); 
+                } else {
+                    // Show validation errors
+                    $('#successMessage').addClass('d-none');
+
+                    $('#errorMessage').removeClass('d-none');
+                      let errorHtml = '';
+                      for (let field in response.errors) {
+                          errorHtml += `<li>${response.errors[field]}</li>`;
+                      }
+                      $('#errorList').html(errorHtml);
+                }
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error updating event:', error);
+            console.log(xhr.responseText);
+        }
+    });
+});
+
+</script>
 </body>
 </html>
 
