@@ -39,6 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     header("Location: dashboard/member_dashboard.php");
                 } elseif ($user['role'] === 'officer') {
                     header("Location: dashboard/officer_dashboard.php");
+                } elseif ($user['role'] === 'admin') {
+                    header("Location: dashboard/admin_dashboard.php");
+                   
                 } else {
                     $errors[] = "Unknown user role.";
                 }
