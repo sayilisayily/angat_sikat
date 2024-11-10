@@ -148,7 +148,7 @@ $('#editEventForm').on('submit', function(event) {
                     }, 2000); 
                 } else {
                     // Show validation errors
-                    $('#editsuccessMessage').addClass('d-none');
+                    $('#successMessage').addClass('d-none');
 
                     $('#errorMessage').removeClass('d-none');
                       let errorHtml = '';
