@@ -1,5 +1,9 @@
 <?php
 include '../connection.php';
+include '../session_check.php';  // Assuming session_check.php sets the organization_id in the session
+
+$errors = [];
+$data = [];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get inputs from the form
