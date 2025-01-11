@@ -83,6 +83,7 @@ $(".edit-btn").on("click", function () {
         $("#edit_firstname").val(response.data.first_name); // Match DB field names
         $("#edit_lastname").val(response.data.last_name);
         $("#edit_email").val(response.data.email);
+        $("#edit_position").val(response.data.position);
         $("#edit_organization").val(response.data.organization_id); // Use organization_id
 
         // Clear previous error messages
