@@ -117,7 +117,7 @@ if ($result->num_rows > 0) {
 }
 
 // Fetching income rows
-$income_query = "SELECT amount, reference FROM income WHERE organization_id = $organization_id AND archived=0";
+$income_query = "SELECT title, amount, reference FROM income WHERE organization_id = $organization_id AND archived=0";
 $income_result = mysqli_query($conn, $income_query);
 
 $inflows = []; // Array to store the fetched income rows
@@ -166,14 +166,14 @@ $html1 = '
 foreach ($inflows as $inflow) {
     $html1 .= '
     <tr>
-        <td>Income</td>
+        <td>'. htmlspecialchars($inflow['title']) .'</td>
         <td>' . number_format($inflow['amount'], 2) . '</td>
         <td>' . htmlspecialchars($inflow['reference']) . '</td>
     </tr>';
 }
 $html1 .= '
     <tr>
-        <td><b>Total Inflows</b></td>
+        <td><b>TOTAL INFLOWS</b></td>
         <td colspan="2">' . number_format($total_inflows, 2) . '</td>
     </tr>
 </table>';
@@ -183,7 +183,7 @@ $query = "
     SELECT 
         category,
         SUM(amount) AS subtotal,
-        GROUP_CONCAT(CONCAT(description, ' (', reference, ')') SEPARATOR ', ') AS details
+        GROUP_CONCAT(CONCAT(title, ' (', reference, ')') SEPARATOR ', ') AS details
     FROM expenses
     WHERE organization_id = $organization_id
     GROUP BY category
@@ -256,10 +256,10 @@ if ($organization_result && mysqli_num_rows($organization_result) > 0) {
 // Fetch the latest Cash Balance End from balance_history table
 $balance_query = "
     SELECT 
-        cash_balance_end 
+        balance AS cash_balance_end
     FROM balance_history 
     WHERE organization_id = $organization_id 
-    ORDER BY balance_date DESC 
+    ORDER BY updated_at DESC 
     LIMIT 1
 ";
 $balance_result = mysqli_query($conn, $balance_query);
@@ -275,7 +275,7 @@ if ($balance_result && mysqli_num_rows($balance_result) > 0) {
 $html3 = '
 <table border="1" cellpadding="5" cellspacing="0" style="width:100%; text-align:left;">
     <tr>
-        <td><b>Cash Balance Beginning (from previous term)</b></td>
+        <td><b>CASH BALANCE BEGINNING (from previous term)</b></td>
         <td>' . number_format($beginning_balance, 2) . '</td>
     </tr>
     <tr>
@@ -283,7 +283,7 @@ $html3 = '
         <td>' . number_format($total_inflows, 2) . '</td>
     </tr>
     <tr>
-        <td><b>Total Outflows</b></td>
+        <td><b>TOTAL OUTFLOWS</b></td>
         <td>' . number_format($total_outflows, 2) . '</td>
     </tr>
     <tr>
@@ -291,15 +291,15 @@ $html3 = '
         <td></td>
     </tr>
     <tr>
-        <td>Cash on Bank</td>
+        <td>CASH ON BANK</td>
         <td>' . number_format($cash_on_bank, 2) . '</td>
     </tr>
     <tr>
-        <td>Cash on Hand</td>
+        <td>CASH ON HAND</td>
         <td>' . number_format($cash_on_hand, 2) . '</td>
     </tr>
     <tr>
-        <td><b>Cash Balance End</b></td>
+        <td><b>CASH BALANCE END</b></td>
         <td>' . number_format($cash_balance_end, 2) . '</td>
     </tr>
 </table>';
@@ -343,7 +343,7 @@ $pdf->Ln(10); // Space between sections
 // Example Names for Signatures
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Ln(10); // Space for signatures above names
-$pdf->Cell(80, 10, "JAMES MATHEW S. BELEN", 0, 0, 'L', 0);
+$pdf->Cell(80, 10, "GUILLIER E. PARULAN", 0, 0, 'L', 0);
 $pdf->Cell(80, 10, "MICHAEL EDWARD T. ARMINTIA, REE", 0, 1, 'L', 0);
 $pdf->SetFont($arial, 'B', 11);
 $pdf->Cell(80, 10, "President, CSG", 0, 0, 'L', 0);
@@ -361,7 +361,7 @@ $pdf->SetFont($arial, 'B', 11);
 $pdf->Cell(0, 0, "Coordinator, SDS", 0, 1, 'C', 0, '', 1);
 
 // Generate the file name
-    $file_name = "Permit_to_Withdraw_" . $eventTitle . '_' . time() . ".pdf";
+    $file_name = "Permit_to_Withdraw_" . time() . ".pdf";
 
     // Use the 'D' parameter to force download
     $pdf->Output($file_name, 'I'); 
