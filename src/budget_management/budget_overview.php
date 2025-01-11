@@ -827,10 +827,6 @@
                                 <input type="hidden" id="allocationId" name="allocation_id">
                                 <!-- Hidden input for allocation ID -->
                                 <div class="mb-3">
-                                    <label for="allocated_budget" class="form-label">Allocated Budget</label>
-                                    <input type="number" class="form-control" id="allocated_budget" name="allocated_budget" required>
-                                </div>
-                                <div class="mb-3">
                                     <label for="category" class="form-label">Category</label>
                                     <select class="form-control" id="category" name="category" required>
                                         <option value="">Select Category</option>
@@ -855,6 +851,10 @@
                                         }
                                         ?>
                                     </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="allocated_budget" class="form-label">Allocated Budget</label>
+                                    <input type="number" class="form-control" id="allocated_budget" name="allocated_budget" required>
                                 </div>
                                 <input type="hidden" name="organization_id" value="<?php echo htmlspecialchars($organization_id); ?>">
                             </form>
