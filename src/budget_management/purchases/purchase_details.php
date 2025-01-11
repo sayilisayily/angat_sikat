@@ -133,7 +133,7 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a class="text-nowrap logo-img">
-                        <img src="../assets/images/logos/neon_sikat.png" alt="Angat Sikat Logo" class="logo contain"
+                        <img src="../../assets/images/logos/neon_sikat.png" alt="Angat Sikat Logo" class="logo contain"
                             style="width: 60px; height: auto;" />
                     </a>
                     <span class="logo-text">ANGATSIKAT</span>
@@ -145,7 +145,7 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <ul id="sidebarnav">
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="../dashboard/officer_dashboard.php" aria-expanded="false">
+                            <a class="sidebar-link" href="../../dashboard/officer_dashboard.php" aria-expanded="false">
                                 <i class="bx bxs-dashboard" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Dashboard</span>
                             </a>
@@ -244,27 +244,27 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                     <span class="hide-menu">Budget</span>
                                 </a>
                                 <div class="submenu">
-                                    <a href="../budget_management/budget_overview.php">Overview</a>
-                                    <a href="../budget_management/financial_plan.php">Plan</a>
+                                    <a href="../../budget_management/budget_overview.php">Overview</a>
+                                    <a href="../../budget_management/financial_plan.php">Plan</a>
                                 </div>
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../budget_management/purchases/purchases.php" aria-expanded="false">
+                                <a class="sidebar-link" href="../../budget_management/purchases/purchases.php" aria-expanded="false">
                                     <i class="bx bxs-purchase-tag" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Purchases</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../budget_management/maintenance/maintenance.php" aria-expanded="false">
+                                <a class="sidebar-link" href="../../budget_management/maintenance/maintenance.php" aria-expanded="false">
                                     <i class="bx bxs-cog" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">MOE</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../activity_management/activities.php" aria-expanded="false"
+                                <a class="sidebar-link" href="../../activity_management/activities.php" aria-expanded="false"
                                     data-tooltip="Manage Events">
                                     <i class="bx bx-calendar-event" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Activities</span>
@@ -272,7 +272,7 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../activity_management/calendar.php" aria-expanded="false"
+                                <a class="sidebar-link" href="../../activity_management/calendar.php" aria-expanded="false"
                                     data-tooltip="Manage Events">
                                     <i class="bx bx-calendar" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Calendar</span>
@@ -280,7 +280,7 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../budget_management/budget_approval_table.php" aria-expanded="false"
+                                <a class="sidebar-link" href="../../budget_management/budget_approval_table.php" aria-expanded="false"
                                     data-tooltip="Manage Events">
                                     <i class="bx bx-book-content" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Approval</span>
@@ -294,8 +294,8 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                     <span class="hide-menu">Transactions</span>
                                 </a>
                                 <div class="submenu">
-                                    <a href="../income_and_expenses/income.php" onclick="closeSubmenus()">Income</a>
-                                    <a href="../income_and_expenses/expenses.php" onclick="closeSubmenus()">Expenses</a>
+                                    <a href="../../income_and_expenses/income.php" onclick="closeSubmenus()">Income</a>
+                                    <a href="../../income_and_expenses/expenses.php" onclick="closeSubmenus()">Expenses</a>
                                 </div>
                             </li>
                         </ul>
@@ -334,9 +334,9 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                         </li>
 
                         <li class="sidebar-item profile-container">
-                                <a class="sidebar-link" href="../user/profile.php" aria-expanded="false" data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
+                                <a class="sidebar-link" href="../../user/profile.php" aria-expanded="false" data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
                                 <div class="profile-pic-border" style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-                                    <img src="<?php echo !empty($profile_picture) ? '../user/uploads/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
+                                    <img src="<?php echo !empty($profile_picture) ? '../../user/uploads/' . htmlspecialchars($profile_picture) : '../../user/uploads/default.png'; ?>"
                                         alt="Profile Picture" class="profile-pic" style="max-height: 100%; max-width: 100%; object-fit: cover;" />
                                 </div>
                                 <span class="profile-name" style="margin-left: 0.5rem; font-size: 0.9rem;">
@@ -391,7 +391,7 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                     <a href="#" class="dropdown-toggle d-flex align-items-center"
                                         data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
                                         <img class="border border-dark rounded-circle"
-                                            src="<?php echo !empty($profile_picture) ? '../user/' . $profile_picture : '../user/uploads/default.png'; ?>"
+                                            src="<?php echo !empty($profile_picture) ? '../../user/' . $profile_picture : '../../user/uploads/default.png'; ?>"
                                             alt="Profile" style="width: 40px; height: 40px; margin-left: 10px;">
                                         <span class="visually-hidden">
                                             <?php echo htmlspecialchars($user['username']); ?>
