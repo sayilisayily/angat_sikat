@@ -14,16 +14,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $last_name = trim(mysqli_real_escape_string($conn, $_POST['last_name']));
     $organization = intval($_POST['organization']);
     $email = trim(mysqli_real_escape_string($conn, $_POST['email']));
-    $password = $_POST['password'];
+    $position = mysqli_real_escape_string($conn, $_POST['position']); // New field for position
 
     // Validation
-    if (empty($username) || empty($first_name) || empty($last_name) || empty($email) || empty($password)) {
+    if (empty($username) || empty($first_name) || empty($last_name) || empty($email) || empty($position)) {
         $errors[] = "All fields are required.";
     }
 
-    // Check if email is valid
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid email format.";
+    // Check if email is valid and ends with "cvsu.edu.ph"
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL) || !str_ends_with($email, '@cvsu.edu.ph')) {
+        $errors[] = "Invalid email. Email must be a valid format and end with 'cvsu.edu.ph'.";
+    }
+
+    // Check if position is valid
+    if (!in_array($position, ['President', 'Treasurer'])) {
+        $errors[] = "Invalid position. Position must be either 'President' or 'Treasurer'.";
     }
 
     // Check if username or email already exists (excluding the current user)
@@ -37,30 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Username or email is already taken.";
     }
 
-    // Verify the provided password matches the user's current password
-    $password_query = "SELECT password FROM users WHERE user_id = ?";
-    $stmt = $conn->prepare($password_query);
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 0) {
-        $errors[] = "User not found.";
-    } else {
-        $user = $result->fetch_assoc();
-        if (!password_verify($password, $user['password'])) {
-            $errors[] = "Incorrect password.";
-        }
-    }
-
     // If no errors, proceed with update
     if (empty($errors)) {
-        // Update the user in the database (password remains unchanged)
+        // Update the user in the database
         $update_query = "UPDATE users 
-                         SET username = ?, first_name = ?, last_name = ?, organization_id = ?, email = ? 
+                         SET username = ?, first_name = ?, last_name = ?, organization_id = ?, email = ?, position = ? 
                          WHERE user_id = ?";
         $stmt = $conn->prepare($update_query);
-        $stmt->bind_param("sssisi", $username, $first_name, $last_name, $organization, $email, $user_id);
+        $stmt->bind_param("sssissi", $username, $first_name, $last_name, $organization, $email, $position, $user_id);
 
         if ($stmt->execute()) {
             $data['success'] = true;

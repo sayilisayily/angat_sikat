@@ -258,6 +258,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                         <th>Last Name</th>
                         <th>Email</th>
                         <th>Organization</th>
+                        <th>Position</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -278,6 +279,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                                 <td>{$userRow['last_name']}</td>
                                 <td>{$userRow['email']}</td>
                                 <td>{$userRow['organization_name']}</td>
+                                <td>{$userRow['position']}</td>
                                 <td>
                                     <button class='btn btn-primary btn-sm edit-btn mb-3' 
                                             data-bs-toggle='modal' 
@@ -366,6 +368,18 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                                     echo "<option value=''>No Organizations Available</option>";
                                     }
                                     ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Position Row -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="position" class="form-label">Position</label>
+                                <select class="form-select" name="position" id="position" required>
+                                    <option value="">Select Position</option>
+                                    <option value="President">President</option>
+                                    <option value="Treasurer">Treasurer</option>
                                 </select>
                             </div>
                         </div>
@@ -478,14 +492,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                             </div>
                         </div>
 
-                        <!-- Password and Confirm Password Row -->
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class='bx bx-lock'></i></span>
-                                <input type="password" class="form-control" id="edit_password" name="password" placeholder="Password" required>
-                            </div>
+                        <!-- Position Row -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="position" class="form-label">Position</label>
+                                <select class="form-select" name="position" id="edit_position" required>
+                                    <option value="">Select Position</option>
+                                    <option value="President">President</option>
+                                    <option value="Treasurer">Treasurer</option>
+                                </select>
                             </div>
                         </div>
                         
