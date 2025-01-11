@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login</title>
+  <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png" />
+  <link rel="stylesheet" href="../assets/css/styles.min.css" />
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("../user/CCAT-Campus-Scaled.jpg");
+      background-size: cover;
+      background-position: center;
+      filter: blur(8px);
+      z-index: 1;
+    }
+
+    .page-wrapper {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.9);
+      max-width: 850px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      z-index: 2;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .form-section {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .form-check-input.primary {
+      background-color: #00542f;
+      border-color: #00542f;
+    }
+
+    .form-check-input.primary:checked {
+      background-color: #00542f;
+      border-color: #00542f;
+    }
+
+    .input-group.password-input {
+      position: relative;
+    }
+
+    .input-group.password-input .toggle-password {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #00542f;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div class="container d-flex align-items-center justify-content-center" style="max-width: 900px">
+      <div class="form-container shadow-lg rounded">
+        <div class="form-section">
+          <a href="" class="text-center d-block py-3 w-100"
+            style="display: flex; flex-direction: column; align-items: center">
+            <img src="../assets/images/logos/neon_sikat.png" alt="Logo" width="auto" height="100" />
+            <span style="
+                  font-weight: bold;
+                  font-size: 20px;
+                  color:rgb(0, 102, 102);
+                  display: block;
+                  text-align: center;
+                ">ANGAT SIKAT</span>
+          </a>
+          <p class="text-center mb-4" style="color: #6c757d; font-size: 0.9rem">
+            Budget and Expense Tracker for Organization in <br>
+            Cavite State University CCAT CAMPUS
+          </p>
+
+          <form id="loginForm" action="login.php" method="post">
+            <div class="mb-3 input-group">
+              <span class="input-group-text"><i class="bx bx-user"></i></span>
+              <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
+            </div>
+            <div class="mb-4 input-group password-input">
+              <span class="input-group-text"><i class="bx bx-lock"></i></span>
+              <input type="password" class="form-control" name="password" id="password" placeholder="Password"
+                required />
+              <i class="bx bx-show toggle-password" id="togglePassword"></i>
+            </div>
+            <div class="d-flex align-items-center justify-content-between mb-4">
+              <div class="form-check">
+                <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" />
+                <label class="form-check-label" for="flexCheckChecked" style="color: #00542f">Remember Me</label>
+              </div>
+              <a class="fw-bold" href="../user/reset_password.html" style="color: #00542f">Forgot Password?</a>
+            </div>
+            <button type="submit" class="btn w-100 mb-4" style="
+                  background-color: #3e7044;
+                  color: white;
+                  width: 100%;
+                  padding: 10px;
+                  border-radius: 8px;
+                ">
+              Sign In
+            </button>
+          </form>
+        </div>
+
+        <div class="col-md-6 d-none d-md-block">
+          <div class="image-container" style="height: 100%; display: flex; align-items: center">
+            <img src="login.jpg" alt="Login Illustration" class="img-fluid rounded" style="
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  object-position: center;
+                " />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+  <script>
+    // JavaScript to toggle password visibility
+    document.getElementById("togglePassword").addEventListener("click", function () {
+      const passwordField = document.getElementById("password");
+      const toggleIcon = this;
+      if (passwordField.type === "password") {
+        passwordField.type = "text";
+        toggleIcon.classList.remove("bx-show");
+        toggleIcon.classList.add("bx-hide");
+      } else {
+        passwordField.type = "password";
+        toggleIcon.classList.remove("bx-hide");
+        toggleIcon.classList.add("bx-show");
+      }
+    });
+  </script>
+</body>
+
+</html>
