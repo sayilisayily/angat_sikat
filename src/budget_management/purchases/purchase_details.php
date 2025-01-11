@@ -80,8 +80,6 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
     <title>Purchase Details</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png"/>
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
-    <!--Custom CSS for Sidebar-->
-    <link rel="stylesheet" href="../../html/sidebar.css" />
     <!--Custom CSS for Activities-->
     <link rel="stylesheet" href="../../activity_management/css/activities.css" />
     <!--Boxicon-->
