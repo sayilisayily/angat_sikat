@@ -991,10 +991,6 @@ include '../organization_query.php';
                             </div>
                             <div class="container">
                                 <div class="container mt-5">
-                                    <button id="pdfButton" class="btn btn-success mb-3">
-                                        <i class="fas fa-download"></i> Download PDF
-                                    </button>
-
                                     <div id="tableContent" class="table-responsive">
                                         <!-- Added table-responsive class -->
                                         <table class="table table-bordered">
@@ -1044,16 +1040,6 @@ include '../organization_query.php';
                             <script
                                 src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-                            <script>
-
-                                // PDF download function
-                                document.getElementById('pdfButton').addEventListener('click', function () {
-                                    const element = document.getElementById('tableContent');
-                                    html2pdf()
-                                        .from(element)
-                                        .save('recent_transact.pdf'); // PDF named as "liquidation_report.pdf"
-                                });
-                            </script>
                             <!--Recent Transaction dashboard end-->
 
                             <?php
