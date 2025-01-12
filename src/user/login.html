@@ -49,11 +49,8 @@
       z-index: 2;
       display: flex;
       flex-direction: row;
-      /* Keep row layout */
       max-width: 800px;
-      /* Set max width */
       width: 90%;
-      /* Responsive width */
     }
 
     .form-section {
@@ -63,7 +60,6 @@
 
     .input-group {
       margin-bottom: 15px;
-      /* Adjusted spacing */
     }
 
     .input-group.password-input {
@@ -75,6 +71,8 @@
       right: 10px;
       top: 50%;
       transform: translateY(-50%);
+      border: none;
+      background: none;
       cursor: pointer;
       color: #00542f;
       font-size: 1.5rem;
@@ -85,13 +83,11 @@
       color: white;
       border-radius: 8px;
       padding: 12px;
-      /* Adjusted padding */
       width: 100%;
     }
 
     .image-container {
       flex: 1;
-      /* Allow image container to take equal space */
       display: flex;
       align-items: center;
       justify-content: center;
@@ -99,20 +95,16 @@
 
     .image-container img {
       max-width: 100%;
-      /* Make image responsive */
       height: auto;
-      /* Maintain aspect ratio */
     }
 
     @media (max-width: 768px) {
       .form-container {
         flex-direction: column;
-        /* Stack elements on small screens */
       }
 
       .image-container {
         display: none;
-        /* Hide image on mobile */
       }
     }
   </style>
@@ -148,7 +140,9 @@
               <span class="input-group-text"><i class="bx bx-lock"></i></span>
               <input type="password" class="form-control" name="password" id="password" placeholder="Password"
                 required />
-              <i class="bx bx-show toggle-password" id="togglePassword"></i>
+              <button type="button" class="toggle-password" id="togglePassword">
+                <i class="bx bx-show"></i>
+              </button>
             </div>
             <button type="submit" class="btn mb-4">
               Sign In
@@ -165,12 +159,11 @@
 
   <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
   <script>
     // JavaScript to toggle password visibility
     document.getElementById("togglePassword").addEventListener("click", function () {
       const passwordField = document.getElementById("password");
-      const toggleIcon = this;
+      const toggleIcon = this.querySelector("i");
       if (passwordField.type === "password") {
         passwordField.type = "text";
         toggleIcon.classList.remove("bx-show");
