@@ -494,15 +494,12 @@ include '../organization_query.php';
 
                             if (response.success) {
                                 // Show notification
-                                $("#notification").fadeIn().delay(2000).fadeOut(); // Show notification for 2 seconds
-
-                                setTimeout(function () {
-                                    // Redirect to profile info or edit form after showing the notification
+                                $("#notification").fadeIn().delay(2000).fadeOut(function() {
+                                    // Redirect after notification
                                     window.location.href = 'profile_info.php'; // Change this to your desired redirect URL
-                                }, 2000);
+                                });
                             } else {
-                                $("#editSuccessMessage").addClass("d-none");
-                                $("#editErrorMessage").removeClass("d-none");
+                                // Handle errors
                                 let errorHtml = "";
                                 for (let field in response.errors) {
                                     errorHtml += `<li>${response.errors[field]}</li>`;
