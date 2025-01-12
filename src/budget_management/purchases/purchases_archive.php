@@ -20,7 +20,7 @@ $result = $conn->query($sql);
 
 <head>
     <title>Purchases Archive</title>
-    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png"/>
+    <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/favicon_sikat.png"/>
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
     <!--Custom CSS for Sidebar-->
     <link rel="stylesheet" href="../../html/sidebar.css" />
