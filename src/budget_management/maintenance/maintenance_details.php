@@ -437,7 +437,7 @@ if (isset($_GET['maintenance_id']) && !empty($_GET['maintenance_id'])) {
                                         <li><a class="dropdown-item" href="../user/profile.php"><i
                                                     class="bx bx-user"></i> My Profile</a>
                                         </li>
-                                        <li><a class="dropdown-item" href="../user/logout.php"><i
+                                        <li><a class="dropdown-item" href="../../user/logout.php"><i
                                                     class="bx bx-log-out"></i> Logout</a></li>
                                     </ul>
                                 </div>
