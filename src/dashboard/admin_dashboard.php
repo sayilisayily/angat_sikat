@@ -487,8 +487,8 @@ include '../organization_query.php';
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="../organization_management/organizations.php" aria-expanded="false"
-                                data-tooltip="Organizations">
+                            <a class="sidebar-link" href="../organization_management/organizations.php"
+                                aria-expanded="false" data-tooltip="Organizations">
                                 <i class="bx bx-group" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Organizations</span>
                             </a>
@@ -503,24 +503,27 @@ include '../organization_query.php';
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="../budget_management/admin_budget_approval_table.php" aria-expanded="false"
-                                data-tooltip="Events">
+                            <a class="sidebar-link" href="../budget_management/admin_budget_approval_table.php"
+                                aria-expanded="false" data-tooltip="Events">
                                 <i class="bx bx-book-content" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Approval</span>
                             </a>
                         </li>
 
                         <li class="sidebar-item profile-container">
-                            <a class="sidebar-link" href="../user/admin_profile.php" aria-expanded="false" data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
-                            <div class="profile-pic-border" style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-                                <img src="<?php echo !empty($profile_picture) ? '../user/uploads/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
-                                    alt="Profile Picture" class="profile-pic" style="max-height: 100%; max-width: 100%; object-fit: cover;" />
-                            </div>
-                            <span class="profile-name" style="margin-left: 0.5rem; font-size: 0.9rem;">
-                                <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
-                            </span>
-                        </a>
-                    </li>
+                            <a class="sidebar-link" href="../user/admin_profile.php" aria-expanded="false"
+                                data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
+                                <div class="profile-pic-border"
+                                    style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                                    <img src="<?php echo !empty($profile_picture) ? '../user/uploads/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
+                                        alt="Profile Picture" class="profile-pic"
+                                        style="max-height: 100%; max-width: 100%; object-fit: cover;" />
+                                </div>
+                                <span class="profile-name" style="margin-left: 0.5rem; font-size: 0.9rem;">
+                                    <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
+                                </span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -598,16 +601,16 @@ include '../organization_query.php';
             <!--  Header End -->
 
 
-            <div class="body-wrapper-inner">
-                <div class="container-fluid">
-                    <!--  Row 1 -->
-                    <div class="row">
+
+            <div class="container-fluid">
+                <!--  Row 1 -->
+                <div class="row">
                     <!-- Welcome Message with adjusted left margin -->
                     <h1 class="welcome-message h5 fw-bold mb-4">
-                            <span class="text-warning fw-bold me-2">|</span>Hello,
-                            <?php echo htmlspecialchars($user['first_name']); ?>!
-                        </h1>
-                    
+                        <span class="text-warning fw-bold me-2">|</span>Hello,
+                        <?php echo htmlspecialchars($user['first_name']); ?>!
+                    </h1>
+
                     <!--Upcoming Events-->
                     <div>
                         <h3 class="title h5 fw-bold mb-4 mt-5">
@@ -982,63 +985,61 @@ include '../organization_query.php';
 
                             <!--Organizations Table-->
                             <div>
-                                    <h3 class="title h5 fw-bold mb-4 mt-5">
-                                        <span class="text-warning fw-bold me-2">|</span>Organization
-                                    </h3>
-                                </div>
-                                <div class="container">
-                                    <div class="container mt-5">
-                                        <button id="pdfButton" class="btn btn-success mb-3">
-                                            <i class="fas fa-download"></i> Download PDF
-                                        </button>
-
-                                        <div id="tableContent" class="table-responsive"> <!-- Added table-responsive class -->
-                                            <table class="table table-bordered">
-                                                <thead class="thead-light fw-bold">
-                                                    <tr class="fw-bold fs-4 text-dark">
-                                                        <th>Type</th>
-                                                        <th>Description</th>
-                                                        <th>Amount</th>
-                                                        <th>Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php if (!empty($transactions)): ?>
-                                                        <?php foreach ($transactions as $transaction): ?>
-                                                            <tr>
-                                                                <td><?php echo htmlspecialchars($transaction['type']); ?></td>
-                                                                <td><?php echo htmlspecialchars($transaction['description']); ?></td>
-                                                                <td>₱<?php echo number_format($transaction['amount'], 2); ?></td>
-                                                                <td><?php echo htmlspecialchars(date("F j, Y", strtotime($transaction['date']))); ?></td>
-                                                            </tr>
-                                                        <?php endforeach; ?>
-                                                    <?php else: ?>
-                                                        <tr>
-                                                            <td colspan="4" class="text-center">No transactions found for this organization.</td>
-                                                        </tr>
-                                                    <?php endif; ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                <h3 class="title h5 fw-bold mb-4 mt-5">
+                                    <span class="text-warning fw-bold me-2">|</span>Organization
+                                </h3>
+                            </div>
+                            <div class="container">
+                                <div class="container mt-5">
+                                    <div id="tableContent" class="table-responsive">
+                                        <!-- Added table-responsive class -->
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light fw-bold">
+                                                <tr class="fw-bold fs-4 text-dark">
+                                                    <th>Type</th>
+                                                    <th>Description</th>
+                                                    <th>Amount</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php if (!empty($transactions)): ?>
+                                                <?php foreach ($transactions as $transaction): ?>
+                                                <tr>
+                                                    <td>
+                                                        <?php echo htmlspecialchars($transaction['type']); ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo htmlspecialchars($transaction['description']); ?>
+                                                    </td>
+                                                    <td>₱
+                                                        <?php echo number_format($transaction['amount'], 2); ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php echo htmlspecialchars(date("F j, Y", strtotime($transaction['date']))); ?>
+                                                    </td>
+                                                </tr>
+                                                <?php endforeach; ?>
+                                                <?php else: ?>
+                                                <tr>
+                                                    <td colspan="4" class="text-center">No transactions found for this
+                                                        organization.</td>
+                                                </tr>
+                                                <?php endif; ?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
+                            </div>
 
                             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-                            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-                            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                            <script
+                                src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+                            <script
+                                src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
                             <script
                                 src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-                            <script>
-
-                                // PDF download function
-                                document.getElementById('pdfButton').addEventListener('click', function () {
-                                    const element = document.getElementById('tableContent');
-                                    html2pdf()
-                                        .from(element)
-                                        .save('recent_transact.pdf'); // PDF named as "liquidation_report.pdf"
-                                });
-                            </script>
                             <!--Recent Transaction dashboard end-->
 
                             <?php
@@ -1060,63 +1061,63 @@ include '../organization_query.php';
                             $events = [];
                             }
                             ?>
-                                </div>
+                        </div>
 
-                            <style>
-                                @media (max-width: 768px) {
-                                    .responsive-container {
-                                        overflow-x: auto;
-                                        /* Enable horizontal scrolling */
-                                        width: 100%;
-                                        /* Full width on smaller screens */
-                                    }
-
-                                    .balance-report {
-                                        width: 725px;
-                                        /* Maintain original width on larger screens */
-                                    }
+                        <style>
+                            @media (max-width: 768px) {
+                                .responsive-container {
+                                    overflow-x: auto;
+                                    /* Enable horizontal scrolling */
+                                    width: 100%;
+                                    /* Full width on smaller screens */
                                 }
-                            </style>
+
+                                .balance-report {
+                                    width: 725px;
+                                    /* Maintain original width on larger screens */
+                                }
+                            }
+                        </style>
 
 
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function () {
-                                    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                                    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-                                        new bootstrap.Tooltip(tooltipTriggerEl);
-                                    });
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function () {
+                                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                                tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                                    new bootstrap.Tooltip(tooltipTriggerEl);
                                 });
-                            </script>
+                            });
+                        </script>
 
-                            <!-- Users start -->
-                            <div>
-                                <h3 class="title h5 fw-bold mb-10 mt-5">
-                                    <span class="text-warning fw-bold me-2">|</span>Users
-                                </h3>
+                        <!-- Users start -->
+                        <div>
+                            <h3 class="title h5 fw-bold mb-10 mt-5">
+                                <span class="text-warning fw-bold me-2">|</span>Users
+                            </h3>
 
-                                <?php 
+                            <?php 
                                     $sql = "SELECT * FROM events WHERE archived = 0 AND organization_id = $organization_id ORDER BY event_id DESC LIMIT 5";
                                     $result = $conn->query($sql);
                                 ?>
-                                <div class="container">
-                                    <div id="tableContent" class="table-responsive"> <!-- Added table-responsive class -->
-                                        <table class="table table-bordered">
-                                            <thead class="thead-light fw-bold">
-                                                <tr>
-                                                    <th rowspan=2>Title</th>
-                                                    <th rowspan=2>Venue</th>
-                                                    <th colspan=2 style="text-align: center;"> Date </th>
-                                                    <th rowspan=2>Type</th>
-                                                    <th rowspan=2>Status</th>
-                                                    <th rowspan=2>Accomplished</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Start</th>
-                                                    <th>End</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php
+                            <div class="container">
+                                <div id="tableContent" class="table-responsive"> <!-- Added table-responsive class -->
+                                    <table class="table table-bordered">
+                                        <thead class="thead-light fw-bold">
+                                            <tr>
+                                                <th rowspan=2>Title</th>
+                                                <th rowspan=2>Venue</th>
+                                                <th colspan=2 style="text-align: center;"> Date </th>
+                                                <th rowspan=2>Type</th>
+                                                <th rowspan=2>Status</th>
+                                                <th rowspan=2>Accomplished</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Start</th>
+                                                <th>End</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
                                                 if ($result->num_rows > 0) {
                                                     while ($row = $result->fetch_assoc()) {
                                                         $checked = $row['accomplishment_status'] ? 'checked' : '';
@@ -1149,47 +1150,50 @@ include '../organization_query.php';
                                                     echo "<tr><td colspan='9' class='text-center'>No events found</td></tr>";
                                                 }
                                                 ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <!-- Users end -->
+                        </div>
+                        <!-- Users end -->
 
-                            <style>
-                                .custom-btn {
-                                    background-color: #00542F;
-                                    border-color: #00542F;
-                                    color: #ffffff; /* Text color */
-                                }
+                        <style>
+                            .custom-btn {
+                                background-color: #00542F;
+                                border-color: #00542F;
+                                color: #ffffff;
+                                /* Text color */
+                            }
 
-                                .custom-btn:hover {
-                                    background-color: #004026; /* Darker shade for hover */
-                                    border-color: #004026;
-                                }
-                            </style>
+                            .custom-btn:hover {
+                                background-color: #004026;
+                                /* Darker shade for hover */
+                                border-color: #004026;
+                            }
+                        </style>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+                        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+                        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+                        <script
+                            src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-<script>
-    // PDF download function
-    document.getElementById('pdfButton').addEventListener('click', function () {
-        const element = document.getElementById('tableContent');
-        html2pdf()
-            .from(element)
-            .save('transaction_report.pdf');
-    });
-</script>
-            </div>
-            <div class="py-6 px-6 text-center d-none d-sm-block">
-                <p class="mb-0 fs-4">© Copyright 2025 [ CVSU CCAT STUDENTS ] - All Rights Reserved</p>
+                        <script>
+                            // PDF download function
+                            document.getElementById('pdfButton').addEventListener('click', function () {
+                                const element = document.getElementById('tableContent');
+                                html2pdf()
+                                    .from(element)
+                                    .save('transaction_report.pdf');
+                            });
+                        </script>
+                    </div>
+                    <div class="py-6 px-6 text-center d-none d-sm-block">
+                        <p class="mb-0 fs-4">© Copyright 2025 [ CVSU CCAT STUDENTS ] - All Rights Reserved</p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    </div>
     </div>
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
