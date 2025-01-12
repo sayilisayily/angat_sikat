@@ -19,7 +19,7 @@ $result = $conn->query($sql);
 <html lang="en">
 
 <head>
-    <title>MOE Archive</title>
+    <title>Purchases Archive</title>
     <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/favicon.png" />
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
     <!--Custom CSS for Sidebar-->
