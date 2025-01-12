@@ -810,7 +810,7 @@ include '../organization_query.php';
                                 /* Maintain aspect ratio */
                                 margin: 0 auto;
                                 /* Center logo */
-                                margin-left: 30px;
+                                margin-left: 43px;
                             }
 
                             .organization-details {
