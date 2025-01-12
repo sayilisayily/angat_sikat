@@ -359,7 +359,8 @@ $result = $conn->query($sql);
                                         data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
                                         <img class="border border-dark rounded-circle"
                                             src="<?php echo !empty($profile_picture) ? '../user/' . $profile_picture : '../user/uploads/default.png'; ?>"
-                                            alt="Profile" style="width: 40px; height: 40px; margin-left: 10px;">
+                                            alt="Profile"
+                                            style="width: 40px; height: 40px; margin-left: 10px; object-fit: cover;">
                                         <span class="visually-hidden">
                                             <?php echo htmlspecialchars($user['username']); ?>
                                         </span>
