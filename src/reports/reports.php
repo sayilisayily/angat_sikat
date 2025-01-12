@@ -253,7 +253,7 @@
                         <li class="sidebar-item profile-container">
                                 <a class="sidebar-link" href="../user/profile.php" aria-expanded="false" data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
                                 <div class="profile-pic-border" style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-                                    <img src="<?php echo !empty($profile_picture) ? '../user/uploads/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
+                                    <img src="<?php echo !empty($profile_picture) ? '../user/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
                                         alt="Profile Picture" class="profile-pic" style="max-height: 100%; max-width: 100%; object-fit: cover;" />
                                 </div>
                                 <span class="profile-name" style="margin-left: 0.5rem; font-size: 0.9rem;">
@@ -530,57 +530,151 @@
             <div class="modal fade" id="projectProposalModal" tabindex="-1" role="dialog" aria-labelledby="projectProposalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-                        <form id="projectProposalForm">
+                        <form id="projectProposalForm" action="generate_proposal.php" method="POST" target="_blank">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="projectProposalLabel">Generate Project Proposal Report</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <!-- Form fields -->
+                                <!-- Event Title -->
+                                <div class="form-group">
+                                    <label for="proposal_title" class="form-label">Event Title</label>
+                                    <select class="form-control" id="proposal_title" name="event_title" required>
+                                        <option value="">Select Event Title</option>
+                                        <?php
+                                        // Fetch event titles with event_type 'expense' and accomplishment_status = 0
+                                        $proposal_query = "SELECT title, event_id FROM events 
+                                                        WHERE accomplishment_status = 0 AND event_status != 'Approved'
+                                                        AND organization_id = $organization_id";
+                                        $proposal_result = mysqli_query($conn, $proposal_query);
 
-                                    
-                                    
-                                <div class="form-group row mb-2">
-                                    <!-- Event Title -->
-                                    <div class="col-12">
-                                        <label for="proposal_title">Event Title</label>
-                                        <select class="form-control" id="proposal_title" name="event_title" required>
-                                            <option value="">Select Event Title</option>
-                                            <?php
-                                            // Fetch event titles with event_type 'expense' and accomplishment_status = 0
-                                            $proposal_query = "SELECT title, event_id, event_start_date, event_venue FROM events 
-                                                            WHERE accomplishment_status = 0 AND event_status != 'Approved'
-                                                            AND organization_id = $organization_id";
-                                            $proposal_result = mysqli_query($conn, $proposal_query);
-
-                                            if ($proposal_result && mysqli_num_rows($proposal_result) > 0) {
-                                                while ($proposal = mysqli_fetch_assoc($proposal_result)) {
-                                                    echo '<option value="' . htmlspecialchars($proposal['title']) . '" 
-                                                        data-event-id="' . htmlspecialchars($proposal['event_id']) . '" 
-                                                        data-venue="' . htmlspecialchars($proposal['event_venue']) . '" 
-                                                        data-start-date="' . htmlspecialchars($proposal['event_start_date']) . '">' 
-                                                        . htmlspecialchars($proposal['title']) . '</option>';
-                                                }
-                                            } else {
-                                                echo '<option value="">No events available</option>';
+                                        if ($proposal_result && mysqli_num_rows($proposal_result) > 0) {
+                                            while ($proposal = mysqli_fetch_assoc($proposal_result)) {
+                                                echo '<option value="' . htmlspecialchars($proposal['title']) . '" 
+                                                    data-event-id="' . htmlspecialchars($proposal['event_id']) . '">' 
+                                                    . htmlspecialchars($proposal['title']) . '</option>';
                                             }
-                                            ?>
-                                        </select>
+                                        } else {
+                                            echo '<option value="">No events available</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+
+                                <input type="hidden" class="form-control" id="proposal_id" name="event_id">
+
+                                <!-- Collaborators -->
+                                <div class="form-group mb-3">
+                                    <label for="collaborators" class="form-label">Collaborator(s)</label>
+                                    <div id="collaborators" class="form-check">
+                                        <!-- Add an N/A option -->
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="collaborator_na" name="collaborators[]" value="0">
+                                            <label class="form-check-label" for="collaborator_na">None</label>
+                                        </div>
+                                        <?php
+                                        // Fetch organization names
+                                        $org_query = "SELECT organization_name, organization_id FROM organizations";
+                                        $org_result = mysqli_query($conn, $org_query);
+
+                                        if ($org_result && mysqli_num_rows($org_result) > 0) {
+                                            while ($org = mysqli_fetch_assoc($org_result)) {
+                                                $org_id = htmlspecialchars($org['organization_id']);
+                                                $org_name = htmlspecialchars($org['organization_name']);
+                                                echo '<div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="collaborator_' . $org_id . '" name="collaborators[]" value="' . $org_id . '">
+                                                        <label class="form-check-label" for="collaborator_' . $org_id . '">' . $org_name . '</label>
+                                                    </div>';
+                                            }
+                                        }
+                                        ?>
                                     </div>
                                 </div>
-                                <!-- Hidden input fields-->
-                                <input type="hidden" class="form-control" id="proposal_name" name="organization_name" 
-                                    value="<?php echo htmlspecialchars($organization_name); ?>" readonly>
-                                <input type="hidden" class="form-control" id="proposal_id" name="event_id">
-                                
 
-                                <!-- Success Message Alert -->
-                                <div id="successMessage2" class="alert alert-success d-none mt-3" role="alert">
-                                    Project proposal report generated successfully!
+
+
+                                <!-- Agenda -->
+                                <div class="form-group mb-3">
+                                    <label for="agenda" class="form-label">Agenda (Select SDG Goals)</label>
+                                    <div class="form-check">
+                                        <?php
+                                        $sdg_goals = [
+                                            "SDG1- No Poverty",
+                                            "SDG2- Zero Hunger",
+                                            "SDG3- Good Health and Well-being",
+                                            "SDG4- Quality Education",
+                                            "SDG5- Gender Equality",
+                                            "SDG6- Clean Water and Sanitation",
+                                            "SDG7- Affordable and Clean Energy",
+                                            "SDG8- Decent Work and Economic Growth",
+                                            "SDG9- Industry, Innovation and Infrastructure",
+                                            "SDG10- Reduced Inequalities",
+                                            "SDG11- Sustainable Cities and Communities",
+                                            "SDG12- Responsible Consumption and Production",
+                                            "SDG13- Climate Action",
+                                            "SDG14- Life Below Water",
+                                            "SDG15- Life On Land",
+                                            "SDG16- Peace, Justice and Strong Institutions",
+                                            "SDG17- Partnership for the Goals"
+                                        ];
+                                        foreach ($sdg_goals as $goal) {
+                                            echo '<div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="agenda[]" value="' . $goal . '" id="' . $goal . '">
+                                                    <label class="form-check-label" for="' . $goal . '">' . $goal . '</label>
+                                                </div>';
+                                        }
+                                        ?>
+                                    </div>
                                 </div>
-                                <!-- Error Message Alert -->
-                                <div id="errorMessage2" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="errorList2"></ul> <!-- List for showing validation errors -->
+
+                                <!-- Rationale -->
+                                <div class="form-group mb-3">
+                                    <label for="rationale" class="form-label">Rationale</label>
+                                    <textarea class="form-control" id="rationale" name="rationale" rows="3" placeholder="Provide short rationale about your activity, focusing on who are the proponents and why this activity will be conducted." required></textarea>
+                                </div>
+
+                                <!-- Description -->
+                                <div class="form-group mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Describe the event, focusing on when and where it will happen." required></textarea>
+                                </div>
+
+                                <!-- Objectives -->
+                                <div class="form-group mb-3">
+                                    <label for="general_objective" class="form-label">General Objective</label>
+                                    <textarea class="form-control" id="general_objective" name="general_objective" rows="2" required></textarea>
+                                </div>
+                                <div id="specificObjectivesContainer" class="form-group">
+                                    <label class="form-label">Specific Objectives</label>
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control" name="specific_objectives[]" placeholder="Specific Objective">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="addSpecificObjective()">+</button>
+                                    </div>
+                                </div>
+
+                                <!-- Implementation Plan -->
+                                <div id="implementationPlanContainer" class="form-group mb-3">
+                                    <label class="form-label">Implementation Plan</label>
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control" name="activities[]" placeholder="Activity">
+                                        <input type="date" class="form-control" name="target_dates[]">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="addImplementationPlan()">+</button>
+                                    </div>
+                                </div>
+
+                                <!-- Implementing Guidelines -->
+                                <div id="implementingGuidelinesContainer" class="form-group mb-3">
+                                    <label class="form-label">Implementing Guidelines</label>
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control" name="guidelines[]" placeholder="Guideline">
+                                        <button type="button" class="btn btn-outline-secondary" onclick="addGuideline()">+</button>
+                                    </div>
+                                </div>
+
+                                <!-- Funding Source -->
+                                <div class="form-group mb-3">
+                                    <label for="funding_source" class="form-label">Funding Source</label>
+                                    <textarea class="form-control" id="funding_source" name="funding_source" rows="2" required></textarea>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -588,6 +682,7 @@
                                 <button type="submit" class="btn btn-primary">Generate Report</button>
                             </div>
                         </form>
+
                     </div>
                 </div>
             </div>

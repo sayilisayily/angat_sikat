@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 
 try {
 // Get form data
-$event_id = 31;
+$event_id =  $_POST['event_id'];
 $org_query = "SELECT organization_name FROM organizations WHERE organization_id = $organization_id";
                                     $org_result = mysqli_query($conn, $org_query);
 

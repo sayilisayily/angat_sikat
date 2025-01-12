@@ -4,7 +4,7 @@ require_once('../connection.php');
 include('../session_check.php');
 
 // Get form data
-$event_id = 30;
+$event_id =  $_POST['event_id'];
 $org_query = "SELECT organization_name FROM organizations WHERE organization_id = $organization_id";
                                     $org_result = mysqli_query($conn, $org_query);
 
@@ -17,22 +17,34 @@ $org_query = "SELECT organization_name FROM organizations WHERE organization_id 
 
 class CustomPDF extends TCPDF {
     public function Header() {
-        $this->SetFont('arial', 'I', 10); // Set font to Arial, size 11
+        $this->SetFont('play', 'I', 10); // Set font to Arial, size 11
         $this->Cell(0, 10, 'SGOA FORM 08', 0, 1, 'R'); // Right-aligned header text
     }
 
     // Footer Method
     public function Footer() {
-        $this->SetY(-30.48); // Position 1.2 inches from the bottom
-        $this->SetFont('arial', '', 10); // Set font to Arial
+        $this->SetY(-25.4); // Position 1 inch from the bottom
+        $this->SetFont('play', '', 10); // Set font
 
-        // First line: SASCO and Budget Request
-        $this->Cell(0, 10, 'SASCO', 0, 0, 'L');
-        $this->Cell(0, 10, 'Proposal', 0, 1, 'R');
-        
-        // Second line: Organization Name and Page Number
-        $this->Cell(0, 10, 'Name of Organization', 0, 0, 'L');
-        $this->Cell(0, 10, 'Page ' . $this->getAliasNumPage() . ' of ' . $this->getAliasNbPages(), 0, 0, 'R');
+        // HTML content for footer with adjusted left and right margins
+        $html = '
+        <div style="border-top: 1px solid #000; font-size: 10px; font-family: Play, sans-serif; line-height: 1; padding-left: 38.1mm; padding-right: 25.4mm;">
+            <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
+                SASCO
+            </div>
+            <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
+                Financial Statement
+            </div>
+            <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
+                Name of Organization
+            </div>
+            <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
+                Page ' . $this->getAliasNumPage() . ' of ' . $this->getAliasNbPages() . '
+            </div>
+        </div>';
+
+        // Write the HTML footer with the border
+        $this->writeHTML($html, true, false, true, false, 'L');
     }
 }
 
@@ -50,44 +62,49 @@ $pdf->AddPage();
 $pdf->SetMargins(25.4, 25.4, 25.4); // 1-inch margins (25.4mm)
 $pdf->SetAutoPageBreak(true, 30.48); // 1.2-inch bottom margin
 
-$pdf->SetFont($centurygothic, 'B', 11);
-$pdf->Cell(0, 0, '', 0, 1, 'C', 0, '', 1);
-$pdf->Cell(0, 0, 'Republic of the Philippines', 0, 1, 'C', 0, '', 1);
 
-$pdf->SetFont('Bookman Old Style', 'B', 11);
-$pdf->Cell(0, 0, 'CAVITE STATE UNIVERSITY', 0, 1, 'C', 0, '', 1);
-
-$pdf->SetFont($centuryGothicBold, 'B', 11);
-$pdf->Cell(0, 0, 'CCAT Campus', 0, 1, 'C', 0, '', 1);
-
-$pdf->SetFont($centurygothic, 'B', 11);
-$pdf->Cell(0, 0, 'Rosario, Cavite', 0, 1, 'C', 0, '', 1);
-
-$pdf->Ln(2);
-$pdf->Cell(0, 0, '(046) 437-9507 / (046) 437-6659', 0, 1, 'C', 0, '', 1);
-$pdf->Cell(0, 0, 'cvsurosario@cvsu.edu.ph', 0, 1, 'C', 0, '', 1);
-$pdf->Cell(0, 0, 'www.cvsu-rosario.edu.ph', 0, 1, 'C', 0, '', 1);
-
-// Now add the logos using HTML for images
-$html = '
-    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-        <div style="flex: 1; text-align: left;">
-            <img src="img/cvsu.jpg" width="40" height="40" />
-        </div>
-        <div style="flex: 1; text-align: right;">
-            <img src="img/cvsu.jpg" width="40" height="40" />
-        </div>
+// Set left logo using HTML
+$htmlLeftLogo = '
+    <div style="text-align: left;">
+        <img src="img/cvsu.jpg" style="width: 100px; height: 100px; margin-top: 5px;" />
     </div>
 ';
 
-// Write the HTML (images only)
-//$pdf->writeHTML($html, true, false, true, false, 'C');
+// Set right logo using HTML
+$htmlRightLogo = '
+    <div style="text-align: right;">
+        <img src="img/bagongpilipinas.jpg" style="width: 100px; height: 100px; margin-top: 5px;" />
+    </div>
+';
+
+// Add the left logo
+$pdf->writeHTMLCell(30, 40, 15, 15, $htmlLeftLogo, 0, 0, false, true, 'L', true);
+
+// Add the right logo
+$pdf->writeHTMLCell(30, 40, 165, 15, $htmlRightLogo, 0, 0, false, true, 'R', true);
+
+// Center-align the header text
+$pdf->SetFont($centurygothic, 'B', 11);
+$pdf->SetY(15); // Adjust Y to align with logos
+$pdf->Cell(0, 5, 'Republic of the Philippines', 0, 1, 'C');
+$pdf->SetFont('Bookman Old Style', 'B', 11);
+$pdf->Cell(0, 5, 'CAVITE STATE UNIVERSITY', 0, 1, 'C');
+$pdf->SetFont($centuryGothicBold, 'B', 11);
+$pdf->Cell(0, 5, 'CCAT Campus', 0, 1, 'C');
+$pdf->SetFont($centurygothic, 'B', 11);
+$pdf->Cell(0, 5, 'Rosario, Cavite', 0, 1, 'C');
+
+$pdf->Ln(2);
+$pdf->Cell(0, 5, '(046) 437-9507 / (046) 437-6659', 0, 1, 'C');
+$pdf->Cell(0, 5, 'cvsurosario@cvsu.edu.ph', 0, 1, 'C');
+$pdf->Cell(0, 5, 'www.cvsu-rosario.edu.ph', 0, 1, 'C');
+
 $pdf->Ln(10); // Add space after header
 
 
 
 // Query to fetch the event title and start date
-$query = "SELECT title, event_start_date FROM events WHERE event_id = ?";
+$query = "SELECT title, event_start_date, event_venue FROM events WHERE event_id = ?";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $event_id);
 $stmt->execute();
@@ -97,6 +114,7 @@ if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
     $eventTitle = ($row['title']); // Convert the title to uppercase
     $eventStartDate = date("F j, Y", strtotime($row['event_start_date'])); // Format the start date
+    $eventVenue = ($row['event_venue']); 
 } else {
     $eventTitle = strtoupper("Event Not Found"); // Default title if event is not found
     $eventStartDate = "N/A"; // Default date if event is not found
@@ -110,7 +128,6 @@ $pdf->SetFont($arialBold, '', 11);
 $pdf->Cell(0, 0, strtoupper($organization_name), 0, 1, 'C', 0, '', 1);
 $pdf->Ln(5);
 $pdf->Cell(0, 0, "PROJECT PROPOSAL", 0, 1, 'C', 0, '', 1);
-$pdf->Cell(0, 0, $eventTitle, 0, 1, 'C', 0, '', 1);
 $pdf->Ln(10);
 
 // Add body
@@ -133,231 +150,336 @@ $pdf->Cell($right_width, $row_height, $organization_name, 0, 1, 'L');
 // III. COLLABORATOR(S)
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Cell($left_width, $row_height, 'III. COLLABORATOR(S):', 0, 0, 'L');
-$pdf->SetFont('arial', '', 11);
-$pdf->Cell($right_width, $row_height, 'None', 0, 1, 'L');
+
+// Fetch the selected collaborators from the form
+$collaborators = isset($_POST['collaborators']) ? $_POST['collaborators'] : [];
+
+// Check if "N/A" is selected or no collaborators are provided
+if (in_array('0', $collaborators) || empty($collaborators)) {
+    $pdf->SetFont('arial', '', 11);
+    $pdf->Cell($right_width, $row_height, 'None', 0, 1, 'L');
+} else {
+    // Fetch collaborator names from the database based on selected IDs
+    $collaborator_ids = implode(',', array_map('intval', $collaborators)); // Sanitize input
+    $collab_query = "SELECT organization_name FROM organizations WHERE organization_id IN ($collaborator_ids)";
+    $collab_result = mysqli_query($conn, $collab_query);
+
+    if ($collab_result && mysqli_num_rows($collab_result) > 0) {
+        $collab_names = [];
+        while ($row = mysqli_fetch_assoc($collab_result)) {
+            $collab_names[] = $row['organization_name'];
+        }
+        $collaborator_list = implode(', ', $collab_names);
+    } else {
+        $collaborator_list = 'None';
+    }
+
+    // Output the collaborator names in the PDF
+    $pdf->SetFont('arial', '', 11);
+    $pdf->MultiCell($right_width, $row_height, $collaborator_list, 0, 'L');
+}
 
 // IV. TARGET DATE AND VENUE
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Cell($left_width, $row_height, 'IV. TARGET DATE AND VENUE:', 0, 0, 'L');
 $pdf->SetFont('arial', '', 11);
-$pdf->Cell($right_width, $row_height, 'January 10, 2025', 0, 1, 'L');
+$pdf->Cell($right_width, $row_height, $eventStartDate, 0, 1, 'L');
 $pdf->Cell($left_width, $row_height, '', 0, 0, 'L'); // Empty left cell for alignment
-$pdf->Cell($right_width, $row_height, '8 a.m. to 5 p.m. CvSU-CCAT Covered Court 1', 0, 1, 'L');
+$pdf->Cell($right_width, $row_height, $eventVenue, 0, 1, 'L');
 
 // Set column widths
 $right_column_width = 140; // Width for the SDG list
 $row_height = 6; // Row height
-
 // Add left column
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Cell($left_width, $row_height, 'V. AGENDA:', 0, 0, 'L');
 
-// Add right column with SDG list
+// Fetch selected SDGs from the form
+$agenda = isset($_POST['agenda']) ? $_POST['agenda'] : [];
+
+// Check if any SDGs are selected
+if (!empty($agenda)) {
+    // Concatenate the selected SDGs into a single string
+    $selected_agenda = implode("\n", array_map('htmlspecialchars', $agenda));
+} else {
+    // Default text if no SDGs are selected
+    $selected_agenda = 'None';
+}
+
+// Add right column with selected SDGs
 $pdf->SetFont('arial', '', 11);
-$pdf->MultiCell($right_width, $row_height, 
-    "SDG1- No Poverty\n" .
-    "SDG2- Zero Hunger\n" .
-    "SDG3- Good Health and Well-being\n" .
-    "SDG4- Quality Education\n" .
-    "SDG5- Gender Equality\n" .
-    "SDG6- Clean Water and Sanitation\n" .
-    "SDG7- Affordable and Clean Energy\n" .
-    "SDG8- Decent Work and Economic Growth\n" .
-    "SDG9- Industry, Innovation and Infrastructure\n" .
-    "SDG10- Reduced Inequalities\n" .
-    "SDG11- Sustainable Cities and Communities\n" .
-    "SDG12- Responsible Consumption and Production\n" .
-    "SDG13- Climate Action\n" .
-    "SDG14- Life Below Water\n" .
-    "SDG15- Life On Land\n" .
-    "SDG16- Peace, Justice and Strong Institutions\n" .
-    "SDG17- Partnership for the Goals", 
-    0, 'L', false, 1, '', '', true);
+$pdf->MultiCell($right_width, $row_height, $selected_agenda, 0, 'L', false, 1, '', '', true);
 
 // VI. RATIONALE
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Cell(0, 10, 'VI. RATIONALE', 0, 1);
 $pdf->SetFont('arial', '', 11);
-$pdf->MultiCell(0, 10, 
-    "Provide short rationale about your activity, focusing on who are the proponents and why this activity will be conducted.", 
-    0, 'L', false, 1, '', '', true);
+
+// Fetch rationale input
+$rationale = isset($_POST['rationale']) && !empty(trim($_POST['rationale'])) 
+    ? htmlspecialchars(trim($_POST['rationale'])) 
+    : 'Provide short rationale about your activity, focusing on who are the proponents and why this activity will be conducted.';
+
+// Output rationale to PDF
+$pdf->MultiCell(0, 10, $rationale, 0, 'L', false, 1, '', '', true);
 
 // VII. DESCRIPTION
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Cell(0, 10, 'VII. DESCRIPTION', 0, 1);
 $pdf->SetFont('arial', '', 11);
-$pdf->MultiCell(0, 10, 
-    "Describe the event, focusing on when and where it will happen.", 
-    0, 'L', false, 1, '', '', true);
 
+// Fetch description input
+$description = isset($_POST['description']) && !empty(trim($_POST['description'])) 
+    ? htmlspecialchars(trim($_POST['description'])) 
+    : 'Describe the event, focusing on when and where it will happen.';
+
+// Output description to PDF
+$pdf->MultiCell(0, 10, $description, 0, 'L', false, 1, '', '', true);
 // VIII. OBJECTIVES
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Cell(0, 10, 'VIII. OBJECTIVES', 0, 1);
 $pdf->SetFont('arial', '', 11);
 
-// Define the objectives text
-$generalObjective = "The general objective of this activity is to………………………………… Specifically, it aims to:";
-$objectives = [
-    "specific objective 1",
-    "specific objective 2",
-    "specific objective 3",
-    "specific objective 4"
-];
+// Fetch general objective from the form
+$generalObjective = isset($_POST['general_objective']) && !empty(trim($_POST['general_objective'])) 
+    ? htmlspecialchars(trim($_POST['general_objective'])) 
+    : "The general objective of this activity is to………………………………… Specifically, it aims to:";
 
 // Output the general objective
 $pdf->MultiCell(0, 10, $generalObjective, 0, 'L', false, 1, '', '', true);
 
-// Output each specific objective with numbers and indentation
-foreach ($objectives as $index => $objective) {
-    $formattedObjective = ($index + 1) . ". " . $objective;
-    $pdf->Cell(10); // Add indentation
-    $pdf->MultiCell(0, 10, $formattedObjective, 0, 'L', false, 1, '', '', true);
-}
+// Fetch specific objectives from the form
+$specificObjectives = isset($_POST['specific_objectives']) && is_array($_POST['specific_objectives']) 
+    ? array_filter(array_map('trim', $_POST['specific_objectives'])) 
+    : ["specific objective 1", "specific objective 2", "specific objective 3", "specific objective 4"];
 
-// IMPLEMENTATION PLAN
+// Output each specific objective with numbering and indentation
+if (!empty($specificObjectives)) {
+    foreach ($specificObjectives as $index => $objective) {
+        $formattedObjective = ($index + 1) . ". " . htmlspecialchars($objective);
+        $pdf->Cell(10); // Add indentation
+        $pdf->MultiCell(0, 10, $formattedObjective, 0, 'L', false, 1, '', '', true);
+    }
+}
+// IX. IMPLEMENTATION PLAN
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Cell(0, 10, 'IX. IMPLEMENTATION PLAN:', 0, 1);
 $pdf->Ln(5); // Add some space
-
-// Set table headers
-$pdf->SetFont($arialBold, '', 11);
-$pdf->Cell(80, 10, 'Activity', 1, 0, 'C'); // Width: 90
-$pdf->Cell(80, 10, 'Target Date', 1, 1, 'C'); // Width: 90
-
-// Set example data
-$activities = [
-    [
-        "activity" => "Planning of the event (preparation of proposal, letters for communication, formation of committees, and target approval of the event)",
-        "date" => "December 16-20, 2024"
-    ],
-    [
-        "activity" => "Opening Program",
-        "date" => "January 10, 2025 (8 a.m. to 9 a.m.)"
-    ],
-    [
-        "activity" => "Conduct of different competitions",
-        "date" => "January 10, 2025 (9 a.m. to 5 p.m.)"
-    ],
-    [
-        "activity" => "Post Evaluation Meeting",
-        "date" => "January 13, 2025"
-    ]
-];
-
-// Output table rows
 $pdf->SetFont('arial', '', 11);
-foreach ($activities as $row) {
-    $pdf->MultiCell(80, 10, $row['activity'], 1, 'L', false, 0); // Activity cell
-    $pdf->MultiCell(80, 10, $row['date'], 1, 'L', false, 1);     // Date cell
+
+// Fetch data from the modal form
+$activities = isset($_POST['activities']) && is_array($_POST['activities']) 
+    ? array_filter(array_map('trim', $_POST['activities'])) 
+    : [];
+
+$targetDates = isset($_POST['target_dates']) && is_array($_POST['target_dates']) 
+    ? array_filter($_POST['target_dates']) 
+    : [];
+
+// Ensure both arrays have the same length
+$implementationPlan = [];
+for ($i = 0; $i < count($activities); $i++) {
+    if (!empty($activities[$i]) && !empty($targetDates[$i])) {
+        $implementationPlan[] = [
+            "activity" => htmlspecialchars($activities[$i]),
+            "date" => htmlspecialchars($targetDates[$i]),
+        ];
+    }
 }
+
+// Default example data if no input is provided
+if (empty($implementationPlan)) {
+    $implementationPlan = [
+        [
+            "activity" => "Planning of the event (preparation of proposal, letters for communication, formation of committees, and target approval of the event)",
+            "date" => "December 16-20, 2024"
+        ],
+        [
+            "activity" => "Opening Program",
+            "date" => "January 10, 2025 (8 a.m. to 9 a.m.)"
+        ],
+        [
+            "activity" => "Conduct of different competitions",
+            "date" => "January 10, 2025 (9 a.m. to 5 p.m.)"
+        ],
+        [
+            "activity" => "Post Evaluation Meeting",
+            "date" => "January 13, 2025"
+        ]
+    ];
+}
+
+// HTML Table for implementation plan
+$html = '<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">';
+$html .= '<tr>';
+$html .= '<th style="text-align: center; width: 50%;">Activity</th>';
+$html .= '<th style="text-align: center; width: 50%;">Target Date</th>';
+$html .= '</tr>';
+
+// Add table rows based on the data
+foreach ($implementationPlan as $row) {
+    $html .= '<tr>';
+    $html .= '<td style="text-align: left;">' . $row['activity'] . '</td>';
+    $html .= '<td style="text-align: left;">' . $row['date'] . '</td>';
+    $html .= '</tr>';
+}
+
+$html .= '</table>';
+
+// Output the table to the PDF using writeHTML
+$pdf->writeHTML($html, true, false, true, false, '');
 
 // X. IMPLEMENTING GUIDELINES
 $pdf->Ln(10); // Add space before the section
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Cell(0, 10, 'X. IMPLEMENTING GUIDELINES:', 0, 1);
 
+// Fetch guidelines from the form input
+$guidelines = isset($_POST['guidelines']) && is_array($_POST['guidelines']) 
+    ? array_filter(array_map('trim', $_POST['guidelines'])) 
+    : [];
+
+// Default example guidelines if no input is provided
+if (empty($guidelines)) {
+    $guidelines = [
+        "The ABC Organization Day will be conducted on January 10, 2025, from 8 a.m. to 5 p.m. at the CvSU-CCAT Campus Covered Court 1.",
+        "Registration will start at 7 a.m.",
+        "Venue will be kept clean while observing the Garbage-In-Garbage-Out policy.",
+        "Upon approval, an excuse letter will be prepared and approved by the chairperson of the department and director for instruction.",
+        "A letter for the utilization of Covered Court 1 will also be prepared with prior communication to the court custodian."
+    ];
+}
+
+// Output each guideline with numbers
 $pdf->SetFont('arial', '', 11);
-$pdf->MultiCell(0, 10, 
-    "1. The ABC Organization Day will be conducted on January 10, 2025 from 8 a.m. to 5 p.m. at the CvSU-CCAT Campus Covered Court 1.\n" .
-    "2. Registration will start at 7 a.m.\n" .
-    "3. a.\n" .
-    "4. b.\n" .
-    "5. c.\n" .
-    "6. d.\n" .
-    "7. e.\n" .
-    "8. Venue will be kept clean while observing the Garbage-In-Garbage-Out policy.\n" .
-    "9. Upon approval, an excuse letter will be prepared and approved by the chairperson of the department and director for instruction.\n" .
-    "10. A letter for the utilization of Covered Court 1 will also be prepared with prior communication to the court custodian.", 
-    0, 'L', false, 1, '', '', true);
+foreach ($guidelines as $index => $guideline) {
+    $formattedGuideline = ($index + 1) . ". " . htmlspecialchars($guideline); // Number each guideline
+    $pdf->MultiCell(0, 10, $formattedGuideline, 0, 'L', false, 1, '', '', true);
+}
 
-    // XI. FINANCIAL PLAN
-$pdf->Ln(10); // Add space before the section
+// IX. FINANCIAL PLAN
 $pdf->SetFont($arialBold, '', 11);
-$pdf->Cell(0, 10, 'XI. FINANCIAL PLAN', 0, 1);
-
-$pdf->SetFont('arial', '', 11);
-
-// Projected Revenue
-$pdf->SetFont($arialBold, '', 11);
-$pdf->Cell(0, 10, 'PROJECTED REVENUE', 0, 1);
-$pdf->SetFont('arial', '', 11);
-
-// Revenue Table Header
-$pdf->SetFillColor(230, 230, 230); // Light gray background for headers
-$pdf->Cell(80, 10, 'Description', 1, 0, 'C');
-$pdf->Cell(30, 10, 'QTY', 1, 0, 'C');
-$pdf->Cell(30, 10, 'UNIT PRICE', 1, 0, 'C');
-$pdf->Cell(40, 10, 'TOTAL', 1, 1, 'C');
-
-// Example Revenue Data
-$pdf->Cell(80, 10, 'Registration', 1);
-$pdf->Cell(30, 10, '100', 1, 0, 'C');
-$pdf->Cell(30, 10, '100', 1, 0, 'C');
-$pdf->Cell(40, 10, '10,000', 1, 1, 'C');
-
-// Subtotal
-$pdf->Cell(140, 10, 'Subtotal', 1, 0, 'R');
-$pdf->Cell(40, 10, '10,000', 1, 1, 'C');
-
-// Add spacing before the next section
-$pdf->Ln(5);
-
-// Projected Expenses
-$pdf->SetFont($arialBold, '', 11);
-$pdf->Cell(0, 10, 'PROJECTED EXPENSES', 0, 1);
+$pdf->Cell(0, 10, 'XI. FINANCIAL PLAN:', 0, 1);
+$pdf->Ln(5); // Add some space
 $pdf->SetFont('arial', '', 11);
 
-// Expenses Table Header
-$pdf->SetFillColor(230, 230, 230); // Light gray background for headers
-$pdf->Cell(80, 10, 'Description', 1, 0, 'C');
-$pdf->Cell(30, 10, 'QTY', 1, 0, 'C');
-$pdf->Cell(30, 10, 'UNIT PRICE', 1, 0, 'C');
-$pdf->Cell(40, 10, 'TOTAL', 1, 1, 'C');
+// Query the database for event items (e.g., revenue or expense items) based on event_id
 
-// Example Expenses Data
-$pdf->Cell(80, 10, 'Certificates and Program and Invitation', 1);
-$pdf->Cell(30, 10, '', 1, 0, 'C');
-$pdf->Cell(30, 10, '', 1, 0, 'C');
-$pdf->Cell(40, 10, '', 1, 1, 'C');
+$sql = "SELECT description, quantity, amount, type FROM event_items WHERE event_id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $event_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
-$pdf->Cell(80, 10, 'Vellum Board', 1);
-$pdf->Cell(30, 10, '10', 1, 0, 'C');
-$pdf->Cell(30, 10, '50', 1, 0, 'C');
-$pdf->Cell(40, 10, '500', 1, 1, 'C');
+// Initialize arrays for revenue and expense items
+$revenueItems = [];
+$expenseItems = [];
 
-$pdf->Cell(80, 10, 'Ink (Bk/M/C/Y)', 1);
-$pdf->Cell(30, 10, '4', 1, 0, 'C');
-$pdf->Cell(30, 10, '285', 1, 0, 'C');
-$pdf->Cell(40, 10, '1,140', 1, 1, 'C');
+// Assuming event_items have a "type" column (e.g., "revenue" or "expense")
+while ($row = $result->fetch_assoc()) {
+    if ($row['type'] == 'revenue') {
+        $revenueItems[] = $row;
+    } elseif ($row['type'] == 'expense') {
+        $expenseItems[] = $row;
+    }
+}
 
-$pdf->Cell(80, 10, 'Food for Judges', 1);
-$pdf->Cell(30, 10, '5', 1, 0, 'C');
-$pdf->Cell(30, 10, '250', 1, 0, 'C');
-$pdf->Cell(40, 10, '1,250', 1, 1, 'C');
+// HTML content for the table, dynamically populated
+$html = '
 
-$pdf->Cell(80, 10, 'Food for Officers', 1);
-$pdf->Cell(30, 10, '10', 1, 0, 'C');
-$pdf->Cell(30, 10, '150', 1, 0, 'C');
-$pdf->Cell(40, 10, '1,500', 1, 1, 'C');
+<h4>PROJECTED REVENUE</h4>
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="background-color: #E6E6E6; text-align: center;">
+            <th>Description</th>
+            <th>QTY</th>
+            <th>UNIT PRICE</th>
+            <th>TOTAL</th>
+        </tr>
+    </thead>
+    <tbody>';
 
-$pdf->Cell(80, 10, 'Champion Prize', 1);
-$pdf->Cell(30, 10, '1', 1, 0, 'C');
-$pdf->Cell(30, 10, '1,500', 1, 0, 'C');
-$pdf->Cell(40, 10, '1,500', 1, 1, 'C');
+// Loop through the revenue items and create rows
+$totalRevenue = 0;
+foreach ($revenueItems as $item) {
+    $totalAmount = $item['quantity'] * $item['amount']; // Calculate total amount
+    $html .= '<tr>';
+    $html .= '<td>' . $item['description'] . '</td>';
+    $html .= '<td style="text-align: center;">' . $item['quantity'] . '</td>';
+    $html .= '<td style="text-align: center;">' . number_format($item['amount'], 2) . '</td>';
+    $html .= '<td style="text-align: center;">' . number_format($totalAmount, 2) . '</td>';
+    $html .= '</tr>';
+    $totalRevenue += $totalAmount;
+}
 
-$pdf->Cell(80, 10, '1st Runner Up Prize', 1);
-$pdf->Cell(30, 10, '1', 1, 0, 'C');
-$pdf->Cell(30, 10, '1,000', 1, 0, 'C');
-$pdf->Cell(40, 10, '1,000', 1, 1, 'C');
+$html .= '
+        <tr>
+            <td colspan="3" style="text-align: right;"><strong>Subtotal</strong></td>
+            <td style="text-align: center;">' . number_format($totalRevenue, 2) . '</td>
+        </tr>
+    </tbody>
+</table>
 
-// Subtotal
-$pdf->Cell(140, 10, 'Subtotal', 1, 0, 'R');
-$pdf->Cell(40, 10, '6,890', 1, 1, 'C');
+<br>
+<h4>PROJECTED EXPENSES</h4>
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+    <thead>
+        <tr style="background-color: #E6E6E6; text-align: center;">
+            <th>Description</th>
+            <th>QTY</th>
+            <th>UNIT PRICE</th>
+            <th>TOTAL</th>
+        </tr>
+    </thead>
+    <tbody>';
 
-// Projected Income
+// Loop through the expense items and create rows
+$totalExpenses = 0;
+foreach ($expenseItems as $item) {
+    $totalAmount = $item['quantity'] * $item['amount']; // Calculate total amount
+    $html .= '<tr>';
+    $html .= '<td>' . $item['description'] . '</td>';
+    $html .= '<td style="text-align: center;">' . $item['quantity'] . '</td>';
+    $html .= '<td style="text-align: center;">' . number_format($item['amount'], 2) . '</td>';
+    $html .= '<td style="text-align: center;">' . number_format($totalAmount, 2) . '</td>';
+    $html .= '</tr>';
+    $totalExpenses += $totalAmount;
+}
+
+$html .= '
+        <tr>
+            <td colspan="3" style="text-align: right;"><strong>Subtotal</strong></td>
+            <td style="text-align: center;">' . number_format($totalExpenses, 2) . '</td>
+        </tr>
+    </tbody>
+</table>
+
+<br>
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+    <tr>
+        <td colspan="3" style="text-align: right; font-weight: bold;">Projected Income</td>
+        <td style="text-align: center;">' . number_format($totalRevenue - $totalExpenses, 2) . '</td>
+    </tr>
+</table>
+';
+
+// Output the HTML content to the PDF using TCPDF
+$pdf->writeHTML($html, true, false, true, false, '');
+
+
+// VI. RATIONALE
 $pdf->SetFont($arialBold, '', 11);
-$pdf->Cell(140, 10, 'Projected Income', 1, 0, 'R');
-$pdf->Cell(40, 10, '3,110', 1, 1, 'C');
+$pdf->Cell(0, 10, 'XII. FUNDING SOURCE', 0, 1);
+$pdf->SetFont('arial', '', 11);
+
+// Fetch rationale input
+$funding_source = isset($_POST['funding_source']) && !empty(trim($_POST['funding_source'])) 
+    ? htmlspecialchars(trim($_POST['funding_source'])) 
+    : 'Fund will come from the registration of participants. Income from this activity will be deposited on the bank account of ABC Organization and will be utilized for future activities.';
+
+// Output rationale to PDF
+$pdf->MultiCell(0, 10, $funding_source, 0, 'L', false, 1, '', '', true);
+
 
 $pdf->Ln(10); // Space for signatures above names
 
@@ -391,7 +513,7 @@ $pdf->Ln(10); // Space between sections
 // Example Names for Signatures
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Ln(10); // Space for signatures above names
-$pdf->Cell(80, 10, "JAMES MATHEW S. BELEN", 0, 0, 'L', 0);
+$pdf->Cell(80, 10, "GUILLIER E. PARULAN", 0, 0, 'L', 0);
 $pdf->Cell(80, 10, "MICHAEL EDWARD T. ARMINTIA, REE", 0, 1, 'L', 0);
 $pdf->SetFont($arial, 'B', 11);
 $pdf->Cell(80, 10, "President, CSG", 0, 0, 'L', 0);
