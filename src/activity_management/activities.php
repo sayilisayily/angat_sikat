@@ -274,10 +274,13 @@ $result = $conn->query($sql);
                         </li>
 
                         <li class="sidebar-item profile-container">
-                                <a class="sidebar-link" href="../user/profile.php" aria-expanded="false" data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
-                                <div class="profile-pic-border" style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-                                    <img src="<?php echo !empty($profile_picture) ? '../user/uploads/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
-                                        alt="Profile Picture" class="profile-pic" style="max-height: 100%; max-width: 100%; object-fit: cover;" />
+                            <a class="sidebar-link" href="../user/profile.php" aria-expanded="false"
+                                data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
+                                <div class="profile-pic-border"
+                                    style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 50%; border: 2px solid #ccc;">
+                                    <img src="<?php echo !empty($profile_picture) ? '../user/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
+                                        alt="Profile Picture" class="profile-pic"
+                                        style="height: 100%; width: 100%; object-fit: cover;" />
                                 </div>
                                 <span class="profile-name" style="margin-left: 0.5rem; font-size: 0.9rem;">
                                     <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
