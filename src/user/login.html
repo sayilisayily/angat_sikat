@@ -60,24 +60,22 @@
 
     .input-group {
       margin-bottom: 15px;
-    }
-
-    .input-group.password-input {
       position: relative;
     }
 
-    .input-group.password-input .toggle-password {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
+    .input-group.password-input {
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-password {
       border: none;
       background: none;
       cursor: pointer;
       color: #00542f;
       font-size: 1.5rem;
-      z-index: 2;
-      /* Ensure icon is above the input */
+      margin-left: 10px;
+      /* Space between input and icon */
     }
 
     .btn {
