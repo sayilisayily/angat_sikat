@@ -72,6 +72,30 @@ include '../user_query.php';
             -ms-overflow-style: none; /* IE and Edge */
             scrollbar-width: none; /* Firefox */
         }
+        .body-wrapper {
+            height: 100vh; /* Ensures the element has a height */
+            overflow-x: hidden;  /* Hide horizontal overflow */
+            overflow-y: auto;    /* Allow vertical scrolling when content overflows */
+            background-color: white; /* Change this to match your design */
+        }
+
+        /* For webkit browsers (Chrome, Safari) */
+        .body-wrapper::-webkit-scrollbar {
+            width: 8px;  /* Set scrollbar width */
+        }
+
+        .body-wrapper::-webkit-scrollbar-track {
+            background: transparent;  /* Track color */
+        }
+
+        .body-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.5);  /* Thumb color */
+            border-radius: 10px;  /* Rounded corners */
+        }
+
+        .body-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.8);  /* Thumb color on hover */
+        }
     </style>
 </head>
 
@@ -143,16 +167,19 @@ include '../user_query.php';
                         </li>
 
                         <li class="sidebar-item profile-container">
-                            <a class="sidebar-link" href="../user/admin_profile.php" aria-expanded="false" data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
-                            <div class="profile-pic-border" style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-                                <img src="<?php echo !empty($profile_picture) ? '../user/uploads/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
-                                    alt="Profile Picture" class="profile-pic" style="max-height: 100%; max-width: 100%; object-fit: cover;" />
-                            </div>
-                            <span class="profile-name" style="margin-left: 0.5rem; font-size: 0.9rem;">
-                                <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
-                            </span>
-                        </a>
-                    </li>
+                            <a class="sidebar-link" href="../user/admin_profile.php" aria-expanded="false"
+                                data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
+                                <div class="profile-pic-border"
+                                    style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 50%; border: 2px solid #ccc;">
+                                    <img src="<?php echo !empty($profile_picture) ? '../user/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
+                                        alt="Profile Picture" class="profile-pic"
+                                        style="height: 100%; width: 100%; object-fit: cover;" />
+                                </div>
+                                <span class="profile-name" style="margin-left: 0.5rem; font-size: 0.9rem;">
+                                    <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
+                                </span>
+                            </a>
+                        </li>
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
@@ -201,7 +228,8 @@ include '../user_query.php';
                                         data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
                                         <img class="border border-dark rounded-circle"
                                             src="<?php echo !empty($profile_picture) ? '../user/' . $profile_picture : '../user/uploads/default.png'; ?>"
-                                            alt="Profile" style="width: 40px; height: 40px; margin-left: 10px;">
+                                            alt="Profile"
+                                            style="width: 40px; height: 40px; margin-left: 10px; object-fit: cover;">
                                         <span class="visually-hidden">
                                             <?php echo htmlspecialchars($user['username']); ?>
                                         </span>
@@ -215,7 +243,7 @@ include '../user_query.php';
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="../user/profile.php"><i
+                                        <li><a class="dropdown-item" href="../user/admin_profile.php"><i
                                                     class="bx bx-user"></i> My Profile</a>
                                         </li>
                                         <li><a class="dropdown-item" href="../user/logout.php"><i

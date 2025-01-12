@@ -329,6 +329,31 @@ include '../organization_query.php';
             /* Light background for contrast */
         }
 
+        .body-wrapper {
+            height: 100vh; /* Ensures the element has a height */
+            overflow-x: hidden;  /* Hide horizontal overflow */
+            overflow-y: auto;    /* Allow vertical scrolling when content overflows */
+            background-color: white; /* Change this to match your design */
+        }
+
+        /* For webkit browsers (Chrome, Safari) */
+        .body-wrapper::-webkit-scrollbar {
+            width: 8px;  /* Set scrollbar width */
+        }
+
+        .body-wrapper::-webkit-scrollbar-track {
+            background: transparent;  /* Track color */
+        }
+
+        .body-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.5);  /* Thumb color */
+            border-radius: 10px;  /* Rounded corners */
+        }
+
+        .body-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.8);  /* Thumb color on hover */
+        }
+
         /* Transaction Header Styles */
         .transaction-text {
             font-size: 1.5rem;
@@ -511,7 +536,7 @@ include '../organization_query.php';
                         </li>
 
                         <li class="sidebar-item profile-container">
-                            <a class="sidebar-link" href="../user/profile.php" aria-expanded="false"
+                            <a class="sidebar-link" href="../user/admin_profile.php" aria-expanded="false"
                                 data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
                                 <div class="profile-pic-border"
                                     style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 50%; border: 2px solid #ccc;">
@@ -572,7 +597,8 @@ include '../organization_query.php';
                                         data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
                                         <img class="border border-dark rounded-circle"
                                             src="<?php echo !empty($profile_picture) ? '../user/' . $profile_picture : '../user/uploads/default.png'; ?>"
-                                            alt="Profile" style="width: 40px; height: 40px; margin-left: 10px;">
+                                            alt="Profile"
+                                            style="width: 40px; height: 40px; margin-left: 10px; object-fit: cover;">
                                         <span class="visually-hidden">
                                             <?php echo htmlspecialchars($user['username']); ?>
                                         </span>
@@ -586,7 +612,7 @@ include '../organization_query.php';
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="../user/profile.php"><i
+                                        <li><a class="dropdown-item" href="../user/admin_profile.php"><i
                                                     class="bx bx-user"></i> My Profile</a>
                                         </li>
                                         <li><a class="dropdown-item" href="../user/logout.php"><i
@@ -599,8 +625,6 @@ include '../organization_query.php';
                 </nav>
             </header>
             <!--  Header End -->
-
-
 
             <div class="container-fluid">
                 <!--  Row 1 -->
