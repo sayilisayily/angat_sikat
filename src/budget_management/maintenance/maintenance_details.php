@@ -120,6 +120,30 @@ if (isset($_GET['maintenance_id']) && !empty($_GET['maintenance_id'])) {
         #sidebarnav>li>a>span {
             color: #fff;
         }
+        .body-wrapper {
+            height: 100vh; /* Ensures the element has a height */
+            overflow-x: hidden;  /* Hide horizontal overflow */
+            overflow-y: auto;    /* Allow vertical scrolling when content overflows */
+            background-color: white; /* Change this to match your design */
+        }
+
+        /* For webkit browsers (Chrome, Safari) */
+        .body-wrapper::-webkit-scrollbar {
+            width: 8px;  /* Set scrollbar width */
+        }
+
+        .body-wrapper::-webkit-scrollbar-track {
+            background: transparent;  /* Track color */
+        }
+
+        .body-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.5);  /* Thumb color */
+            border-radius: 10px;  /* Rounded corners */
+        }
+
+        .body-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.8);  /* Thumb color on hover */
+        }
     </style>
 </head>
 

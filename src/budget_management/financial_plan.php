@@ -60,6 +60,30 @@ $result = $conn->query($sql);
         #sidebarnav>li>a>span {
             color: #fff;
         }
+        .body-wrapper {
+            height: 100vh; /* Ensures the element has a height */
+            overflow-x: hidden;  /* Hide horizontal overflow */
+            overflow-y: auto;    /* Allow vertical scrolling when content overflows */
+            background-color: white; /* Change this to match your design */
+        }
+
+        /* For webkit browsers (Chrome, Safari) */
+        .body-wrapper::-webkit-scrollbar {
+            width: 8px;  /* Set scrollbar width */
+        }
+
+        .body-wrapper::-webkit-scrollbar-track {
+            background: transparent;  /* Track color */
+        }
+
+        .body-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.5);  /* Thumb color */
+            border-radius: 10px;  /* Rounded corners */
+        }
+
+        .body-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.8);  /* Thumb color on hover */
+        }
     </style>
 </head>
 
@@ -327,18 +351,26 @@ $result = $conn->query($sql);
               
             <!-- Table -->
             <style>
+                html, body {
+                    height: 100%; /* Ensure the body and html take full height */
+                    margin: 0; /* Remove default margin */
+                }
+
                 .tablecontainer {
                     padding: 1.5rem; /* Adjust padding */
                     background-color: #f8f9fa; /* Light background for contrast */
                     border-radius: 8px; /* Rounded corners */
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Subtle shadow */
-                    overflow-y: auto; /* Enable vertical scrolling */
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+                    overflow-y: hidden; /* Enable vertical scrolling */
+                    max-height: calc(100vh - 100px); /* Set max height to fill the screen minus some space */
                 }
 
                 .table-responsive {
                     overflow-x: auto; /* Enable horizontal scrolling */
-                    overflow-y: auto;
+                    overflow-y: auto; /* Enable vertical scrolling */
                     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                    width: 100%; /* Ensure it takes full width */
+                    height: 100%; /* Ensure it takes full height */
                 }
 
                 table {
@@ -366,9 +398,7 @@ $result = $conn->query($sql);
                     }
 
                     .table-responsive {
-                        transform: scale(1.1); /* Zoom in the table */
-                        transform-origin: top left; /* Set the origin of the zoom */
-                        width: 100%; /* Ensure it takes full width */
+                        transform: scale(1); /* No zoom for better visibility */
                     }
 
                     table {
@@ -377,29 +407,19 @@ $result = $conn->query($sql);
                 }
 
                 /* Custom Scrollbar Styles */
-                .tablecontainer::-webkit-scrollbar {
+                .tablecontainer::-webkit-scrollbar,
+                .table-responsive::-webkit-scrollbar {
                     width: 8px; /* Width of vertical scrollbar */
                     height: 8px; /* Height of horizontal scrollbar */
                 }
 
-                .tablecontainer::-webkit-scrollbar-thumb {
-                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
-                    border-radius: 4px; /* Round edges of the scrollbar thumb */
-                }
-
-                .tablecontainer::-webkit-scrollbar-thumb:hover {
-                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
-                }
-
-                .table-responsive::-webkit-scrollbar {
-                    height: 8px; /* Height of horizontal scrollbar */
-                }
-
+                .tablecontainer::-webkit-scrollbar-thumb,
                 .table-responsive::-webkit-scrollbar-thumb {
                     background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
                     border-radius: 4px; /* Round edges of the scrollbar thumb */
                 }
 
+                .tablecontainer::-webkit-scrollbar-thumb:hover,
                 .table-responsive::-webkit-scrollbar-thumb:hover {
                     background: rgba(0, 0, 0, 0.5); /* Darker on hover */
                 }
