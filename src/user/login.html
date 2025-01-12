@@ -43,42 +43,69 @@
 
     .form-container {
       background-color: rgba(255, 255, 255, 0.9);
-      max-width: 850px;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 30px;
+      padding: 20px;
       z-index: 2;
       display: flex;
       flex-direction: row;
+      max-width: 800px;
+      width: 90%;
     }
 
     .form-section {
       flex: 1;
-      padding: 20px;
+      padding: 10px;
     }
 
-    .form-check-input.primary {
-      background-color: #00542f;
-      border-color: #00542f;
-    }
-
-    .form-check-input.primary:checked {
-      background-color: #00542f;
-      border-color: #00542f;
-    }
-
-    .input-group.password-input {
+    .input-group {
+      margin-bottom: 15px;
       position: relative;
     }
 
-    .input-group.password-input .toggle-password {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
+    .input-group.password-input {
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-password {
+      border: none;
+      background: none;
       cursor: pointer;
       color: #00542f;
       font-size: 1.5rem;
+      margin-left: 10px;
+      /* Space between input and icon */
+    }
+
+    .btn {
+      background-color: #3e7044;
+      color: white;
+      border-radius: 8px;
+      padding: 12px;
+      width: 100%;
+    }
+
+    .image-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    @media (max-width: 768px) {
+      .form-container {
+        flex-direction: column;
+      }
+
+      .image-container {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -88,19 +115,18 @@
     data-sidebar-position="fixed" data-header-position="fixed">
     <div class="container d-flex align-items-center justify-content-center" style="max-width: 900px">
       <div class="form-container shadow-lg rounded">
-        <div class="form-section">
-          <a href="" class="text-center d-block py-3 w-100"
-            style="display: flex; flex-direction: column; align-items: center">
-            <img src="../assets/images/logos/neon_sikat.png" alt="Logo" width="auto" height="100" />
+        <div class="form-section text-center">
+          <a href="" class="d-block py-3">
+            <img src="../assets/images/logos/neon_sikat.png" alt="Logo" width="auto" height="80" />
             <span style="
                   font-weight: bold;
-                  font-size: 20px;
-                  color:rgb(0, 102, 102);
+                  font-size: 18px;
+                  color: rgb(0, 102, 102);
                   display: block;
                   text-align: center;
                 ">ANGAT SIKAT</span>
           </a>
-          <p class="text-center mb-4" style="color: #6c757d; font-size: 0.9rem">
+          <p class="mb-3" style="color: #6c757d; font-size: 0.8rem">
             Budget and Expense Tracker for Organization in <br>
             Cavite State University CCAT CAMPUS
           </p>
@@ -114,34 +140,18 @@
               <span class="input-group-text"><i class="bx bx-lock"></i></span>
               <input type="password" class="form-control" name="password" id="password" placeholder="Password"
                 required />
-              <i class="bx bx-show toggle-password" id="togglePassword"></i>
+              <button type="button" class="toggle-password" id="togglePassword">
+                <i class="bx bx-show"></i>
+              </button>
             </div>
-            <div class="d-flex align-items-center justify-content-between mb-4">
-              <div class="form-check">
-                <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" />
-              </div>
-            </div>
-            <button type="submit" class="btn w-100 mb-4" style="
-                  background-color: #3e7044;
-                  color: white;
-                  width: 100%;
-                  padding: 10px;
-                  border-radius: 8px;
-                ">
+            <button type="submit" class="btn mb-4">
               Sign In
             </button>
           </form>
         </div>
 
-        <div class="col-md-6 d-none d-md-block">
-          <div class="image-container" style="height: 100%; display: flex; align-items: center">
-            <img src="login.jpg" alt="Login Illustration" class="img-fluid rounded" style="
-                  width: 100%;
-                  height: 100%;
-                  object-fit: cover;
-                  object-position: center;
-                " />
-          </div>
+        <div class="image-container">
+          <img src="login.jpg" alt="Login Illustration" class="img-fluid rounded" />
         </div>
       </div>
     </div>
@@ -149,12 +159,11 @@
 
   <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
   <script>
     // JavaScript to toggle password visibility
     document.getElementById("togglePassword").addEventListener("click", function () {
       const passwordField = document.getElementById("password");
-      const toggleIcon = this;
+      const toggleIcon = this.querySelector("i");
       if (passwordField.type === "password") {
         passwordField.type = "text";
         toggleIcon.classList.remove("bx-show");
