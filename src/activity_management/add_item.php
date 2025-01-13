@@ -5,11 +5,10 @@ require 'connection.php';
 $response = array('success' => false, 'errors' => array());
 
 // Check if the required fields are set
-if (isset($_POST['event_id'], $_POST['description'], $_POST['quantity'], $_POST['unit'], $_POST['amount'])) {
+if (isset($_POST['event_id'], $_POST['description'], $_POST['quantity'], $_POST['amount'])) {
     $event_id = intval($_POST['event_id']);
     $description = trim($_POST['description']);
     $quantity = intval($_POST['quantity']);
-    $unit = trim($_POST['unit']);
     $amount = floatval($_POST['amount']);
     $profit = isset($_POST['profit']) ? floatval($_POST['profit']) : 0;
 
@@ -19,9 +18,6 @@ if (isset($_POST['event_id'], $_POST['description'], $_POST['quantity'], $_POST[
     }
     if ($quantity <= 0) {
         $response['errors']['quantity'] = 'Quantity must be greater than zero.';
-    }
-    if (empty($unit)) {
-        $response['errors']['unit'] = 'Unit is required.';
     }
     if ($amount <= 0) {
         $response['errors']['amount'] = 'Amount must be greater than zero.';
@@ -72,6 +68,11 @@ if (isset($_POST['event_id'], $_POST['description'], $_POST['quantity'], $_POST[
                 ? $quantity * ($amount + $profit) // Total amount = quantity * (amount + profit)
                 : $quantity * $amount; // For expense events, total amount = quantity * amount
 
+            // Calculate total amount for the new item
+            $type = ($event_type === 'Income') 
+                ? "revenue" // Total amount = quantity * (amount + profit)
+                : "expense"; 
+
             // Calculate total profit for income events (quantity * profit)
             $total_profit = ($event_type === 'Income') ? $quantity * $profit : 0;
 
@@ -89,8 +90,8 @@ if (isset($_POST['event_id'], $_POST['description'], $_POST['quantity'], $_POST[
             }
 
             // Insert the new item
-            $stmt = $conn->prepare("INSERT INTO event_items (event_id, description, quantity, unit, amount, profit, total_amount, total_profit) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("isisiddd", $event_id, $description, $quantity, $unit, $amount, $profit, $item_total, $total_profit);
+            $stmt = $conn->prepare("INSERT INTO event_items (event_id, description, quantity, amount, type, profit, total_amount, total_profit) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("isidsddd", $event_id, $description, $quantity, $amount, $type, $profit, $item_total, $total_profit);
             if (!$stmt->execute()) {
                 throw new Exception('Failed to add item: ' . $stmt->error);
             }

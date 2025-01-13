@@ -485,7 +485,6 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                             <tr>
                                 <th>Description</th>
                                 <th>Quantity</th>
-                                <th>Unit</th>
                                 <th>Amount</th>
                                 <?php if ($event['event_type'] === 'Income'): ?>
                                     <th>Profit</th>
@@ -509,7 +508,6 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                     echo "<tr>
                                             <td>{$item['description']}</td>
                                             <td>{$item['quantity']}</td>
-                                            <td>{$item['unit']}</td>
                                             <td>{$item['amount']}</td>";
                                     if ($event['event_type'] === 'Income'){ 
                                         echo " <td>{$item['profit']}</td>}";
@@ -568,7 +566,6 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                     <th>Date</th>
                                     <th>Description</th>
                                     <th>Quantity</th>
-                                    <th>Unit</th>
                                     <th>Amount</th>
                                     <?php
                                     if ($event['event_type'] === 'Income') {
@@ -592,7 +589,6 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                                 <td>{$item['date']}</td>
                                                 <td>{$item['description']}</td>
                                                 <td>{$item['quantity']}</td>
-                                                <td>{$item['unit']}</td>
                                                 <td>{$item['amount']}</td>";
                                                 if ($event['event_type'] === 'Income'){ 
                                                     echo " <td>{$item['profit']}</td>}";
@@ -652,14 +648,13 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                         </div>
                                     </div>
                                     <div class="form-group row mb-2">
-                                        <div class="col">
-                                            <label for="unit">Unit</label>
-                                            <input type="text" class="form-control" id="unit" name="unit" required>
-                                        </div>
+                                        
                                         <div class="col">
                                             <label for="amount">Amount</label>
                                             <input type="number" step="0.01" class="form-control" id="amount"
                                                 name="amount" required>
+                                        </div>
+                                        <div class="col">
                                         </div>
                                     </div>
                                     <?php if ($event['event_type'] === 'Income') {
@@ -721,13 +716,11 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                     </div>
                                     <div class="form-group row mb-2">
                                         <div class="col">
-                                            <label for="edit_unit" class="form-label">Unit</label>
-                                            <input type="text" class="form-control" id="edit_unit" name="unit" required>
-                                        </div>
-                                        <div class="col">
                                             <label for="edit_amount" class="form-label">Amount</label>
                                             <input type="number" step="0.01" class="form-control" id="edit_amount"
                                                 name="amount" required>
+                                        </div>
+                                        <div class="col">
                                         </div>
                                     </div>
                                     <?php if ($event['event_type'] === 'Income') {
@@ -844,16 +837,13 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                         </div>
                                     </div>
                                     <div class="form-group row mb-2">
-                                        <div class="col">
-                                            <label for="summary_unit">Unit</label>
-                                            <input type="text" class="form-control" id="summary_unit" name="unit"
-                                                required>
-                                        </div>
     
                                         <div class="col">
                                             <label for="summary_amount">Amount</label>
                                             <input type="number" step="0.01" class="form-control" id="summary_amount"
                                                 name="amount" required>
+                                        </div>
+                                        <div class="col">
                                         </div>
                                     </div>
                                     <?php if ($event['event_type'] === 'Expense'){
@@ -917,9 +907,6 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                                 name="quantity" required>
                                         </div>
                                         <div class="col">
-                                            <label for="summary_edit_unit">Unit</label>
-                                            <input type="text" class="form-control" id="summary_edit_unit" name="unit"
-                                                required>
                                         </div>
                                     </div>
                                     <div class="form-group <?php if ($event['event_type'] === 'Income') {echo 'row';} ?> mb-2">       
