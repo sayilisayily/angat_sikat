@@ -18,7 +18,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Reports</title>
-    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png"/>
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
     <!--Custom CSS for Budget Overview-->
     <link rel="stylesheet" href="../budget_management/css/budget.css" />
@@ -96,35 +96,43 @@
 
                             .sidebar-link {
                                 position: relative;
-                                cursor: pointer; /* Ensure pointer cursor for better UX */
+                                cursor: pointer;
+                                /* Ensure pointer cursor for better UX */
                             }
 
                             .sidebar-link:hover {
-                                background-color: #FFB000; /* Hover color */
+                                background-color: #FFB000;
+                                /* Hover color */
                             }
 
                             .sidebar-link.active {
-                                background-color: #FFB000; /* Active color */
+                                background-color: #FFB000;
+                                /* Active color */
                             }
+
                             .scroll-sidebar {
-                                overflow: auto; /* Enable scrolling */
+                                overflow: auto;
+                                /* Enable scrolling */
                             }
 
                             /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
                             .scroll-sidebar::-webkit-scrollbar {
-                                display: none; /* Hide scrollbar */
+                                display: none;
+                                /* Hide scrollbar */
                             }
 
                             /* Hide scrollbar for IE, Edge, and Firefox */
                             .scroll-sidebar {
-                                -ms-overflow-style: none; /* IE and Edge */
-                                scrollbar-width: none; /* Firefox */
+                                -ms-overflow-style: none;
+                                /* IE and Edge */
+                                scrollbar-width: none;
+                                /* Firefox */
                             }
                         </style>
 
                         <script>
                             document.querySelectorAll('.sidebar-link').forEach(link => {
-                                link.addEventListener('click', function() {
+                                link.addEventListener('click', function () {
                                     // Remove 'active' class from all links
                                     document.querySelectorAll('.sidebar-link').forEach(item => {
                                         item.classList.remove('active');
@@ -173,22 +181,24 @@
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../budget_management/purchases/purchases.php" aria-expanded="false">
+                                <a class="sidebar-link" href="../budget_management/purchases/purchases.php"
+                                    aria-expanded="false">
                                     <i class="bx bxs-purchase-tag" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Purchases</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../budget_management/maintenance/maintenance.php" aria-expanded="false">
+                                <a class="sidebar-link" href="../budget_management/maintenance/maintenance.php"
+                                    aria-expanded="false">
                                     <i class="bx bxs-cog" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">MOE</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../activity_management/activities.php" aria-expanded="false"
-                                    data-tooltip="Activities">
+                                <a class="sidebar-link" href="../activity_management/activities.php"
+                                    aria-expanded="false" data-tooltip="Activities">
                                     <i class="bx bx-calendar-event" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Activities</span>
                                 </a>
@@ -203,8 +213,8 @@
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../budget_management/budget_approval_table.php" aria-expanded="false"
-                                    data-tooltip="Approval">
+                                <a class="sidebar-link" href="../budget_management/budget_approval_table.php"
+                                    aria-expanded="false" data-tooltip="Approval">
                                     <i class="bx bx-book-content" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Approval</span>
                                 </a>
@@ -257,10 +267,13 @@
                         </li>
 
                         <li class="sidebar-item profile-container">
-                                <a class="sidebar-link" href="../user/profile.php" aria-expanded="false" data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
-                                <div class="profile-pic-border" style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden;">
+                            <a class="sidebar-link" href="../user/profile.php" aria-expanded="false"
+                                data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
+                                <div class="profile-pic-border"
+                                    style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 50%; border: 2px solid #ccc;">
                                     <img src="<?php echo !empty($profile_picture) ? '../user/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
-                                        alt="Profile Picture" class="profile-pic" style="max-height: 100%; max-width: 100%; object-fit: cover;" />
+                                        alt="Profile Picture" class="profile-pic"
+                                        style="height: 100%; width: 100%; object-fit: cover;" />
                                 </div>
                                 <span class="profile-name" style="margin-left: 0.5rem; font-size: 0.9rem;">
                                     <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
@@ -325,7 +338,8 @@
                                         data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
                                         <img class="border border-dark rounded-circle"
                                             src="<?php echo !empty($profile_picture) ? '../user/' . $profile_picture : '../user/uploads/default.png'; ?>"
-                                            alt="Profile" style="width: 40px; height: 40px; margin-left: 10px;">
+                                            alt="Profile"
+                                            style="width: 40px; height: 40px; margin-left: 10px; object-fit: cover;">
                                         <span class="visually-hidden">
                                             <?php echo htmlspecialchars($user['username']); ?>
                                         </span>
@@ -354,88 +368,83 @@
             <!--  Header End -->
 
             <div class="container mt-5">
-            <h2 class="mb-3"><span class="text-warning fw-bold me-2">|</span> Reports Management</h2>
+                <h2 class="mb-3"><span class="text-warning fw-bold me-2">|</span> Reports Management</h2>
 
-            <!-- Report Type Cards -->
-            <div class="row mb-4">
-                <!-- Budget Request Card -->
-                <div class="col-md">
-                    <div 
-                        class="card text-white gradient-card-1 mb-3 py-4" 
-                        data-bs-toggle="modal" 
-                        data-bs-target="#budgetRequestModal"
-                        style="cursor: pointer;">
-                        <div class="card-body text-center">
-                            <i class="fa-solid fa-file-invoice fa-2x mb-2"></i>
-                            <h5 class="card-title">Budget Request</h5>
+                <!-- Report Type Cards -->
+                <div class="row mb-4">
+                    <!-- Budget Request Card -->
+                    <div class="col-md">
+                        <div class="card text-white gradient-card-1 mb-3 py-4" data-bs-toggle="modal"
+                            data-bs-target="#budgetRequestModal" style="cursor: pointer;">
+                            <div class="card-body text-center">
+                                <i class="fa-solid fa-file-invoice fa-2x mb-2"></i>
+                                <h5 class="card-title">Budget Request</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Project Proposal Card -->
+                    <div class="col-md">
+                        <div class="card text-white gradient-card-2 mb-3 py-4" data-bs-toggle="modal"
+                            data-bs-target="#projectProposalModal">
+                            <div class="card-body text-center">
+                                <i class="fa-solid fa-lightbulb fa-2x mb-2"></i>
+                                <h5 class="card-title">Project Proposal</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Permit to Withdraw Card -->
+                    <div class="col-md">
+                        <div class="card text-white gradient-card-1 mb-3 py-4" data-bs-toggle="modal"
+                            data-bs-target="#permitModal">
+                            <div class="card-body text-center">
+                                <i class="fa-solid fa-coins fa-2x mb-2"></i>
+                                <h5 class="card-title">Permit to Withdraw</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Liquidation Card -->
+                    <div class="col-md">
+                        <div class="card text-white gradient-card-2 mb-3 py-4" data-bs-toggle="modal"
+                            data-bs-target="#liquidationModal">
+                            <div class="card-body text-center">
+                                <i class="fa-solid fa-file-circle-check fa-2x mb-2"></i>
+                                <h5 class="card-title">Liquidation Report</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Accomplishment Card -->
+                    <div class="col-md">
+                        <div class="card text-white gradient-card-1 mb-3 py-4" data-bs-toggle="modal"
+                            data-bs-target="#statementModal">
+                            <div class="card-body text-center">
+                                <i class="fa-solid fa-receipt fa-2x mb-2"></i>
+                                <h5 class="card-title">Financial Statement</h5>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Project Proposal Card -->
-                <div class="col-md">
-                    <div class="card text-white gradient-card-2 mb-3 py-4"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#projectProposalModal">
-                        <div class="card-body text-center">
-                            <i class="fa-solid fa-lightbulb fa-2x mb-2"></i>
-                            <h5 class="card-title">Project Proposal</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Permit to Withdraw Card -->
-                <div class="col-md">
-                    <div class="card text-white gradient-card-1 mb-3 py-4"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#permitModal">
-                        <div class="card-body text-center">
-                            <i class="fa-solid fa-coins fa-2x mb-2"></i>
-                            <h5 class="card-title">Permit to Withdraw</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Liquidation Card -->
-                <div class="col-md">
-                    <div class="card text-white gradient-card-2 mb-3 py-4"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#liquidationModal">
-                        <div class="card-body text-center">
-                            <i class="fa-solid fa-file-circle-check fa-2x mb-2"></i>
-                            <h5 class="card-title">Liquidation Report</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Accomplishment Card -->
-                <div class="col-md">
-                    <div class="card text-white gradient-card-1 mb-3 py-4"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#statementModal">
-                        <div class="card-body text-center">
-                            <i class="fa-solid fa-receipt fa-2x mb-2"></i>
-                            <h5 class="card-title">Financial Statement</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             
 
             <!-- Budget Request Modal -->
-            <div class="modal fade" id="budgetRequestModal" tabindex="-1" role="dialog" aria-labelledby="budgetRequestLabel" aria-hidden="true">
+            <div class="modal fade" id="budgetRequestModal" tabindex="-1" role="dialog"
+                aria-labelledby="budgetRequestLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <form id="budgetRequestForm" action="generate_request.php" method="POST" target="_blank">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="budgetRequestLabel">Generate Budget Request Report</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <!-- Form fields -->
-                                    <!-- Organization Name -->
-                                    <?php
+                                <!-- Organization Name -->
+                                <?php
                                     // Fetch organization name associated with the current user's organization_id
                                     $org_query = "SELECT organization_name FROM organizations WHERE organization_id = $organization_id";
                                     $org_result = mysqli_query($conn, $org_query);
@@ -448,8 +457,8 @@
                                     }
                                     ?>
 
-                                    
-                                    
+
+
                                 <div class="form-group row mb-2">
                                     <!-- Event Title -->
                                     <div class="col-12">
@@ -479,8 +488,9 @@
                                     </div>
                                 </div>
                                 <!-- Hidden input fields-->
-                                <input type="hidden" class="form-control" id="organization_name" name="organization_name" 
-                                    value="<?php echo htmlspecialchars($organization_name); ?>" readonly>
+                                <input type="hidden" class="form-control" id="organization_name"
+                                    name="organization_name" value="<?php echo htmlspecialchars($organization_name); ?>"
+                                    readonly>
                                 <input type="hidden" class="form-control" id="event_id" name="event_id">
 
                                 <!-- Success Message Alert -->
@@ -502,13 +512,15 @@
             </div>
 
             <!-- Project Proposal Modal -->
-            <div class="modal fade" id="projectProposalModal" tabindex="-1" role="dialog" aria-labelledby="projectProposalLabel" aria-hidden="true">
+            <div class="modal fade" id="projectProposalModal" tabindex="-1" role="dialog"
+                aria-labelledby="projectProposalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <form id="projectProposalForm" action="generate_proposal.php" method="POST" target="_blank">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="projectProposalLabel">Generate Project Proposal Report</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <!-- Event Title -->
@@ -544,7 +556,8 @@
                                     <div id="collaborators" class="form-check">
                                         <!-- Add an N/A option -->
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="collaborator_na" name="collaborators[]" value="0">
+                                            <input class="form-check-input" type="checkbox" id="collaborator_na"
+                                                name="collaborators[]" value="0">
                                             <label class="form-check-label" for="collaborator_na">None</label>
                                         </div>
                                         <?php
@@ -605,25 +618,32 @@
                                 <!-- Rationale -->
                                 <div class="form-group mb-3">
                                     <label for="rationale" class="form-label">Rationale</label>
-                                    <textarea class="form-control" id="rationale" name="rationale" rows="3" placeholder="Provide short rationale about your activity, focusing on who are the proponents and why this activity will be conducted." required></textarea>
+                                    <textarea class="form-control" id="rationale" name="rationale" rows="3"
+                                        placeholder="Provide short rationale about your activity, focusing on who are the proponents and why this activity will be conducted."
+                                        required></textarea>
                                 </div>
 
                                 <!-- Description -->
                                 <div class="form-group mb-3">
                                     <label for="description" class="form-label">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Describe the event, focusing on when and where it will happen." required></textarea>
+                                    <textarea class="form-control" id="description" name="description" rows="3"
+                                        placeholder="Describe the event, focusing on when and where it will happen."
+                                        required></textarea>
                                 </div>
 
                                 <!-- Objectives -->
                                 <div class="form-group mb-3">
                                     <label for="general_objective" class="form-label">General Objective</label>
-                                    <textarea class="form-control" id="general_objective" name="general_objective" rows="2" required></textarea>
+                                    <textarea class="form-control" id="general_objective" name="general_objective"
+                                        rows="2" required></textarea>
                                 </div>
                                 <div id="specificObjectivesContainer" class="form-group">
                                     <label class="form-label">Specific Objectives</label>
                                     <div class="input-group mb-2">
-                                        <input type="text" class="form-control" name="specific_objectives[]" placeholder="Specific Objective">
-                                        <button type="button" class="btn btn-outline-secondary" onclick="addSpecificObjective()">+</button>
+                                        <input type="text" class="form-control" name="specific_objectives[]"
+                                            placeholder="Specific Objective">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            onclick="addSpecificObjective()">+</button>
                                     </div>
                                 </div>
 
@@ -631,9 +651,11 @@
                                 <div id="implementationPlanContainer" class="form-group mb-3">
                                     <label class="form-label">Implementation Plan</label>
                                     <div class="input-group mb-2">
-                                        <input type="text" class="form-control" name="activities[]" placeholder="Activity">
+                                        <input type="text" class="form-control" name="activities[]"
+                                            placeholder="Activity">
                                         <input type="date" class="form-control" name="target_dates[]">
-                                        <button type="button" class="btn btn-outline-secondary" onclick="addImplementationPlan()">+</button>
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            onclick="addImplementationPlan()">+</button>
                                     </div>
                                 </div>
 
@@ -641,15 +663,18 @@
                                 <div id="implementingGuidelinesContainer" class="form-group mb-3">
                                     <label class="form-label">Implementing Guidelines</label>
                                     <div class="input-group mb-2">
-                                        <input type="text" class="form-control" name="guidelines[]" placeholder="Guideline">
-                                        <button type="button" class="btn btn-outline-secondary" onclick="addGuideline()">+</button>
+                                        <input type="text" class="form-control" name="guidelines[]"
+                                            placeholder="Guideline">
+                                        <button type="button" class="btn btn-outline-secondary"
+                                            onclick="addGuideline()">+</button>
                                     </div>
                                 </div>
 
                                 <!-- Funding Source -->
                                 <div class="form-group mb-3">
                                     <label for="funding_source" class="form-label">Funding Source</label>
-                                    <textarea class="form-control" id="funding_source" name="funding_source" rows="2" required></textarea>
+                                    <textarea class="form-control" id="funding_source" name="funding_source" rows="2"
+                                        required></textarea>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -663,17 +688,19 @@
             </div>
 
             <!-- Permit to Withdraw Modal -->
-            <div class="modal fade" id="permitModal" tabindex="-1" role="dialog" aria-labelledby="permitLabel" aria-hidden="true">
+            <div class="modal fade" id="permitModal" tabindex="-1" role="dialog" aria-labelledby="permitLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <form id="permitForm" action="generate_permit.php" method="POST" target="_blank">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="permitLabel">Generate Permit to Withdraw</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <!-- Form fields -->
-                                    
+
                                 <div class="form-group row mb-2">
                                     <!-- Event Title -->
                                     <div class="col-12">
@@ -701,13 +728,14 @@
                                         </select>
                                     </div>
                                 </div>
-                                        <input type="hidden" class="form-control" id="total_amount" name="total_amount" readonly>
-                                       
+                                <input type="hidden" class="form-control" id="total_amount" name="total_amount"
+                                    readonly>
+
                                 <!-- Hidden input fields-->
-                                <input type="hidden" class="form-control" id="permit_name" name="organization_name" 
+                                <input type="hidden" class="form-control" id="permit_name" name="organization_name"
                                     value="<?php echo htmlspecialchars($organization_name); ?>" readonly>
                                 <input type="hidden" class="form-control" id="permit_id" name="event_id">
-                                
+
 
                                 <!-- Success Message Alert -->
                                 <div id="successMessage3" class="alert alert-success d-none mt-3" role="alert">
@@ -728,17 +756,19 @@
             </div>
 
             <!-- Liquidation Report Modal -->
-            <div class="modal fade" id="liquidationModal" tabindex="-1" role="dialog" aria-labelledby="liquidationLabel" aria-hidden="true">
+            <div class="modal fade" id="liquidationModal" tabindex="-1" role="dialog" aria-labelledby="liquidationLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <form id="liquidationForm" action="generate_liquidation.php" method="POST" target="_blank">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="liquidationLabel">Generate Liquidation Report</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <!-- Form fields -->
-                                    
+
                                 <div class="form-group row mb-2">
                                     <!-- Event Title -->
                                     <div class="col-12">
@@ -765,21 +795,23 @@
                                         </select>
                                     </div>
                                 </div>
-                                        <input type="hidden" class="form-control" id="liquidation_amount" name="total_amount" readonly>
-                                        
-                                        
+                                <input type="hidden" class="form-control" id="liquidation_amount" name="total_amount"
+                                    readonly>
+
+
                                 <div class="form-group row mb-2">
                                     <!-- Event Start Date -->
                                     <div class="col-12">
                                         <label for="cash_received">Cash Received</label>
-                                        <input type="number" class="form-control" id="cash_received" name="cash_received" required>
-                                        </div>
+                                        <input type="number" class="form-control" id="cash_received"
+                                            name="cash_received" required>
+                                    </div>
                                 </div>
                                 <!-- Hidden input fields-->
-                                <input type="hidden" class="form-control" id="liquidation_name" name="organization_name" 
+                                <input type="hidden" class="form-control" id="liquidation_name" name="organization_name"
                                     value="<?php echo htmlspecialchars($organization_name); ?>" readonly>
                                 <input type="hidden" class="form-control" id="liquidation_id" name="event_id">
-                                
+
 
                                 <!-- Success Message Alert -->
                                 <div id="successMessage4" class="alert alert-success d-none mt-3" role="alert">
@@ -800,23 +832,26 @@
             </div>
 
             <!-- Financial Statement Modal -->
-            <div class="modal fade" id="statementModal" tabindex="-1" role="dialog" aria-labelledby="statementLabel" aria-hidden="true">
+            <div class="modal fade" id="statementModal" tabindex="-1" role="dialog" aria-labelledby="statementLabel"
+                aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <form id="statementForm" action="generate_statement.php" method="POST" target="_blank">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="statementLabel">Generate Financial Statement</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <!-- Form fields -->
-                                    
+
                                 <div class="form-group">
                                     <label for="organization_name">Organization</label>
-                                    <input type="text" class="form-control" id="organization_name" name="organization_name" 
-                                    value="<?php echo htmlspecialchars($organization_name); ?>" readonly>
+                                    <input type="text" class="form-control" id="organization_name"
+                                        name="organization_name"
+                                        value="<?php echo htmlspecialchars($organization_name); ?>" readonly>
                                 </div>
-                                
+
                                 <!-- Success Message Alert -->
                                 <div id="successMessage4" class="alert alert-success d-none mt-3" role="alert">
                                     Financial Statement generated successfully!

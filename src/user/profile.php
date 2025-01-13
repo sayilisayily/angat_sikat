@@ -11,7 +11,7 @@ include '../organization_query.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile</title>
-    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/angat sikat.png" />
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
     <!--Custom CSS for Sidebar-->
     <link rel="stylesheet" href="../html/sidebar.css" />
@@ -260,10 +260,13 @@ include '../organization_query.php';
                         </li>
 
                         <li class="sidebar-item profile-container">
-                                <a class="sidebar-link" href="../user/profile.php" aria-expanded="false" data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
-                                <div class="profile-pic-border" style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden;">
-                                    <img src="<?php echo !empty($profile_picture) ? '../user/uploads/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
-                                        alt="Profile Picture" class="profile-pic" style="max-height: 100%; max-width: 100%; object-fit: cover;" />
+                            <a class="sidebar-link" href="../user/profile.php" aria-expanded="false"
+                                data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
+                                <div class="profile-pic-border"
+                                    style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 50%; border: 2px solid #ccc;">
+                                    <img src="<?php echo !empty($profile_picture) ? '../user/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
+                                        alt="Profile Picture" class="profile-pic"
+                                        style="height: 100%; width: 100%; object-fit: cover;" />
                                 </div>
                                 <span class="profile-name" style="margin-left: 0.5rem; font-size: 0.9rem;">
                                     <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
@@ -318,7 +321,8 @@ include '../organization_query.php';
                                         data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
                                         <img class="border border-dark rounded-circle"
                                             src="<?php echo !empty($profile_picture) ? '../user/' . $profile_picture : '../user/uploads/default.png'; ?>"
-                                            alt="Profile" style="width: 40px; height: 40px; margin-left: 10px;">
+                                            alt="Profile"
+                                            style="width: 40px; height: 40px; margin-left: 10px; object-fit: cover;">
                                         <span class="visually-hidden">
                                             <?php echo htmlspecialchars($user['username']); ?>
                                         </span>
@@ -383,78 +387,105 @@ include '../organization_query.php';
                     </div>
 
                     <!-- Edit Profile Form -->
-                    <form id="edit-profile-form" class="hidden"
-                        enctype="multipart/form-data">
-                        <div class="profile-upload">
-                        <img src="<?php echo !empty($profile_picture) ? htmlspecialchars($profile_picture) : 'uploads/default.png'; ?>" 
-                            alt="Profile Image" 
-                            id="profilePreview" 
-                            class="profile-img">
-
-                            <label for="profile_picture" class="upload-icon">+</label>
-                            <input type="file" id="profile_picture" name="profile_picture" class="hidden"
-                                onchange="document.getElementById('profilePreview').src = window.URL.createObjectURL(this.files[0])">
-                        </div>
-                        <div class="info-text">
-                            <div class="info-label">First Name</div>
-                            <input type="text" name="first_name" value="<?php echo htmlspecialchars($firstname); ?>">
-                        </div>
-                        <div class="info-text">
-                            <div class="info-label">Last Name</div>
-                            <input type="text" name="last_name" value="<?php echo htmlspecialchars($lastname); ?>">
-                        </div>
-                        <div class="info-text">
-                            <div class="info-label">Email</div>
-                            <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>">
-                        </div>
-                        <div class="info-text">
-                            <div class="info-label">Password</div>
-                            <input type="password" name="password" required>
-
-                        </div>
-                        <div class="info-text">
-                            <div class="info-label">Confirm Password</div>
-                            <input type="password" name="confirm_password" required>
-
-                        </div>
-                        
-                        <div class="save-delete">
-                            <div class="delete-btn">
-                                <button type="button" onclick="confirmDelete()">Delete Account</button>
-                            </div>
-                            <div class="save-btn">
-                                <button type="submit">Save Changes</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <script>
-            function confirmDelete() {
-                const confirmation = confirm("Are you sure you want to delete your account? This action cannot be undone.");
-                if (confirmation) {
-                    // Proceed with deletion, redirect to delete action
-                    window.location.href = 'delete_account.php'; // replace with your delete action URL
-                }
-            }
-        </script>
-
+<!-- Edit Profile Form -->
+<form id="edit-profile-form" class="hidden" enctype="multipart/form-data">
+    <div class="profile-upload">
+        <img src="<?php echo !empty($profile_picture) ? htmlspecialchars($profile_picture) : 'uploads/default.png'; ?>" 
+            alt="Profile Image" 
+            id="profilePreview" 
+            class="profile-img">
+        <label for="profile_picture" class="upload-icon">+</label>
+        <input type="file" id="profile_picture" name="profile_picture" class="hidden"
+            onchange="document.getElementById('profilePreview').src = window.URL.createObjectURL(this.files[0])">
     </div>
-    <!-- End of Overall Body Wrapper -->
+    <div class="info-text">
+        <div class="info-label">First Name</div>
+        <input type="text" name="first_name" value="<?php echo htmlspecialchars($firstname); ?>">
+    </div>
+    <div class="info-text">
+        <div class="info-label">Last Name</div>
+        <input type="text" name="last_name" value="<?php echo htmlspecialchars($lastname); ?>">
+    </div>
+    <div class="info-text">
+        <div class="info-label">Email</div>
+        <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>">
+    </div>
+    <div class="info-text">
+        <div class="info-label">Password</div>
+        <input type="password" name="password" required>
+    </div>
+    <div class="info-text">
+        <div class="info-label">Confirm Password</div>
+        <input type="password" name="confirm_password" required>
+    </div>
+    
+    <div class="save-delete">
+        <div class="delete-btn">
+            <button type="button" onclick="confirmDelete()">Delete Account</button>
+        </div>
+        <div class="save-btn">
+            <button type="submit">Save Changes</button>
+        </div>
+    </div>
+</form>
 
-    <script>
-        $(document).ready(function () {
-            $("#edit-profile-form").on("submit", function (event) {
-                event.preventDefault();
-                var formData = new FormData(this);
+<!-- Confirmation Modal -->
+<div id="confirmationModal" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); background-color: #fff; padding: 20px; border: 1px solid #ccc; border-radius: 5px; z-index: 1000; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <p>Do you want to save?</p>
+    <button id="confirmYes">Yes</button>
+    <button id="confirmNo">No</button>
+</div>
+
+<!-- Notification Area -->
+<div id="notification" style="display:none; position:fixed; top:10px; left:50%; transform:translateX(-50%); background-color: #4CAF50; color: white; padding: 15px; border-radius: 5px; z-index: 1000;">
+    Save Successfully
+</div>
+
+<style>
+    #confirmationModal {
+        font-family: Arial, sans-serif;
+    }
+    #confirmationModal button {
+        margin: 5px;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 4px;
+        background-color: #4CAF50; /* Green */
+        color: white;
+        cursor: pointer;
+    }
+    #confirmationModal button:hover {
+        background-color: #45a049; /* Darker green */
+    }
+    #notification {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        text-align: center;
+    }
+</style>
+
+<script>
+    function confirmDelete() {
+        const confirmation = confirm("Are you sure you want to delete your account? This action cannot be undone.");
+        if (confirmation) {
+            window.location.href = 'delete_account.php'; // replace with your delete action URL
+        }
+    }
+
+    $(document).ready(function () {
+        $("#edit-profile-form").on("submit", function (event) {
+            event.preventDefault();
+            $("#confirmationModal").show(); // Show the custom confirmation modal
+
+            $("#confirmYes").off('click').on('click', function () {
+                $("#confirmationModal").hide(); // Hide the confirmation modal
+                var formData = new FormData($("#edit-profile-form")[0]);
 
                 $.ajax({
                     url: "update_profile.php",
                     type: "POST",
                     data: formData,
-                    processData: false, 
+                    processData: false,
                     contentType: false,
                     success: function (response) {
                         try {
@@ -462,17 +493,13 @@ include '../organization_query.php';
                             console.log(response);
 
                             if (response.success) {
-                                $("#editErrorMessage").addClass("d-none");
-                                $("#editSuccessMessage").removeClass("d-none");
-
-                                setTimeout(function () {
-                                    $("#edit-profile-form")[0].reset();
-                                    $("#editSuccessMessage").addClass("d-none");
-                                    location.reload();
-                                }, 2000);
+                                // Show notification
+                                $("#notification").fadeIn().delay(2000).fadeOut(function() {
+                                    // Redirect after notification
+                                    window.location.href = 'profile_info.php'; // Change this to your desired redirect URL
+                                });
                             } else {
-                                $("#editSuccessMessage").addClass("d-none");
-                                $("#editErrorMessage").removeClass("d-none");
+                                // Handle errors
                                 let errorHtml = "";
                                 for (let field in response.errors) {
                                     errorHtml += `<li>${response.errors[field]}</li>`;
@@ -489,10 +516,13 @@ include '../organization_query.php';
                     },
                 });
             });
+
+            $("#confirmNo").off('click').on('click', function () {
+                $("#confirmationModal").hide(); // Hide the modal if "No" is clicked
+            });
         });
-
-
-    </script>
+    });
+</script>
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/sidebarmenu.js"></script>
