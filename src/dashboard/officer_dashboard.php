@@ -844,96 +844,46 @@ include '../organization_query.php';
                     </style>
 
                     <!-- End of Organization Info Box -->
-
                     <!-- Financial Summary Cards Row -->
                     <div class="row justify-content-center mx-1">
                         <?php
-                                // Fetch the latest two balance records from the balance_history table
-                                $query_balance = "SELECT balance, updated_at FROM balance_history 
-                                                WHERE organization_id = ? 
-                                                ORDER BY updated_at DESC 
-                                                LIMIT 2";
+                        // Fetch balance, income, and expense directly from the organizations table
+                        $query_organization = "SELECT balance, income, expense FROM organizations WHERE organization_id = ?";
+                        $stmt_organization = $conn->prepare($query_organization);
+                        $stmt_organization->bind_param("i", $organization_id);
+                        $stmt_organization->execute();
+                        $result_organization = $stmt_organization->get_result();
 
-                                $stmt_balance = $conn->prepare($query_balance);
-                                $stmt_balance->bind_param("i", $organization_id);
-                                $stmt_balance->execute();
-                                $result_balance = $stmt_balance->get_result();
+                        $organization_data = $result_organization->fetch_assoc();
+                        $balance = $organization_data['balance'] ?? 0; // Default to 0 if null
+                        $income = $organization_data['income'] ?? 0; // Default to 0 if null
+                        $expense = $organization_data['expense'] ?? 0; // Default to 0 if null
 
-                                $latest_balances = [];
-                                while ($row = $result_balance->fetch_assoc()) {
-                                    $latest_balances[] = $row['balance'];
-                                }
+                        $stmt_organization->close();
 
-                                // Calculate percentage difference for balance
-                                $balance_percentage_change = 0;
-                                if (count($latest_balances) === 2) {
-                                    $latest_balance = $latest_balances[0];
-                                    $previous_balance = $latest_balances[1];
-
-                                    if ($previous_balance > 0) {
-                                        $balance_percentage_change = (($latest_balance - $previous_balance) / $previous_balance) * 100;
-                                    }
-                                }
-
-                                $stmt_balance->close();
-                                ?>
+                        // Dummy calculations for percentage changes (customize logic as needed)
+                        $balance_percentage_change = 0; // Example: static or calculated based on historical data
+                        $income_percentage_change = 0; // Example: static or calculated based on historical data
+                        $expense_percentage_change = 0; // Example: static or calculated based on historical data
+                        ?>
 
                         <!-- Balance Card -->
                         <div class="col-md-4 mb-3">
                             <div class="card gradient-card-2 p-3 shadow-sm mx-2">
                                 <h7 class="text-white text-start d-block" style="margin-left: 2px;">Balance</h7>
                                 <div class="d-flex align-items-center">
-                                    <h1 class="fw-bold text-white" style="margin-left: 2px;">
-                                        ₱
+                                    <h1 class="fw-bold text-white" style="margin-left: 2px;">₱
                                         <?php echo number_format($balance); ?>
                                     </h1>
                                 </div>
                                 <div class="d-flex justify-content-end">
-                                    <div class="badge bg-warning text-white fw-medium percentage-box"
-                                        style="font-size: 0.75rem; padding: 2px 6px;">
+                                    <div class="badge bg-warning text-white fw-medium percentage-box" style="font-size: 0.75rem; padding: 2px 6px;">
                                         <?php echo number_format(abs($balance_percentage_change), 1); ?>%
                                         <?php echo $balance_percentage_change >= 0 ? '▲' : '▼'; ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <?php
-                                // Fetch the latest two income records from the income_history table
-                                $query_income = "SELECT income, updated_at FROM income_history 
-                                                WHERE organization_id = ? 
-                                                ORDER BY updated_at DESC 
-                                                LIMIT 2";
-
-                                $stmt_income = $conn->prepare($query_income);
-                                $stmt_income->bind_param("i", $organization_id);
-                                $stmt_income->execute();
-                                $result_income = $stmt_income->get_result();
-
-                                $latest_incomes = [];
-                                while ($row = $result_income->fetch_assoc()) {
-                                    $latest_incomes[] = $row['income'];
-                                }
-
-                                // Calculate percentage difference for income
-                                $income_percentage_change = 0;
-                                $income = 0; // Initialize $income
-
-                                if (count($latest_incomes) === 2) {
-                                    $latest_income = $latest_incomes[0];
-                                    $previous_income = $latest_incomes[1];
-
-                                    $income = $latest_income; // Assign latest income to $income
-
-                                    if ($previous_income > 0) {
-                                        $income_percentage_change = (($latest_income - $previous_income) / $previous_income) * 100;
-                                    }
-                                } elseif (count($latest_incomes) === 1) {
-                                    $income = $latest_incomes[0]; // If only one record, assign it to $income
-                                }
-
-                                $stmt_income->close();
-                                ?>
 
                         <!-- Income Card -->
                         <div class="col-md-4 mb-3">
@@ -945,51 +895,13 @@ include '../organization_query.php';
                                     </h1>
                                 </div>
                                 <div class="d-flex justify-content-end">
-                                    <div class="badge bg-warning text-white fw-medium percentage-box"
-                                        style="font-size: 0.75rem; padding: 2px 6px;">
+                                    <div class="badge bg-warning text-white fw-medium percentage-box" style="font-size: 0.75rem; padding: 2px 6px;">
                                         <?php echo number_format(abs($income_percentage_change), 1); ?>%
                                         <?php echo $income_percentage_change >= 0 ? '▲' : '▼'; ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <?php
-                                // Fetch the latest two expense records from the expense_history table
-                                $query = "SELECT expense, updated_at FROM expense_history 
-                                        WHERE organization_id = ? 
-                                        ORDER BY updated_at DESC 
-                                        LIMIT 2";
-
-                                $stmt = $conn->prepare($query);
-                                $stmt->bind_param("i", $organization_id);
-                                $stmt->execute();
-                                $result = $stmt->get_result();
-
-                                $latest_expenses = [];
-                                while ($row = $result->fetch_assoc()) {
-                                    $latest_expenses[] = $row['expense'];
-                                }
-
-                                // Calculate percentage difference
-                                $percentage_change = 0;
-                                $expense = 0; // Initialize $expense
-
-                                if (count($latest_expenses) === 2) {
-                                    $latest = $latest_expenses[0];
-                                    $previous = $latest_expenses[1];
-
-                                    $expense = $latest; // Assign latest expense to $expense
-
-                                    if ($previous > 0) {
-                                        $percentage_change = (($latest - $previous) / $previous) * 100;
-                                    }
-                                } elseif (count($latest_expenses) === 1) {
-                                    $expense = $latest_expenses[0]; // If only one record, assign it to $expense
-                                }
-
-                                $stmt->close();
-                                ?>
 
                         <!-- Expense Card -->
                         <div class="col-md-4 mb-3">
@@ -1001,15 +913,15 @@ include '../organization_query.php';
                                     </h1>
                                 </div>
                                 <div class="d-flex justify-content-end">
-                                    <div class="badge bg-warning text-white fw-medium percentage-box"
-                                        style="font-size: 0.75rem; padding: 2px 6px;">
-                                        <?php echo number_format(abs($percentage_change), 1); ?>%
-                                        <?php echo $percentage_change >= 0 ? '▲' : '▼'; ?>
+                                    <div class="badge bg-warning text-white fw-medium percentage-box" style="font-size: 0.75rem; padding: 2px 6px;">
+                                        <?php echo number_format(abs($expense_percentage_change), 1); ?>%
+                                        <?php echo $expense_percentage_change >= 0 ? '▲' : '▼'; ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <!-- End of Financial Summary Cards Row -->
 
                     <!-- Balance Report Section -->
