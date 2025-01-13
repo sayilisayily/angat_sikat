@@ -265,7 +265,7 @@ $result = $conn->query($sql);
                         </script>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="../reports/reports.php" aria-expanded="false"
+                            <a class="sidebar-link" href="../../reports/reports.php" aria-expanded="false"
                                 data-tooltip="Manage Events">
                                 <i class="bx bx-bar-chart-alt-2" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Reports</span>
