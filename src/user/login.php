@@ -5,8 +5,8 @@ session_start();
 // Include database connection
 include 'connection.php';
 
-// Initialize variables for error handling
-$errors = [];
+// Initialize response array
+$response = ['success' => false, 'message' => '', 'errors' => [], 'redirect_url' => ''];
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Check if email and password are provided
     if (empty($email) || empty($password)) {
-        $errors[] = "Please enter both email and password.";
+        $response['errors'][] = "Please enter both email and password.";
     } else {
         // Prepare query to check if the user exists
         $query = "SELECT * FROM users WHERE email = '$email'";
@@ -34,32 +34,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['organization_id'] = $user['organization_id'];
 
-                // Redirect based on role
-                if ($user['role'] === 'member') {
-                    header("Location: dashboard/member_dashboard.php");
+                // Set success message and redirect URL based on role
+                $response['success'] = true;
+                $response['message'] = "Login successful!";
+                if ($user['role'] === 'admin') {
+                    $response['redirect_url'] = '../dashboard/admin_dashboard.php';
                 } elseif ($user['role'] === 'officer') {
-                    header("Location: ../dashboard/officer_dashboard.php");
-                } elseif ($user['role'] === 'admin') {
-                    header("Location: ../dashboard/admin_dashboard.php");
+                    $response['redirect_url'] = '../dashboard/officer_dashboard.php';
+                } elseif ($user['role'] === 'member') {
+                    $response['redirect_url'] = '../dashboard/member_dashboard.php';
                 } else {
-                    $errors[] = "Unknown user role.";
+                    $response['errors'][] = "Unknown user role.";
                 }
-                exit();
             } else {
-                $errors[] = "Incorrect password.";
+                $response['errors'][] = "Incorrect password.";
             }
         } else {
-            $errors[] = "User not found.";
+            $response['errors'][] = "User not found.";
         }
     }
 }
 
-// Display errors if any
-if (!empty($errors)) {
-    foreach ($errors as $error) {
-        echo "<p style='color: red;'>$error</p>";
-    }
-}
+// Return JSON response
+header('Content-Type: application/json');
+echo json_encode($response);
 
 // Close database connection
 mysqli_close($conn);
