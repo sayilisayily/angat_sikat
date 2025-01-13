@@ -69,13 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $query .= " WHERE user_id = ?";
         $params[] = $user_id;
 
-        // Debug query
-        echo $query;
-        print_r($params);
-
+        // Prepare and execute the statement
         $stmt = $conn->prepare($query);
         if (!$stmt) {
-            die("Query preparation failed: " . $conn->error);
+            $data['success'] = false;
+            $data['errors'] = ["database" => "Query preparation failed: " . $conn->error];
+            echo json_encode($data);
+            exit; // Exit to prevent further output
         }
 
         $stmt->bind_param(str_repeat("s", count($params) - 1) . "i", ...$params);
@@ -93,8 +93,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $data['success'] = false;
         $data['errors'] = $errors;
     }
-
 }
 
+// Return JSON response
 echo json_encode($data);
 ?>

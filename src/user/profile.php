@@ -373,11 +373,15 @@ include '../organization_query.php';
                         </div>
                         <div class="info-text">
                             <div class="info-label">Organization</div>
-                            <div>20241111</div>
+                            <div><?php echo htmlspecialchars($org_name); ?></div>
                         </div>
                         <div class="info-text">
                             <div class="info-label">Role</div>
                             <div><?php echo htmlspecialchars($role); ?></div>
+                        </div>
+                        <div class="info-text">
+                            <div class="info-label">Position</div>
+                            <div><?php echo htmlspecialchars($position); ?></div>
                         </div>
                         
                         
@@ -385,49 +389,56 @@ include '../organization_query.php';
                             <button onclick="toggleEditMode()">Edit Profile</button>
                         </div>
                     </div>
+        <!-- Edit Profile Form -->
+        <form id="edit-profile-form" class="hidden" enctype="multipart/form-data">
+            <div class="profile-upload">
+                <img src="<?php echo !empty($profile_picture) ? htmlspecialchars($profile_picture) : 'uploads/default.png'; ?>" 
+                    alt="Profile Image" 
+                    id="profilePreview" 
+                    class="profile-img">
+                <label for="profile_picture" class="upload-icon">+</label>
+                <input type="file" id="profile_picture" name="profile_picture" class="hidden"
+                    onchange="document.getElementById('profilePreview').src = window.URL.createObjectURL(this.files[0])">
+            </div>
+            <div class="info-text">
+                <div class="info-label">First Name</div>
+                <input type="text" name="first_name" value="<?php echo htmlspecialchars($firstname); ?>">
+            </div>
+            <div class="info-text">
+                <div class="info-label">Last Name</div>
+                <input type="text" name="last_name" value="<?php echo htmlspecialchars($lastname); ?>">
+            </div>
+            <div class="info-text">
+                <div class="info-label">Email</div>
+                <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>">
+            </div>
+            <div class="info-text">
+                <div class="info-label">Password</div>
+                <input type="password" name="password" required>
+            </div>
+            <div class="info-text">
+                <div class="info-label">Confirm Password</div>
+                <input type="password" name="confirm_password" required>
+            </div>
 
-                    <!-- Edit Profile Form -->
-<!-- Edit Profile Form -->
-<form id="edit-profile-form" class="hidden" enctype="multipart/form-data">
-    <div class="profile-upload">
-        <img src="<?php echo !empty($profile_picture) ? htmlspecialchars($profile_picture) : 'uploads/default.png'; ?>" 
-            alt="Profile Image" 
-            id="profilePreview" 
-            class="profile-img">
-        <label for="profile_picture" class="upload-icon">+</label>
-        <input type="file" id="profile_picture" name="profile_picture" class="hidden"
-            onchange="document.getElementById('profilePreview').src = window.URL.createObjectURL(this.files[0])">
-    </div>
-    <div class="info-text">
-        <div class="info-label">First Name</div>
-        <input type="text" name="first_name" value="<?php echo htmlspecialchars($firstname); ?>">
-    </div>
-    <div class="info-text">
-        <div class="info-label">Last Name</div>
-        <input type="text" name="last_name" value="<?php echo htmlspecialchars($lastname); ?>">
-    </div>
-    <div class="info-text">
-        <div class="info-label">Email</div>
-        <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>">
-    </div>
-    <div class="info-text">
-        <div class="info-label">Password</div>
-        <input type="password" name="password" required>
-    </div>
-    <div class="info-text">
-        <div class="info-label">Confirm Password</div>
-        <input type="password" name="confirm_password" required>
-    </div>
-    
-    <div class="save-delete">
-        <div class="delete-btn">
-            <button type="button" onclick="confirmDelete()">Delete Account</button>
-        </div>
-        <div class="save-btn">
-            <button type="submit">Save Changes</button>
-        </div>
-    </div>
-</form>
+            <!-- Success Message Alert -->
+            <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                                        Profile updated successfully!
+                                    </div>
+                                    <!-- Error Message Alert -->
+                                    <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                        <ul id="errorList"></ul> <!-- List for showing validation errors -->
+                                    </div>
+            
+            <div class="save-delete">
+                <div class="delete-btn">
+                    <button type="button" onclick="confirmDelete()">Delete Account</button>
+                </div>
+                <div class="save-btn">
+                    <button type="submit">Save Changes</button>
+                </div>
+            </div>
+        </form>
 
 <!-- Confirmation Modal -->
 <div id="confirmationModal" style="display:none; position:fixed; top:30%; left:50%; transform:translate(-50%, -50%); background-color: #fff; padding: 20px; border: 1px solid #ccc; border-radius: 5px; z-index: 1000; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
@@ -473,49 +484,50 @@ include '../organization_query.php';
     }
 
     $(document).ready(function () {
-        $("#edit-profile-form").on("submit", function (event) {
-            event.preventDefault();
-            $("#confirmationModal").show(); // Show the custom confirmation modal
+                
+        // Add Budget Approval Form Submission via AJAX
+        $("#edit-profile-form").on("submit", function (e) {
+        e.preventDefault();
 
-            $("#confirmYes").off('click').on('click', function () {
-                $("#confirmationModal").hide(); // Hide the confirmation modal
-                var formData = new FormData($("#edit-profile-form")[0]);
+        // Create FormData object to include file uploads
+        let formData = new FormData(this);
 
-                $.ajax({
-                    url: "update_profile.php",
-                    type: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        try {
-                            response = JSON.parse(response);
-                            console.log(response);
-
-                            if (response.success) {
-                                // Show notification
-                                $("#notification").fadeIn().delay(2000).fadeOut(function() {
-                                    // Redirect after notification
-                                    window.location.href = 'profile_info.php'; // Change this to your desired redirect URL
-                                });
-                            } else {
-                                // Handle errors
-                                let errorHtml = "";
-                                for (let field in response.errors) {
-                                    errorHtml += `<li>${response.errors[field]}</li>`;
-                                }
-                                $("#editErrorList").html(errorHtml);
-                            }
-                        } catch (error) {
-                            console.error("Error parsing JSON:", error);
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error updating organization:", error);
-                        console.log(xhr.responseText);
-                    },
-                });
-            });
+        $.ajax({
+            url: "update_profile.php", // Add form submission PHP file
+            type: "POST",
+            data: formData, // Use formData object
+            contentType: false, // Important for file upload
+            processData: false, // Important for file upload
+            success: function (response) {
+                console.log("Server response:", response);
+                try {
+                    response = JSON.parse(response);
+                    if (response.success) {
+                        $("#errorMessage").addClass("d-none");
+                        $("#successMessage").removeClass("d-none");
+                        setTimeout(function () {
+                            $("#edit-profile-form")[0].reset();
+                            $("#successMessage").addClass("d-none");
+                            location.reload(); // Reload the page after 2 seconds
+                        }, 2000);
+                    } else {
+                        $("#successMessage").addClass("d-none");
+                        $("#errorMessage").removeClass("d-none");
+                        let errorHtml = "";
+                        response.errors.forEach(function(error) {
+                            errorHtml += `<li>${error}</li>`;
+                        });
+                        $("#errorList").html(errorHtml);
+                    }
+                } catch (error) {
+                    console.error("Error parsing JSON:", error);
+                    $("#errorMessage").removeClass("d-none").text("An unexpected error occurred.");
+                }
+            },
+            error: function (xhr, status, error) {
+            console.error("Error adding event:", error);
+            },
+        });
 
             $("#confirmNo").off('click').on('click', function () {
                 $("#confirmationModal").hide(); // Hide the modal if "No" is clicked
