@@ -431,9 +431,6 @@ include '../organization_query.php';
                                     </div>
             
             <div class="save-delete">
-                <div class="delete-btn">
-                    <button type="button" onclick="confirmDelete()">Delete Account</button>
-                </div>
                 <div class="save-btn">
                     <button type="submit">Save Changes</button>
                 </div>
