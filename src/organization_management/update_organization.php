@@ -18,6 +18,12 @@ if (empty($_POST['organization_name'])) {
     $organization_name = trim($_POST['organization_name']);
 }
 
+if (empty($_POST['acronym'])) {
+    $errors['acronym'] = 'Organization acronym is required.';
+} else {
+    $acronym = mysqli_real_escape_string($conn, $_POST['acronym']);
+}
+
 // Check for duplicate organization name
 $query = "SELECT * FROM organizations WHERE organization_name = ? AND organization_id != ?";
 $stmt = $conn->prepare($query);
@@ -61,6 +67,7 @@ if (isset($_FILES['organization_logo']) && $_FILES['organization_logo']['error']
 if (empty($errors)) {
     $query = "UPDATE organizations SET 
               organization_name = ?, 
+              acronym=?,
               organization_logo = ?, 
               organization_members = ?, 
               organization_status = ?, 
@@ -68,8 +75,9 @@ if (empty($errors)) {
               WHERE organization_id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param(
-        'ssissi',
+        'sssissi',
         $organization_name,
+        $acronym,
         $organization_logo,
         $organization_members,
         $organization_status,

@@ -254,6 +254,7 @@ $result = $conn->query($sql);
         <thead>
             <tr>
                 <th>Name</th>
+                <th>Acronym</th>
                 <th>Logo</th>
                 <th>Members</th>
                 <th>Status</th>
@@ -277,6 +278,7 @@ $result = $conn->query($sql);
                 // Display the organization data in the table
                 echo "<tr>
                         <td>{$row['organization_name']}</td>
+                        <td>{$row['acronym']}</td>
                         <td><img src='$logo_path' alt='Logo' style='width: 50px; height: 50px; object-fit: cover;'></td>
                         <td>{$row['organization_members']}</td>
                         <td>{$row['organization_status']}</td>
@@ -321,6 +323,11 @@ $result = $conn->query($sql);
                         <div class="form-group mb-3">
                             <label for="organization_name">Organization Name</label>
                             <input type="text" class="form-control" id="organization_name" name="organization_name"
+                                required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="acronym">Organization Acronym</label>
+                            <input type="text" class="form-control" id="acronym" name="acronym"
                                 required>
                         </div>
                         <div class="form-group mb-3">
@@ -390,6 +397,11 @@ $result = $conn->query($sql);
                         <div class="form-group mb-3">
                             <label for="editOrganizationName">Organization Name</label>
                             <input type="text" class="form-control" id="editOrganizationName" name="organization_name"
+                                required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="acronym">Organization Acronym</label>
+                            <input type="text" class="form-control" id="editAcronym" name="acronym"
                                 required>
                         </div>
                         <div class="form-group mb-3">

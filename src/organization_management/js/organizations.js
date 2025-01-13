@@ -70,6 +70,7 @@ $(".edit-btn").on("click", function () {
         // Populate the form fields with the response data
         $("#editOrganizationId").val(response.data.organization_id);
         $("#editOrganizationName").val(response.data.organization_name);
+        $("#editAcronym").val(response.data.acronym);
         $("#editOrganizationMembers").val(response.data.organization_members);
         $("#editOrganizationStatus").val(response.data.organization_status);
         $("#editOrganizationColor").val(response.data.organization_color);

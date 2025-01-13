@@ -72,6 +72,12 @@ if (empty($_POST['organization_status'])) {
     $organization_status = mysqli_real_escape_string($conn, $_POST['organization_status']);
 }
 
+if (empty($_POST['acronym'])) {
+    $errors['acronym'] = 'Organization acronym is required.';
+} else {
+    $acronym = mysqli_real_escape_string($conn, $_POST['acronym']);
+}
+
 // Validate organization color (if provided)
 $organization_color = isset($_POST['organization_color']) ? $_POST['organization_color'] : null;
 if (!empty($organization_color) && !preg_match('/^#[a-fA-F0-9]{6}$/', $organization_color)) {
@@ -84,11 +90,11 @@ if (!empty($errors)) {
     $data['errors'] = $errors;
 } else {
     // Use prepared statement to insert organization into the database
-    $query = "INSERT INTO organizations (organization_name, organization_logo, organization_members, organization_status, organization_color) 
-              VALUES (?, ?, ?, ?, ?)";
+    $query = "INSERT INTO organizations (organization_name, acronym, organization_logo, organization_members, organization_status, organization_color) 
+              VALUES (?, ?, ?, ?, ?, ?)";
     
     if ($stmt = $conn->prepare($query)) {
-        $stmt->bind_param('ssiss', $organization_name, $organization_logo, $organization_members, $organization_status, $organization_color);
+        $stmt->bind_param('sssiss', $organization_name, $acronym, $organization_logo, $organization_members, $organization_status, $organization_color);
 
         if ($stmt->execute()) {
             $data['success'] = true;
