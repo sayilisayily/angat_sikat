@@ -449,9 +449,9 @@ $result = $conn->query($sql);
 
                                 <!-- Title Field -->
                                 <div class="form-group mt-3">
-                                    <label for="title">Title</label>
+                                    <label for="title">Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <select name="title" id="title" class="form-control" required>
-                                        <option value="">Select Title</option>
+                                        <option value="">Select Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></option>
                                         <?php
                                         include 'connection.php';
 
@@ -505,20 +505,20 @@ $result = $conn->query($sql);
 
                                 <!-- Category Field -->
                                 <div class="form-group">
-                                    <label for="category">Category</label>
+                                    <label for="category">Category <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <input type="text" class="form-control" id="category" name="category" readonly>
                                 </div>
 
                                 <!-- Amount Field -->
                                 <div class="form-group mt-3">
-                                    <label for="amount">Amount</label>
+                                    <label for="amount">Amount <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <input type="number" class="form-control" id="total_amount" name="total_amount" step="0.01"
                                         readonly>
                                 </div>
 
                                 <!-- Reference (File Upload) Field -->
                                 <div class="form-group mt-3">
-                                    <label for="reference">Reference</label>
+                                    <label for="reference">Reference <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <input type="file" class="form-control" id="reference" name="reference"
                                         accept=".pdf,.jpg,.png,.doc,.docx" required>
                                 </div>

@@ -484,9 +484,9 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                             <form id="addBudgetApprovalForm" enctype="multipart/form-data">
                                 <div class="form-group">
                                     <input type="hidden" name="id" id="id">
-                                    <label for="title">Title</label>
+                                    <label for="title">Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <select name="title" id="title" class="form-control" required>
-                                        <option value="">Select Title</option>
+                                        <option value="">Select Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></option>
                                         <!-- Fetch titles from events, purchases, and maintenance -->
                                         <?php
                                         // Fetch events
@@ -525,7 +525,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                                     </select>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="attachment" class="form-label">Attachment:</label>
+                                    <label for="attachment" class="form-label">Attachment: <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <input type="file" name="attachment" id="attachment" class="form-control" required>
                                 </div>
                                 <!-- Success Message Alert -->

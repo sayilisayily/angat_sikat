@@ -444,7 +444,7 @@ $result = $conn->query($sql);
 
                                 <!-- Title Selector -->
                                 <div class="form-group mt-3">
-                                    <label for="titleSelector">Select Event Title</label>
+                                    <label for="titleSelector">Select Event Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <select class="form-control" id="titleSelector" name="titleSelector">
                                     <option value="">Select Event Title</option>
                                     <?php
@@ -470,7 +470,7 @@ $result = $conn->query($sql);
 
                                 <!-- Title Input Field -->
                                 <div class="form-group mt-3">
-                                    <label for="titleInput">Title</label>
+                                    <label for="titleInput">Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <input type="text" class="form-control" id="titleInput" name="title" required>
                                 </div>
 
@@ -479,13 +479,13 @@ $result = $conn->query($sql);
 
                                 <!-- Revenue Field -->
                                 <div class="form-group mt-3">
-                                    <label for="revenue">Revenue</label>
+                                    <label for="revenue">Revenue <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <input type="number" class="form-control" id="revenue" name="revenue" step="0.01" required>
                                 </div>
 
                                 <!-- Reference (File Upload) Field -->
                                 <div class="form-group mt-3">
-                                    <label for="reference">Reference</label>
+                                    <label for="reference">Reference <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <input type="file" class="form-control" id="reference" name="reference" accept=".pdf,.jpg,.png,.doc,.docx" required>
                                 </div>
 
