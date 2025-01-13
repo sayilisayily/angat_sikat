@@ -486,9 +486,9 @@
                                 <div class="form-group row mb-2">
                                     <!-- Event Title -->
                                     <div class="col-12">
-                                    <label for="event_title">Event Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
-                                    <select class="form-control" id="event_title" name="event_title" required>
-                                        <option value="">Select Event Title </option>
+                                        <label for="event_title">Event Title</label>
+                                        <select class="form-control" id="event_title" name="event_title" required>
+                                            <option value="">Select Event Title</option>
                                             <?php
                                             // Fetch event titles with event_type 'expense' and accomplishment_status = 0
                                             $event_query = "SELECT title, event_id, event_start_date FROM events 
@@ -549,7 +549,7 @@
                             <div class="modal-body">
                                 <!-- Event Title -->
                                 <div class="form-group">
-                                    <label for="proposal_title" class="form-label">Event Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label for="proposal_title" class="form-label">Event Title</label>
                                     <select class="form-control" id="proposal_title" name="event_title" required>
                                         <option value="">Select Event Title</option>
                                         <?php
@@ -576,7 +576,7 @@
 
                                 <!-- Collaborators -->
                                 <div class="form-group mb-3">
-                                    <label for="collaborators" class="form-label">Collaborator(s) <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label for="collaborators" class="form-label">Collaborator(s)</label>
                                     <div id="collaborators" class="form-check">
                                         <!-- Add an N/A option -->
                                         <div class="form-check">
@@ -607,7 +607,7 @@
 
                                 <!-- Agenda -->
                                 <div class="form-group mb-3">
-                                    <label for="agenda" class="form-label">Agenda (Select SDG Goals) <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label for="agenda" class="form-label">Agenda (Select SDG Goals)</label>
                                     <div class="form-check">
                                         <?php
                                         $sdg_goals = [
@@ -641,7 +641,7 @@
 
                                 <!-- Rationale -->
                                 <div class="form-group mb-3">
-                                    <label for="rationale" class="form-label">Rationale <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label for="rationale" class="form-label">Rationale</label>
                                     <textarea class="form-control" id="rationale" name="rationale" rows="3"
                                         placeholder="Provide short rationale about your activity, focusing on who are the proponents and why this activity will be conducted."
                                         required></textarea>
@@ -649,7 +649,7 @@
 
                                 <!-- Description -->
                                 <div class="form-group mb-3">
-                                    <label for="description" class="form-label">Description <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label for="description" class="form-label">Description</label>
                                     <textarea class="form-control" id="description" name="description" rows="3"
                                         placeholder="Describe the event, focusing on when and where it will happen."
                                         required></textarea>
@@ -657,12 +657,12 @@
 
                                 <!-- Objectives -->
                                 <div class="form-group mb-3">
-                                    <label for="general_objective" class="form-label">General Objective <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label for="general_objective" class="form-label">General Objective</label>
                                     <textarea class="form-control" id="general_objective" name="general_objective"
                                         rows="2" required></textarea>
                                 </div>
                                 <div id="specificObjectivesContainer" class="form-group">
-                                    <label class="form-label">Specific Objectives <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label class="form-label">Specific Objectives</label>
                                     <div class="input-group mb-2">
                                         <input type="text" class="form-control" name="specific_objectives[]"
                                             placeholder="Specific Objective" required>
@@ -673,7 +673,7 @@
 
                                 <!-- Implementation Plan -->
                                 <div id="implementationPlanContainer" class="form-group mb-3">
-                                    <label class="form-label">Implementation Plan <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label class="form-label">Implementation Plan</label>
                                     <div class="input-group mb-2">
                                         <input type="text" class="form-control" name="activities[]"
                                             placeholder="Activity" required>
@@ -685,7 +685,7 @@
 
                                 <!-- Implementing Guidelines -->
                                 <div id="implementingGuidelinesContainer" class="form-group mb-3">
-                                    <label class="form-label">Implementing Guidelines <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label class="form-label">Implementing Guidelines</label>
                                     <div class="input-group mb-2">
                                         <input type="text" class="form-control" name="guidelines[]"
                                             placeholder="Guideline" required>
@@ -696,7 +696,7 @@
 
                                 <!-- Funding Source -->
                                 <div class="form-group mb-3">
-                                    <label for="funding_source" class="form-label">Funding Source <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label for="funding_source" class="form-label">Funding Source</label>
                                     <textarea class="form-control" id="funding_source" name="funding_source" rows="2"
                                         required></textarea>
                                 </div>
@@ -728,7 +728,7 @@
                                 <div class="form-group row mb-2">
                                     <!-- Event Title -->
                                     <div class="col-12">
-                                        <label for="permit_title">Event Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                        <label for="permit_title">Event Title</label>
                                         <select class="form-control" id="permit_title" name="event_title" required>
                                             <option value="">Select Event Title</option>
                                             <?php
@@ -796,7 +796,7 @@
                                 <div class="form-group row mb-2">
                                     <!-- Event Title -->
                                     <div class="col-12">
-                                        <label for="liquidation_title">Event Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                        <label for="liquidation_title">Event Title</label>
                                         <select class="form-control" id="liquidation_title" name="event_title" required>
                                             <option value="">Select Event Title</option>
                                             <?php
@@ -826,7 +826,7 @@
                                 <div class="form-group row mb-2">
                                     <!-- Event Start Date -->
                                     <div class="col-12">
-                                        <label for="cash_received">Cash Received <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                        <label for="cash_received">Cash Received</label>
                                         <input type="number" class="form-control" id="cash_received"
                                             name="cash_received" required>
                                     </div>
@@ -870,7 +870,7 @@
                                 <!-- Form fields -->
 
                                 <div class="form-group">
-                                    <label for="organization_name">Organization <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label for="organization_name">Organization</label>
                                     <input type="text" class="form-control" id="organization_name"
                                         name="organization_name"
                                         value="<?php echo htmlspecialchars($organization_name); ?>" readonly>
