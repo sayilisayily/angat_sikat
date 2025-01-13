@@ -7,19 +7,20 @@ header('Content-Type: application/json');
 try {
 // Get form data
 $event_id = $_POST['event_id'];
-$org_query = "SELECT organization_name FROM organizations WHERE organization_id = $organization_id";
+$org_query = "SELECT organization_name, acronym FROM organizations WHERE organization_id = $organization_id";
                                     $org_result = mysqli_query($conn, $org_query);
 
                                     if ($org_result && mysqli_num_rows($org_result) > 0) {
                                         $org_row = mysqli_fetch_assoc($org_result);
                                         $organization_name = $org_row['organization_name'];
+                                        $acronym = $org_row['acronym'];
                                     } else {
                                         $organization_name = "Unknown Organization"; // Fallback if no name is found
                                     }
 
 class CustomPDF extends TCPDF {
     public function Header() {
-        $this->SetFont('arial', 'I', 10); // Set font to Arial, size 11
+        $this->SetFont('play', 'I', 10); // Set font to Arial, size 11
         $this->Cell(0, 10, 'SGOA FORM 10', 0, 1, 'R'); // Right-aligned header text
     }
 
@@ -142,31 +143,20 @@ $pdf->SetFont($arial, '', 11);
 $pdf->MultiCell(0, 0, "Coordinator, SDS\nThis Campus\n\nSir:\n\nGreetings of peace. I am writing this letter to request for budget disbursement allotted for ". $eventTitle ." scheduled on " . $eventStartDate . ". This budget will be utilized as follows:", 0, 'L', 0, 1, '', '', true);
 $pdf->Ln(5);
 
-
-// Add table title spanning all columns
-$pdf->SetFont($arialBold, '', 11);
-$pdf->SetFillColor(230, 230, 230); // Optional: Highlight the title background
-$pdf->Cell(160, 10, "PROJECTED EXPENSES", 1, 1, 'L'); // Spans all columns (60 + 30 + 30 + 40 = 160)
-
-// Add table header
-$pdf->SetFont($arialBold, '', 11);
-$pdf->Cell(50, 10, "Description", 1, 0, 'L');
-$pdf->Cell(25, 10, "QTY", 1, 0, 'C');
-$pdf->Cell(25, 10, "UNIT PRICE", 1, 0, 'C');
-$pdf->Cell(30, 10, "TOTAL", 1, 0, 'C');
-$pdf->Cell(30, 10, "", 1, 1, 'C');  
-
-
-
-$query = "SELECT description, quantity, amount AS unit_price FROM event_items WHERE event_id = ?";
+// Prepare data for the table
+$query = "SELECT description, quantity, amount AS unit_price FROM event_items WHERE event_id = ? AND type = 'expense'";
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $event_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
 $items = [];
+$totalAmount = 0;
+
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
+        $row['total'] = $row['quantity'] * $row['unit_price'];
+        $totalAmount += $row['total'];
         $items[] = $row;
     }
 } else {
@@ -174,56 +164,145 @@ if ($result->num_rows > 0) {
     echo json_encode(['error' => 'No items found for the given event ID.']);
     exit;
 }
-// Table rows
-$pdf->SetFont($arial, '', 11);
-$totalAmount = 0;
 
+// Create the table HTML
+$html = '
+<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse; text-align: center;">
+    <thead>
+        <tr>
+            <th colspan="4">
+                PROJECTED EXPENSES
+            </th>
+        </tr>
+        <tr>
+            <th style="width: 50%;">Description</th>
+            <th style="width: 15%;">QTY</th>
+            <th style="width: 15%;">UNIT PRICE</th>
+            <th style="width: 20%;">TOTAL</th>
+        </tr>
+    </thead>
+    <tbody>';
+
+// Add rows to the table
 foreach ($items as $item) {
-    $description = $item['description'];
-    $quantity = $item['quantity'];
-    $unitPrice = $item['unit_price'];
-    $total = $quantity * $unitPrice;
-    $totalAmount += $total;
-
-    $pdf->Cell(50, 10, $description, 1, 0, 'C', 0);
-    $pdf->Cell(25, 10, $quantity, 1, 0, 'C', 0);
-    $pdf->Cell(25, 10, number_format($unitPrice), 1, 0, 'C', 0);
-    $pdf->Cell(30, 10, number_format($total), 1, 0, 'C', 0);
-    $pdf->Cell(30, 10, "", 1, 1, 'C'); 
+    $html .= '
+        <tr>
+            <td style="text-align: left;">' . htmlspecialchars($item['description']) . '</td>
+            <td>' . $item['quantity'] . '</td>
+            <td>' . number_format($item['unit_price'], 2) . '</td>
+            <td>' . number_format($item['total'], 2) . '</td>
+        </tr>';
 }
 
-// Total row
-$pdf->SetFont($arialBold, '', 11);
-$pdf->Cell(130, 10, "TOTAL", 1, 0, 'L', 0);
-$pdf->Cell(30, 10, number_format($totalAmount), 1, 1, 'C', 0);
-$pdf->Ln(10);
+// Add the total row
+$html .= '
+        <tr style="font-weight: bold;">
+            <td colspan="3" style="text-align: right;">TOTAL</td>
+            <td>' . number_format($totalAmount, 2) . '</td>
+        </tr>
+    </tbody>
+</table>';
+
+// Write the table to the PDF
+$pdf->writeHTML($html, true, false, true, false, '');
+
 
 // Prepared By Section
 $pdf->SetFont($arial, '', 11); 
 $pdf->Cell(0, 0, "Prepared by:", 0, 1, 'L', 0, '', 1);
 $pdf->Ln(10); // Space for signatures above names
+// Query to fetch the President and Treasurer of the organization
+$query = "
+    SELECT first_name, last_name, position 
+    FROM users 
+    WHERE organization_id = ? AND position IN ('President', 'Treasurer')
+    ORDER BY FIELD(position, 'Treasurer', 'President')";
 
-$pdf->SetFont($arialBold, '', 11); 
-$pdf->Cell(80, 10, "NAME", 0, 0, 'L', 0); // Name position after space
-$pdf->Cell(80, 10, "NAME", 0, 1, 'L', 0);
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $organization_id); // Assuming $organization_id is available
+$stmt->execute();
+$result = $stmt->get_result();
+
+$president = null;
+$treasurer = null;
+
+// Loop through results and assign values based on position
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        if ($row['position'] == 'President') {
+            $president = $row['first_name'] . ' ' . $row['last_name'];
+        } elseif ($row['position'] == 'Treasurer') {
+            $treasurer = $row['first_name'] . ' ' . $row['last_name'];
+        }
+    }
+}
+
+// Default values if no President or Treasurer found
+if (!$president) {
+    $president = "N/A";
+}
+if (!$treasurer) {
+    $treasurer = "N/A";
+}
+
+// Add the fetched names to the PDF
+$pdf->SetFont($arialBold, '', 11);
+$pdf->Cell(80, 10, strtoupper($treasurer), 0, 0, 'L', 0); // Treasurer's name
+$pdf->Cell(80, 10, strtoupper($president), 0, 1, 'L', 0); // President's name
 $pdf->SetFont($arial, 'B', 11);
-$pdf->Cell(80, 10, "Treasurer, Organization", 0, 0, 'L', 0);
-$pdf->Cell(80, 10, "President, Organization", 0, 1, 'L', 0);
-$pdf->Ln(10); // Space between sections
+$pdf->Cell(80, 10, "Treasurer, ".$acronym, 0, 0, 'L', 0);
+$pdf->Cell(80, 10, "President, ".$acronym, 0, 1, 'L', 0);
+$pdf->Ln(10); // Add spacing between sections
+
 
 // Recommending Approval Section
 $pdf->SetFont($arial, '', 11);
 $pdf->Cell(0, 0, "Recommending Approval:", 0, 1, 'L', 0, '', 1);
 $pdf->Ln(10); // Space for signatures above names
 
-// Recommending Approval Table
+// Query to fetch the Junior and Senior Advisers of the organization
+$query = "
+    SELECT first_name, last_name, position 
+    FROM advisers 
+    WHERE organization_id = ? AND position IN ('Junior Adviser', 'Senior Adviser')
+    ORDER BY FIELD(position, 'Junior Adviser', 'Senior Adviser')";
+
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $organization_id); // Assuming $organization_id is available
+$stmt->execute();
+$result = $stmt->get_result();
+
+$juniorAdviser = null;
+$seniorAdviser = null;
+
+// Loop through results and assign values based on position
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        if ($row['position'] == 'Junior Adviser') {
+            $juniorAdviser = $row['first_name'] . ' ' . $row['last_name'];
+        } elseif ($row['position'] == 'Senior Adviser') {
+            $seniorAdviser = $row['first_name'] . ' ' . $row['last_name'];
+        }
+    }
+}
+
+// Default values if no advisers are found
+if (!$juniorAdviser) {
+    $juniorAdviser = "N/A";
+}
+if (!$seniorAdviser) {
+    $seniorAdviser = "N/A";
+}
+
+// Add the fetched names to the Recommending Approval Table in the PDF
 $pdf->SetFont($arialBold, '', 11);
-$pdf->Cell(80, 10, "NAME", 0, 0, 'L', 0); // Name position after space
-$pdf->Cell(80, 10, "NAME", 0, 1, 'L', 0);
+$pdf->Cell(80, 10, strtoupper($juniorAdviser), 0, 0, 'L', 0); // Junior Adviser name
+$pdf->Cell(80, 10, strtoupper($seniorAdviser), 0, 1, 'L', 0); // Senior Adviser name
 $pdf->SetFont($arial, 'B', 11);
-$pdf->Cell(80, 10, "Junior Adviser, Organization", 0, 0, 'L', 0);
-$pdf->Cell(80, 10, "Senior Adviser, Organization", 0, 1, 'L', 0);
-$pdf->Ln(10); // Space between sections
+$pdf->Cell(80, 10, "Junior Adviser, " . $acronym, 0, 0, 'L', 0);
+$pdf->Cell(80, 10, "Senior Adviser, " . $acronym, 0, 1, 'L', 0);
+$pdf->Ln(10); // Add spacing between sections
+
 
 // Example Names for Signatures
 $pdf->SetFont($arialBold, '', 11);

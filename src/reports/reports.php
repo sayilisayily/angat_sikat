@@ -3,6 +3,12 @@
     include '../connection.php';
     include '../session_check.php';
     include '../user_query.php';
+
+    // Check if user is logged in and has officer role
+    if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
+        header("Location: ../user/login.html");
+        exit();
+    }
 ?>
 
 <!doctype html>
@@ -284,23 +290,33 @@
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
                             <li class="nav-item">
-                                <button id="notificationBtn"
-                                    style="background-color: transparent; border: none; padding: 0; position: relative;">
-                                    <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover"
-                                        colors="primary:#004024" style="width:30px; height:30px;">
-                                    </lord-icon>
-                                    <!-- Notification Count Badge -->
-                                    <span id="notificationCount" style="
-                                    position: absolute;
-                                    top: -5px;
-                                    right: -5px;
-                                    background-color: red;
-                                    color: white;
-                                    font-size: 12px;
-                                    padding: 2px 6px;
-                                    border-radius: 50%;
-                                    display: none;">0</span>
-                                </button>
+                                <!-- Notification Icon -->
+                                    <div style="position: relative; display: inline-block;">
+                                    <button id="notificationBtn" style="background-color: transparent; border: none; padding: 0;">
+                                        <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover" 
+                                            colors="primary:#004024" style="width:30px; height:30px;">
+                                        </lord-icon>
+                                        <!-- Notification Count Badge -->
+                                        <span id="notificationCount" style="position: absolute; top: -5px; right: -5px; 
+                                            background-color: red; color: white; font-size: 12px; padding: 2px 6px; 
+                                            border-radius: 50%; display: none;">0</span>
+                                    </button>
+
+                                    <!-- Notification Dropdown -->
+                                    <div id="notificationDropdown" class="dropdown-menu p-2 shadow" 
+                                        style="display: none; position: absolute; right: 0; top: 35px; width: 300px; max-height: 400px; 
+                                        overflow-y: auto; background-color: white; border-radius: 5px; z-index: 1000;">
+                                        <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                                            Notifications
+                                        </p>
+                                        <div id="notificationList">
+                                            <!-- Notifications will be dynamically loaded here -->
+                                        </div>
+                                        <p id="noNotifications" style="text-align: center; margin-top: 10px; color: gray; display: none;">
+                                            No new notifications
+                                        </p>
+                                    </div>
+                                </div>
                             </li>
                             <li class="nav-item dropdown">
                                 <!-- Profile Dropdown -->
@@ -405,48 +421,7 @@
                 </div>
             </div>
 
-            <!-- Reports Table -->
-            <div class="tablecontainer mt-3 p-4">
-                <h4 class="mb-4">Reports
-                    <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addReportModal"
-                        style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
-                        <i class="fa-solid fa-plus"></i> Add Report
-                    </button>
-                </h4>
-                <table class="table">
-                    <thead class="thead-light">
-                        <tr>
-                            <th>Report Name</th>
-                            <th>Report Type</th>
-                            <th>Uploaded On</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $query = "SELECT * FROM reports WHERE organization_id=$organization_id";
-                        $result = mysqli_query($conn, $query);
-
-                        if (!$result) {
-                            die("Query failed: " . mysqli_error($conn));
-                        }
-
-                        while ($row = mysqli_fetch_assoc($result)) { ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['file_name']); ?></td>
-                            <td><?php echo htmlspecialchars($row['report_type']); ?></td>
-                            <td><?php echo htmlspecialchars($row['created_at']); ?></td>
-                            <td>
-                                <button class="btn btn-secondary"><i class="fa-solid fa-file-export"></i> Export</button>
-                                <button class="btn btn-primary"><i class="fa-solid fa-print"></i> Print</button>
-                                <button class="btn btn-danger"><i class="fa-solid fa-archive"></i> Archive</button>
-                            </td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            
 
             <!-- Budget Request Modal -->
             <div class="modal fade" id="budgetRequestModal" tabindex="-1" role="dialog" aria-labelledby="budgetRequestLabel" aria-hidden="true">
