@@ -720,13 +720,13 @@
                                     <div class="col-12 col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fa-solid fa-plus"></i></span>
-                                            <input type="number" step="0.01" class="form-control" id="addAmount" name="add_amount" placeholder="Add Amount">
+                                            <input type="number" step="0.01" class="form-control" id="addAmount" name="add_amount" placeholder="Add Amount" required>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fa-solid fa-minus"></i></span>
-                                            <input type="number" step="0.01" class="form-control" id="subtractAmount" name="subtract_amount" placeholder="Subtract Amount">
+                                            <input type="number" step="0.01" class="form-control" id="subtractAmount" name="subtract_amount" placeholder="Subtract Amount" required>
                                         </div>
                                     </div>
                                 </div>
@@ -772,13 +772,13 @@
                                     <div class="col-12 col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fa-solid fa-plus"></i></span>
-                                            <input type="number" step="0.01" class="form-control" id="addCashOnBank" name="add_cash_on_bank" placeholder="Add Amount">
+                                            <input type="number" step="0.01" class="form-control" id="addCashOnBank" name="add_cash_on_bank" placeholder="Add Amount" required>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fa-solid fa-minus"></i></span>
-                                            <input type="number" step="0.01" class="form-control" id="subtractCashOnBank" name="subtract_cash_on_bank" placeholder="Subtract Amount">
+                                            <input type="number" step="0.01" class="form-control" id="subtractCashOnBank" name="subtract_cash_on_bank" placeholder="Subtract Amount" required>
                                         </div>
                                     </div>
                                 </div>
@@ -823,13 +823,13 @@
                                     <div class="col-12 col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fa-solid fa-plus"></i></span>
-                                            <input type="number" step="0.01" class="form-control" id="addCashOnHand" name="add_cash_on_hand" placeholder="Add Amount">
+                                            <input type="number" step="0.01" class="form-control" id="addCashOnHand" name="add_cash_on_hand" placeholder="Add Amount" required>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fa-solid fa-minus"></i></span>
-                                            <input type="number" step="0.01" class="form-control" id="subtractCashOnHand" name="subtract_cash_on_hand" placeholder="Subtract Amount">
+                                            <input type="number" step="0.01" class="form-control" id="subtractCashOnHand" name="subtract_cash_on_hand" placeholder="Subtract Amount" required>
                                         </div>
                                     </div>
                                 </div>
@@ -926,7 +926,7 @@
                             </div>
                             
                             <form id="editBudgetForm">
-                                <input type="hidden" id="edit_allocation_id" name="edit_allocation_id">
+                                <input type="hidden" id="edit_allocation_id" name="edit_allocation_id" required>
                                 <input type="hidden" name="edit_organization_id" value="<?php echo $organization_id; ?>">
                                 <!-- Hidden input for allocation ID -->
                                 <div class="mb-3">
@@ -938,13 +938,13 @@
                                     <div class="col-12 col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fa-solid fa-plus"></i></span>
-                                            <input type="number" step="0.01" class="form-control" id="addBudget" name="add_budget" placeholder="Add Amount">
+                                            <input type="number" step="0.01" class="form-control" id="addBudget" name="add_budget" placeholder="Add Amount" required>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fa-solid fa-minus"></i></span>
-                                            <input type="number" step="0.01" class="form-control" id="subtractBudget" name="subtract_budget" placeholder="Subtract Amount">
+                                            <input type="number" step="0.01" class="form-control" id="subtractBudget" name="subtract_budget" placeholder="Subtract Amount" required>
                                         </div>
                                     </div>
                                 </div>
