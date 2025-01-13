@@ -44,6 +44,7 @@
     header {
       display: flex;
       justify-content: space-between;
+      /* Space between logos */
       align-items: center;
       padding: 20px;
       position: relative;
@@ -51,7 +52,8 @@
     }
 
     .logo {
-      height: 60px;
+      height: 100px;
+      /* Adjust height for left and right logos */
       width: auto;
     }
 
@@ -65,7 +67,16 @@
       z-index: 3;
       text-align: center;
       padding: 0 20px;
-      margin-top: -50px;
+      margin: 0;
+      /* Remove margin to center container */
+      position: absolute;
+      /* Use absolute positioning */
+      top: 50%;
+      /* Center vertically */
+      left: 50%;
+      /* Center horizontally */
+      transform: translate(-50%, -50%);
+      /* Adjust for centering */
     }
 
     h1 {
@@ -82,7 +93,8 @@
     }
 
     h1 span:nth-child(2) {
-      color: #ffb000;
+      color: #00bfff;
+      /* Neon blue */
     }
 
     h1 span:nth-child(3) {
@@ -102,31 +114,16 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      background-color: #ffb000;
+      background-color: #00bfff;
+      /* Blue */
       animation: fadeIn 2s ease-in-out, pulse 1.5s infinite;
       transition: background-color 0.3s ease;
       margin-top: 20px;
     }
 
     .get-started:hover {
-      background-color: #ffa300;
-    }
-
-    .sign-up {
-      padding: 10px 20px;
-      font-size: 16px;
-      color: #00b415;
-      background-color: transparent;
-      border: 2px solid #00b415;
-      border-radius: 5px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .sign-up:hover {
-      background-color: white;
-      color: #27ae60;
+      background-color: #0095e0;
+      /* Darker blue on hover */
     }
 
     @keyframes fadeIn {
@@ -183,10 +180,6 @@
       .get-started {
         padding: 10px 20px;
       }
-
-      .sign-up {
-        padding: 8px 16px;
-      }
     }
   </style>
 </head>
@@ -194,14 +187,14 @@
 <body>
   <div class="overlay"></div>
   <header>
-    <img src="../assets/images/logos/neon_sikat.png" alt="Your Logo" class="logo" />
-    <a href="../user/register.php" class="sign-up">Sign Up</a>
+    <img src="../assets/images/logos/neon_sikat.png" alt="Left Logo" class="logo" />
+    <img src="../user/cvsu_logo.png" alt="Right Logo" class="logo" />
   </header>
 
   <div class="container">
     <h1>
       <span style="color: #ffffff">Angat</span>
-      <span style="color: #ff7b00">Sikat</span>
+      <span style="color: #00bfff">Sikat</span>
       <br />
       <span style="color: #ffffff">Web App</span>
     </h1>
