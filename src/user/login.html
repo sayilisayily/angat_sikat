@@ -75,7 +75,6 @@
       color: #00542f;
       font-size: 1.5rem;
       margin-left: 10px;
-      /* Space between input and icon */
     }
 
     .btn {
@@ -132,14 +131,11 @@
           </p>
 
           <form id="loginForm">
-            <!-- Success Message Alert -->
             <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
               Login successful!
             </div>
-            <!-- Error Message Alert -->
             <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
               <ul id="errorList"></ul>
-              <!-- List for showing validation errors -->
             </div>
 
             <div class="mb-3 input-group">
@@ -190,15 +186,14 @@
           .then((data) => {
             if (data.success) {
               // Show success message
-              const successMessage =
-                document.getElementById("successMessage");
+              const successMessage = document.getElementById("successMessage");
               successMessage.textContent = data.message;
               successMessage.classList.remove("d-none");
 
               // Redirect to the appropriate dashboard
               setTimeout(() => {
-                window.location.href = data.redirect_url; // Redirect URL provided by the server
-              }, 1500); // Wait 1.5 seconds to display the success message
+                window.location.href = data.redirect_url;
+              }, 1500);
             } else {
               // Show error messages
               const errorMessage = document.getElementById("errorMessage");
@@ -215,6 +210,15 @@
             console.error("Error:", error);
           });
       });
+
+    // Toggle password visibility
+    document.getElementById("togglePassword").addEventListener("click", function () {
+      const passwordInput = document.getElementById("password");
+      const passwordType = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+      passwordInput.setAttribute("type", passwordType);
+      this.querySelector("i").classList.toggle("bx-show");
+      this.querySelector("i").classList.toggle("bx-hide");
+    });
   </script>
 </body>
 

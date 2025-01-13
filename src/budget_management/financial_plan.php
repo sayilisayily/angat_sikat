@@ -579,13 +579,13 @@ $result = $conn->query($sql);
                                 <!-- Form fields -->
                                 <div class="form-group mb-2">
                                     <div class="col">
-                                        <label for="title">Title</label>
+                                        <label for="title">Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <input type="text" class="form-control" id="title" name="title" required>
                                     </div>
                                 </div>
                                 <div class="form-group row mb-2">
                                     <div class="col">
-                                        <label for="type">Type</label>
+                                        <label for="type">Type <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <select class="form-control" id="type" name="type" required>
                                             <option value="">Select Type</option>
                                             <option value="Income">Income</option>
@@ -593,7 +593,7 @@ $result = $conn->query($sql);
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="category" class="form-label">Category</label>
+                                        <label for="category" class="form-label">Category <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <select class="form-control" id="category" name="category" required>
                                             <option value="">Select Category</option>
                                             <?php
@@ -621,11 +621,11 @@ $result = $conn->query($sql);
                                 </div>
                                 <div class="form-group row mb-2">
                                     <div class="col">
-                                        <label for="date">Proposed Date</label>
+                                        <label for="date">Proposed Date <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <input type="date" class="form-control" id="date" name="date" required>
                                     </div>
                                     <div class="col">
-                                        <label for="amount">Amount</label>
+                                        <label for="amount">Amount <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <input type="number" class="form-control" id="amount" name="amount" min="0" step="0.01" required>
                                     </div>
                                 </div>

@@ -499,7 +499,7 @@ $result = $conn->query($sql);
                     <!-- Plan ID -->
                     <input type="hidden" id="plan_id" name="plan_id">
                     <div class="col">
-                            <label for="title">Maintenance or Other Expense Title</label>
+                            <label for="title">Maintenance or Other Expense Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                             <!-- Purchase title dropdown -->
                             <select class="form-control" id="title" name="title">
                                 <option value="">Select MOE Title</option>
