@@ -44,6 +44,30 @@
         #sidebarnav>li>a>span {
             color: #fff;
         }
+        .body-wrapper {
+            height: 100vh; /* Ensures the element has a height */
+            overflow-x: hidden;  /* Hide horizontal overflow */
+            overflow-y: auto;    /* Allow vertical scrolling when content overflows */
+            background-color: white; /* Change this to match your design */
+        }
+
+        /* For webkit browsers (Chrome, Safari) */
+        .body-wrapper::-webkit-scrollbar {
+            width: 8px;  /* Set scrollbar width */
+        }
+
+        .body-wrapper::-webkit-scrollbar-track {
+            background: transparent;  /* Track color */
+        }
+
+        .body-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.5);  /* Thumb color */
+            border-radius: 10px;  /* Rounded corners */
+        }
+
+        .body-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.8);  /* Thumb color on hover */
+        }
     </style>
 </head>
 
@@ -490,8 +514,8 @@
                                 <!-- Hidden input fields-->
                                 <input type="hidden" class="form-control" id="organization_name"
                                     name="organization_name" value="<?php echo htmlspecialchars($organization_name); ?>"
-                                    readonly>
-                                <input type="hidden" class="form-control" id="event_id" name="event_id">
+                                    readonly required>
+                                <input type="hidden" class="form-control" id="event_id" name="event_id" required>
 
                                 <!-- Success Message Alert -->
                                 <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
@@ -548,7 +572,7 @@
                                     </select>
                                 </div>
 
-                                <input type="hidden" class="form-control" id="proposal_id" name="event_id">
+                                <input type="hidden" class="form-control" id="proposal_id" name="event_id" required>
 
                                 <!-- Collaborators -->
                                 <div class="form-group mb-3">
@@ -557,7 +581,7 @@
                                         <!-- Add an N/A option -->
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="collaborator_na"
-                                                name="collaborators[]" value="0">
+                                                name="collaborators[]" value="0" required>
                                             <label class="form-check-label" for="collaborator_na">None</label>
                                         </div>
                                         <?php
@@ -641,7 +665,7 @@
                                     <label class="form-label">Specific Objectives</label>
                                     <div class="input-group mb-2">
                                         <input type="text" class="form-control" name="specific_objectives[]"
-                                            placeholder="Specific Objective">
+                                            placeholder="Specific Objective" required>
                                         <button type="button" class="btn btn-outline-secondary"
                                             onclick="addSpecificObjective()">+</button>
                                     </div>
@@ -652,8 +676,8 @@
                                     <label class="form-label">Implementation Plan</label>
                                     <div class="input-group mb-2">
                                         <input type="text" class="form-control" name="activities[]"
-                                            placeholder="Activity">
-                                        <input type="date" class="form-control" name="target_dates[]">
+                                            placeholder="Activity" required>
+                                        <input type="date" class="form-control" name="target_dates[]" required>
                                         <button type="button" class="btn btn-outline-secondary"
                                             onclick="addImplementationPlan()">+</button>
                                     </div>
@@ -664,7 +688,7 @@
                                     <label class="form-label">Implementing Guidelines</label>
                                     <div class="input-group mb-2">
                                         <input type="text" class="form-control" name="guidelines[]"
-                                            placeholder="Guideline">
+                                            placeholder="Guideline" required>
                                         <button type="button" class="btn btn-outline-secondary"
                                             onclick="addGuideline()">+</button>
                                     </div>
@@ -734,7 +758,7 @@
                                 <!-- Hidden input fields-->
                                 <input type="hidden" class="form-control" id="permit_name" name="organization_name"
                                     value="<?php echo htmlspecialchars($organization_name); ?>" readonly>
-                                <input type="hidden" class="form-control" id="permit_id" name="event_id">
+                                <input type="hidden" class="form-control" id="permit_id" name="event_id" required>
 
 
                                 <!-- Success Message Alert -->
@@ -810,7 +834,7 @@
                                 <!-- Hidden input fields-->
                                 <input type="hidden" class="form-control" id="liquidation_name" name="organization_name"
                                     value="<?php echo htmlspecialchars($organization_name); ?>" readonly>
-                                <input type="hidden" class="form-control" id="liquidation_id" name="event_id">
+                                <input type="hidden" class="form-control" id="liquidation_id" name="event_id" required>
 
 
                                 <!-- Success Message Alert -->
