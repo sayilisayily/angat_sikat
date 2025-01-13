@@ -10,6 +10,173 @@ $(document).ready(function () {
   });
 });
 
+const notificationBtn = document.getElementById("notificationBtn");
+const notificationDropdown = document.getElementById("notificationDropdown");
+const notificationList = document.getElementById("notificationList");
+const notificationCount = document.getElementById("notificationCount");
+const noNotifications = document.getElementById("noNotifications");
+
+// Toggle Dropdown Visibility
+notificationBtn.addEventListener("click", () => {
+  const isVisible = notificationDropdown.style.display === "block";
+  notificationDropdown.style.display = isVisible ? "none" : "block";
+});
+
+// Load Notifications Dynamically
+function loadNotifications() {
+  fetch("../get_notifications.php")
+    .then((response) => response.json())
+    .then((data) => {
+      notificationList.innerHTML = ""; // Clear existing notifications
+      if (data.length > 0) {
+        data.forEach((notification) => {
+          const notificationItem = document.createElement("div");
+          notificationItem.classList.add("notification-item");
+          notificationItem.style.padding = "10px";
+          notificationItem.style.borderBottom = "1px solid #ccc";
+          notificationItem.textContent = notification.message;
+
+          // Add data-id attribute for the notification ID
+          notificationItem.dataset.id = notification.id;
+
+          // Attach click event to mark as read
+          notificationItem.addEventListener("click", () => {
+            markAsRead(notification.id);
+            notificationItem.style.opacity = 0.5; // Visual indicator (optional)
+          });
+
+          notificationList.appendChild(notificationItem);
+        });
+
+        notificationCount.textContent = data.length;
+        notificationCount.style.display = "inline-block";
+        noNotifications.style.display = "none";
+      } else {
+        noNotifications.style.display = "block";
+        notificationCount.style.display = "none";
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading notifications:", error);
+    });
+}
+
+function updateNotificationCount() {
+  const currentCount = parseInt(notificationCount.textContent, 10) || 0;
+  if (currentCount > 0) {
+    notificationCount.textContent = currentCount - 1;
+    if (currentCount - 1 === 0) {
+      notificationCount.style.display = "none";
+      noNotifications.style.display = "block";
+    }
+  }
+}
+
+// Initial Load
+loadNotifications();
+
+// Optionally, refresh notifications periodically (e.g., every 30 seconds)
+setInterval(loadNotifications, 30000);
+
+// Close dropdown if clicked outside
+document.addEventListener("click", (e) => {
+  if (
+    !notificationBtn.contains(e.target) &&
+    !notificationDropdown.contains(e.target)
+  ) {
+    notificationDropdown.style.display = "none";
+  }
+});
+
+// Function to mark a notification as read
+async function markAsRead(notificationId) {
+  try {
+    await fetch("../notification_read.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: notificationId }),
+    });
+
+    // Optional: update notification count after marking as read
+    updateNotificationCount();
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
+  }
+}
+
+// Add an event listener to the title selector dropdown
+document.getElementById("title").addEventListener("change", function () {
+  const selectedOption = this.options[this.selectedIndex];
+
+  if (selectedOption && selectedOption.value) {
+    // Extract data from the selected option
+    const id = selectedOption.getAttribute("data-id") || "";
+
+    // Populate the modal fields
+    document.getElementById("id").value = id;
+  } else {
+    // Clear the fields if no title is selected
+    document.getElementById("id").value = "";
+  }
+});
+
+// Add Budget Approval Form Submission via AJAX
+$("#addBudgetApprovalForm").on("submit", function (e) {
+  e.preventDefault();
+
+  // Create FormData object to include file uploads
+  let formData = new FormData(this);
+
+  $.ajax({
+    url: "add_budget_approval.php", // Add form submission PHP file
+    type: "POST",
+    data: formData, // Use formData object
+    contentType: false, // Important for file upload
+    processData: false, // Important for file upload
+    success: function (response) {
+      try {
+        response = JSON.parse(response);
+        console.log(response);
+        if (response.success) {
+          // Hide any existing error messages
+          $("#errorMessage").addClass("d-none");
+
+          // Show success message
+          $("#successMessage").removeClass("d-none");
+
+          setTimeout(function () {
+            $("#budgetApprovalModal").modal("hide"); // Hide modal after success
+
+            // Reset the form and hide the success message
+            $("#addBudgetApprovalForm")[0].reset();
+            $("#successMessage").addClass("d-none");
+
+            location.reload();
+          }, 2000); // Reload after 2 seconds
+        } else {
+          // Hide any existing success messages
+          $("#successMessage").addClass("d-none");
+
+          // Show error messages
+          $("#errorMessage").removeClass("d-none");
+          let errorHtml = "";
+          for (let field in response.errors) {
+            errorHtml += `<li>${response.errors[field]}</li>`;
+          }
+          $("#errorList").html(errorHtml);
+        }
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("Error adding event:", error);
+    },
+  });
+});
+
 // Global variables to store event details
 let eventIdToUpdate;
 let newStatus;
