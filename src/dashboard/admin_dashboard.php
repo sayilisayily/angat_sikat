@@ -627,6 +627,7 @@ include '../organization_query.php';
             <!--  Header End -->
 
             <div class="container-fluid">
+                
                 <!--  Row 1 -->
                 <div class="row">
                     <!-- Welcome Message with adjusted left margin -->
@@ -634,7 +635,25 @@ include '../organization_query.php';
                         <span class="text-warning fw-bold me-2">|</span>Hello,
                         <?php echo htmlspecialchars($user['first_name']); ?>!
                     </h1>
+                    <?php
+                    // Fetch the two nearest upcoming events
+                    $query = "
+                    SELECT e.title, e.event_start_date, e.event_end_date, e.event_venue, o.organization_name
+                    FROM events e
+                    JOIN organizations o ON e.organization_id = o.organization_id
+                    WHERE e.event_start_date > CURDATE() 
+                    ORDER BY e.event_start_date ASC
+                    LIMIT 2
+                    ";
+                    $result = $conn->query($query);
 
+                    // Check if the query was successful and fetch the events
+                    if ($result->num_rows > 0) {
+                    $events = $result->fetch_all(MYSQLI_ASSOC);
+                    } else {
+                    $events = [];
+                    }
+                    ?>
                     <!--Upcoming Events-->
                     <div>
                         <h3 class="title h5 fw-bold mb-4 mt-5">
@@ -677,9 +696,6 @@ include '../organization_query.php';
                                                             aria-hidden="true"></i>
                                                         <?php echo date("d M Y", strtotime($event['event_start_date'])) . ' - ' . date("d M Y", strtotime($event['event_end_date'])); ?>
                                                     </p>
-                                                </div>
-                                                <div class="text-end mt-auto">
-                                                    <button class="btn btn-warning details-btn">Details</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -1005,56 +1021,116 @@ include '../organization_query.php';
 
                                 </div>
                             </div>
+                            
                             <!--Upcoming Events end-->
-
-                            <!--Organizations Table-->
+                            <?php
+                                $sql = "SELECT * FROM budget_approvals WHERE archived = 0 AND status='Pending'";
+                                $result = $conn->query($sql);
+                            ?>
+                            <!-- Approvals Table -->
                             <div>
                                 <h3 class="title h5 fw-bold mb-4 mt-5">
-                                    <span class="text-warning fw-bold me-2">|</span>Organization
+                                    <span class="text-warning fw-bold me-2">|</span>Pending Approvals
                                 </h3>
                             </div>
                             <div class="container">
-                                <div class="container mt-5">
                                     <div id="tableContent" class="table-responsive">
                                         <!-- Added table-responsive class -->
                                         <table class="table table-bordered">
                                             <thead class="thead-light fw-bold">
                                                 <tr class="fw-bold fs-4 text-dark">
-                                                    <th>Type</th>
-                                                    <th>Description</th>
-                                                    <th>Amount</th>
-                                                    <th>Date</th>
+                                                    <th>Organization</th> <!-- New column for organization -->
+                                                    <th>Title</th>
+                                                    <th>Category</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php if (!empty($transactions)): ?>
-                                                <?php foreach ($transactions as $transaction): ?>
-                                                <tr>
-                                                    <td>
-                                                        <?php echo htmlspecialchars($transaction['type']); ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo htmlspecialchars($transaction['description']); ?>
-                                                    </td>
-                                                    <td>₱
-                                                        <?php echo number_format($transaction['amount'], 2); ?>
-                                                    </td>
-                                                    <td>
-                                                        <?php echo htmlspecialchars(date("F j, Y", strtotime($transaction['date']))); ?>
-                                                    </td>
+                                                <?php $query = "
+                                                    SELECT b.*, o.organization_name 
+                                                    FROM budget_approvals b 
+                                                    JOIN organizations o ON b.organization_id = o.organization_id";
+                                                $result = mysqli_query($conn, $query);
+                                                if ($result->num_rows > 0) {
+                                                    while ($row = mysqli_fetch_assoc($result)) {
+                                                        $organization = $row['organization_name'];  // Organization name
+                                                        $title = $row['title'];
+                                                        $category = $row['category'];
+                                                        echo
+                                                        "<tr>
+                                                            <td>".htmlspecialchars($organization) ."</td>
+                                                            <td>".htmlspecialchars($title) ."</td>
+                                                            <td>". htmlspecialchars($category)."</td>
+                                                        </tr>";
+                                                    }
+                                                } else { 
+                                                    echo
+                                                    "<tr>
+                                                        <td colspan='3' class='text-center'>No organizations found</td> 
+                                                    </tr>";
+                                                }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                            </div>
+                            <?php
+                                $sql = "SELECT * FROM organizations WHERE archived = 0";
+                                $result = $conn->query($sql);
+                            ?>
+                            <!-- Organizations Table -->
+                            <div>
+                                <h3 class="title h5 fw-bold mb-4 mt-5">
+                                    <span class="text-warning fw-bold me-2">|</span>Organizations
+                                </h3>
+                            </div>
+                            <div class="container">
+                                    <div id="tableContent" class="table-responsive">
+                                        <!-- Added table-responsive class -->
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light fw-bold">
+                                                <tr class="fw-bold fs-4 text-dark">
+                                                    <th>Name</th>
+                                                    <th>Acronym</th>
+                                                    <th>Logo</th>
+                                                    <th>Members</th>
+                                                    <th>Status</th>
                                                 </tr>
-                                                <?php endforeach; ?>
+                                            </thead>
+                                            <tbody>
+                                                <?php if ($result->num_rows > 0): ?>
+                                                    <?php while ($row = $result->fetch_assoc()): ?>
+                                                        <?php
+                                                        $organization_logo = $row['organization_logo']; // Assuming the logo is stored as the file name
+                                                        // Check if logo exists and construct the path
+                                                        $logo_path = !empty($organization_logo) && file_exists('../organization_management/uploads/' . $organization_logo) 
+                                                                    ? '../organization_management/uploads/' . $organization_logo 
+                                                                    : '../organization_management/uploads/default_logo.png';
+
+                                                        // Get the organization color
+                                                        $organization_color = !empty($row['organization_color']) ? $row['organization_color'] : '#FFFFFF'; // Default to white if no color is set
+                                                        ?>
+                                                        <tr>
+                                                            <td><?php echo htmlspecialchars($row['organization_name']); ?></td>
+                                                            <td><?php echo htmlspecialchars($row['acronym']); ?></td>
+                                                            <td>
+                                                                <img src="<?php echo htmlspecialchars($logo_path); ?>" alt="Logo" 
+                                                                    style="width: 50px; height: 50px; object-fit: cover;">
+                                                            </td>
+                                                            <td><?php echo htmlspecialchars($row['organization_members']); ?></td>
+                                                            <td><?php echo htmlspecialchars($row['organization_status']); ?></td>
+                                                            
+                                                        </tr>
+                                                    <?php endwhile; ?>
                                                 <?php else: ?>
-                                                <tr>
-                                                    <td colspan="4" class="text-center">No transactions found for this
-                                                        organization.</td>
-                                                </tr>
+                                                    <tr>
+                                                        <td colspan="7" class="text-center">No organizations found</td> <!-- Updated colspan to 7 -->
+                                                    </tr>
                                                 <?php endif; ?>
                                             </tbody>
                                         </table>
                                     </div>
-                                </div>
                             </div>
+
 
                             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
                             <script
@@ -1120,7 +1196,7 @@ include '../organization_query.php';
                             </h3>
 
                             <?php 
-                                    $sql = "SELECT * FROM events WHERE archived = 0 AND organization_id = $organization_id ORDER BY event_id DESC LIMIT 5";
+                                    $sql = "SELECT * FROM users WHERE archived = 0";
                                     $result = $conn->query($sql);
                                 ?>
                             <div class="container">
@@ -1128,52 +1204,35 @@ include '../organization_query.php';
                                     <table class="table table-bordered">
                                         <thead class="thead-light fw-bold">
                                             <tr>
-                                                <th rowspan=2>Title</th>
-                                                <th rowspan=2>Venue</th>
-                                                <th colspan=2 style="text-align: center;"> Date </th>
-                                                <th rowspan=2>Type</th>
-                                                <th rowspan=2>Status</th>
-                                                <th rowspan=2>Accomplished</th>
-                                            </tr>
-                                            <tr>
-                                                <th>Start</th>
-                                                <th>End</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Organization</th>
+                                                <th>Position</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php
-                                                if ($result->num_rows > 0) {
-                                                    while ($row = $result->fetch_assoc()) {
-                                                        $checked = $row['accomplishment_status'] ? 'checked' : '';
-                                                        $disabled = ($row['event_status'] !== 'Approved') ? 'disabled' : '';
-                                                        echo "<tr>
-                                                                <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='event_details.php?event_id={$row['event_id']}'>{$row['title']}</a></td>
-                                                                <td>{$row['event_venue']}</td>
-                                                                <td>" . date('F j, Y', strtotime($row['event_start_date'])) . "</td>
-                                                                <td>" . date('F j, Y', strtotime($row['event_end_date'])) . "</td>
-                                                                <td>{$row['event_type']}</td>
-                                                                <td>";
-                                                        // Handle event status with badges
-                                                        if ($row['event_status'] == 'Pending') {
-                                                            echo "<span class='badge rounded-pill pending'>Pending</span>";
-                                                        } elseif ($row['event_status'] == 'Approved') {
-                                                            echo "<span class='badge rounded-pill approved'>Approved</span>";
-                                                        } elseif ($row['event_status'] == 'Disapproved') {
-                                                            echo "<span class='badge rounded-pill disapproved'>Disapproved</span>";
-                                                        }
-                                                        echo "</td>";
-                                                        // Render accomplishment status
-                                                        echo "<td>";
-                                                        echo ($row['accomplishment_status'] == 1) 
-                                                            ? "Accomplished" 
-                                                            : "Not Accomplished";
-                                                        echo "</td>";
-                                                        echo "</tr>";
-                                                    }
-                                                } else {
-                                                    echo "<tr><td colspan='9' class='text-center'>No events found</td></tr>";
+                                            // Fetch users with role = 'officer' and join with organizations table to get organization name
+                                            $userQuery = "SELECT users.*, organizations.organization_name 
+                                                        FROM users 
+                                                        JOIN organizations ON users.organization_id = organizations.organization_id 
+                                                        WHERE users.role = 'officer' AND users.archived = 0";
+                                            $userResult = $conn->query($userQuery);
+
+                                            if ($userResult->num_rows > 0) {
+                                                while ($userRow = $userResult->fetch_assoc()) {
+                                                    echo "<tr>
+                                                            <td>{$userRow['first_name']}</td>
+                                                            <td>{$userRow['last_name']}</td>
+                                                            <td>{$userRow['organization_name']}</td>
+                                                            <td>{$userRow['position']}</td>
+                                                            
+                                                        </tr>";
                                                 }
-                                                ?>
+                                            } else {
+                                                echo "<tr><td colspan='7' class='text-center'>No users found</td></tr>";
+                                            }
+                                            ?>
                                         </tbody>
                                     </table>
                                 </div>
