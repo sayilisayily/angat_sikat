@@ -294,8 +294,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                     <?php
                     // Fetch advisers and join with organizations table to get organization name
                     $adviserQuery = "SELECT advisers.*, organizations.organization_name 
-                                    FROM advisers 
-                                    JOIN organizations ON advisers.organization_id = organizations.organization_id";
+                                    FROM advisers
+                                    JOIN organizations ON advisers.organization_id = organizations.organization_id WHERE advisers.archived = 0";
                     $adviserResult = $conn->query($adviserQuery);
 
                     if ($adviserResult->num_rows > 0) {
@@ -388,7 +388,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                         <div class="row mb-3">
                             <div class="col">
                                 <label for="position" class="form-label">Position</label>
-                                <input type="text" class="form-control" name="position" id="position" placeholder="Enter Position" required>
+                                <select class="form-select" name="position" id="position" required>
+                                    <option value="">Select Position</option>
+                                    <option value="Senior Adviser">Senior Adviser</option>
+                                    <option value="Junior Adviser">Junior Adviser</option>
+                                </select>
                             </div>
                         </div>
 
@@ -421,90 +425,81 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 
     </div>
 
-    <!-- Edit User Modal -->
-    <div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="editUserLabel"
+    <!-- Edit Adviser Modal -->
+    <div class="modal fade" id="editAdviserModal" tabindex="-1" role="dialog" aria-labelledby="editAdviserLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <form id="editUserForm">
+                <form id="editAdviserForm">
                     <div class="modal-header">
                         <h5 class="modal-title" id="editUserLabel">Edit User</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <!-- Hidden field for user ID -->
-                        <input type="hidden" id="editUserId" name="user_id">
+                        <input type="hidden" id="editAdviserId" name="adviser_id">
                         <!-- Form fields -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                            <label for="username" class="form-label">Username</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class='bx bx-user'></i></span>
-                                <input type="text" class="form-control" name="username" id="edit_username" placeholder="Enter Username" required>
-                            </div>
-                            </div>
-                            <div class="col-md-6">
-                            <label for="email" class="form-label">Email</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class='bx bx-envelope'></i></span>
-                                <input type="email" class="form-control" name="email" id="edit_email" placeholder="Enter Email" required>
-                            </div>
-                            </div>
-                        </div>
-
                         <!-- First Name and Last Name Row -->
                         <div class="row mb-3">
                             <div class="col-md-6">
-                            <label for="first_name" class="form-label">First Name</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class='bx bx-user'></i></span>
-                                <input type="text" class="form-control" name="first_name" id="edit_firstname" placeholder="Enter First Name" required>
-                            </div>
+                                <label for="first_name" class="form-label">First Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class='bx bx-user'></i></span>
+                                    <input type="text" class="form-control" name="first_name" id="edit_first_name" placeholder="Enter First Name" required>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                            <label for="last_name" class="form-label">Last Name</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class='bx bx-user'></i></span>
-                                <input type="text" class="form-control" name="last_name" id="edit_lastname" placeholder="Enter Last Name" required>
-                            </div>
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class='bx bx-user'></i></span>
+                                    <input type="text" class="form-control" name="last_name" id="edit_last_name" placeholder="Enter Last Name" required>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Organization and Role Row -->
+                        <!-- Organization -->
                         <div class="row mb-3">
                             <div class="col">
                                 <label for="organization" class="form-label">Organization</label>
-                                <select class="form-select" name="organization" id="edit_organization" required>
+                                <select class="form-select" name="organization_id" id="edit_organization" required>
                                     <option value="">Select Organization</option>
                                     <?php
                                     $query = "SELECT organization_id, organization_name FROM organizations";
                                     $result = mysqli_query($conn, $query);
                                     if ($result) {
-                                    while ($org = mysqli_fetch_assoc($result)) {
-                                        echo "<option value='{$org['organization_id']}'>{$org['organization_name']}</option>";
-                                    }
+                                        while ($org = mysqli_fetch_assoc($result)) {
+                                            echo "<option value='{$org['organization_id']}'>{$org['organization_name']}</option>";
+                                        }
                                     } else {
-                                    echo "<option value=''>No Organizations Available</option>";
+                                        echo "<option value=''>No Organizations Available</option>";
                                     }
                                     ?>
                                 </select>
                             </div>
                         </div>
 
-                        <!-- Password and Confirm Password Row -->
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                            <label for="password" class="form-label">Password</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class='bx bx-lock'></i></span>
-                                <input type="password" class="form-control" id="edit_password" name="password" placeholder="Password" required>
-                            </div>
+                        <!-- Position -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="position" class="form-label">Position</label>
+                                <select class="form-select" name="position" id="edit_position" required>
+                                    <option value="">Select Position</option>
+                                    <option value="Senior Adviser">Senior Adviser</option>
+                                    <option value="Junior Adviser">Junior Adviser</option>
+                                </select>
                             </div>
                         </div>
-                        
+
+                        <!-- Picture -->
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="picture" class="form-label">Picture</label>
+                                <input type="file" class="form-control" name="picture" id="edit_picture" accept="image/*">
+                            </div>
+                        </div>
                         <!-- Success Message Alert -->
                         <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                            User updated successfully!
+                            Adviser updated successfully!
                         </div>
 
                         <!-- Error Message Alert -->
@@ -526,15 +521,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="archiveModalLabel">Archive User</h5>
+                    <h5 class="modal-title" id="archiveModalLabel">Archive Adviser</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to archive this user?
+                    Are you sure you want to archive this adviser?
                     <input type="hidden" id="archiveId">
                     <!-- Success Message Alert -->
                     <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                        User archived successfully!
+                        Adviser archived successfully!
                     </div>
                     <!-- Error Message Alert -->
                     <div id="archiveErrorMessage" class="alert alert-danger d-none mt-3" role="alert">

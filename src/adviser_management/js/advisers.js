@@ -68,23 +68,22 @@ $("#addAdviserForm").on("submit", function (event) {
 
 // Handle Edit User Modal
 $(".edit-btn").on("click", function () {
-  var userId = $(this).data("id"); // Get user_id from the button
-  console.log("Selected User ID:", userId); // Log the user ID for debugging
+  var adviserId = $(this).data("id"); // Get adviser_id from the button
+  console.log("Selected Adviser ID:", adviserId); // Log the user ID for debugging
 
   // Send an AJAX request to fetch the user details using the user ID
   $.ajax({
-    url: "get_user_details.php", // PHP file to fetch user data
+    url: "get_adviser_details.php", // PHP file to fetch user data
     type: "POST",
-    data: { user_id: userId },
+    data: { adviser_id: adviserId },
     dataType: "json",
     success: function (response) {
       if (response.success) {
         // Populate the form with user data
-        $("#editUserId").val(response.data.user_id); // Hidden field for user ID
-        $("#edit_username").val(response.data.username);
-        $("#edit_firstname").val(response.data.first_name); // Match DB field names
-        $("#edit_lastname").val(response.data.last_name);
-        $("#edit_email").val(response.data.email);
+        $("#editAdviserId").val(response.data.adviser_id); // Hidden field for user ID
+        $("#edit_first_name").val(response.data.first_name); // Match DB field names
+        $("#edit_last_name").val(response.data.last_name);
+        $("#edit_position").val(response.data.position);
         $("#edit_organization").val(response.data.organization_id); // Use organization_id
 
         // Clear previous error messages
@@ -106,13 +105,15 @@ $(".edit-btn").on("click", function () {
 });
 
 // Handle Edit User Form Submission
-$("#editUserForm").on("submit", function (event) {
+$("#editAdviserForm").on("submit", function (event) {
   event.preventDefault();
-
+  var formData = new FormData(this);
   $.ajax({
-    url: "update_user.php",
+    url: "update_adviser.php",
     type: "POST",
-    data: $(this).serialize(),
+    data: formData, // Send the FormData object
+    processData: false, // Prevent jQuery from processing the data
+    contentType: false,
     success: function (response) {
       try {
         // Parse the JSON response (ensure it's valid JSON)
@@ -128,10 +129,10 @@ $("#editUserForm").on("submit", function (event) {
 
           // Close the modal after a short delay
           setTimeout(function () {
-            $("#editUserModal").modal("hide");
+            $("#editAdviserModal").modal("hide");
 
             // Reset the form and hide the success message
-            $("#editUserForm")[0].reset();
+            $("#editAdviserForm")[0].reset();
             $("#editSuccessMessage").addClass("d-none");
             location.reload();
           }, 2000);
@@ -159,21 +160,21 @@ $("#editUserForm").on("submit", function (event) {
 
 // Event delegation for dynamically loaded buttons (Archive)
 $(document).on("click", ".archive-btn", function () {
-  var userId = $(this).data("id");
-  $("#archiveId").val(userId);
+  var adviserId = $(this).data("id");
+  $("#archiveId").val(adviserId);
   $("#archiveModal").modal("show");
-  console.log("Selected User ID: " + userId);
+  console.log("Selected User ID: " + adviserId);
 });
 
 // Handle archive confirmation when "Archive" button in modal is clicked
 $("#confirmArchiveBtn").on("click", function () {
-  var userId = $("#archiveId").val(); // Get the organization ID from the hidden input field
+  var adviserId = $("#archiveId").val(); // Get the organization ID from the hidden input field
 
   // Send an AJAX request to archive the organization
   $.ajax({
-    url: "archive_user.php", // PHP file to handle archiving
+    url: "archive_adviser.php", // PHP file to handle archiving
     type: "POST",
-    data: { user_id: userId },
+    data: { adviser_id: adviserId },
     dataType: "json",
     success: function (response) {
       try {
