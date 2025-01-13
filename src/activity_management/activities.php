@@ -525,7 +525,7 @@ $result = $conn->query($sql);
                                 <!-- Form fields -->
                                 <div class="form-group row mb-2">
                                     <div class="col">
-                                        <label for="title">Event Title</label>
+                                        <label for="title">Event Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <!-- Plan ID -->
                                         <input type="hidden" id="plan_id" name="plan_id">
                                         <!-- Event title dropdown -->
@@ -552,27 +552,27 @@ $result = $conn->query($sql);
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="venue">Venue</label>
+                                        <label for="venue">Venue <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <input type="text" class="form-control" id="venue" name="venue">
                                     </div>
                                 </div>
                                 <div class="form-group row mb-2">
                                     <div class="col">
-                                        <label for="start_date">Start Date</label>
+                                        <label for="start_date">Start Date <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <input type="date" class="form-control" id="start_date" name="start_date" readonly>
                                     </div>
                                     <div class="col">
-                                        <label for="end_date">End Date</label>
+                                        <label for="end_date">End Date <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <input type="date" class="form-control" id="end_date" name="end_date">
                                     </div>
                                 </div>
                                 <div class="form-group row mb-2">
                                     <div class="col">
-                                        <label for="type">Event Type</label>
+                                        <label for="type">Event Type <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <input type="text" class="form-control" id="type" name="type" readonly>                                 
                                     </div>
                                     <div class="col">
-                                        <label for="amount">Event Total Amount</label>
+                                        <label for="amount">Event Total Amount <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                         <input type="text" class="form-control" id="amount" name="amount" readonly>                                 
                                     </div>
                                 </div>
