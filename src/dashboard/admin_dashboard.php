@@ -1213,7 +1213,7 @@ include '../organization_query.php';
                         </script>
                     </div>
                     <div class="py-6 px-6 text-center d-none d-sm-block">
-                        <p class="mb-0 fs-4">© Copyright 2025 [ CVSU CCAT STUDENTS ] - All Rights Reserved</p>
+                        <p class="mb-0 fs-4">© Copyright 2025 - All Rights Reserved</p>
                     </div>
                 </div>
             </div>

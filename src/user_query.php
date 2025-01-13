@@ -14,6 +14,7 @@ if ($user_result && mysqli_num_rows($user_result) > 0) {
     $fullname = $firstname . ' ' . $lastname;
     $email = $user['email'];
     $role = $user['role'];
+    $position = $user['position'];
     $profile_picture = $user['profile_picture'];
 
 } else {

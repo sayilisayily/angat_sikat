@@ -956,13 +956,7 @@ include '../organization_query.php';
                         style="width: 100%;">
                         <div class="d-flex justify-content-start gap-5 flex-wrap">
                             <h2 class="text-lg fw-bold">Balance Report</h2>
-                            <div class="d-flex gap-3 button-group">
-                                <button class="btn btn-secondary btn-sm"
-                                    onclick="switchView('monthly')">Monthly</button>
-                                <button class="btn btn-secondary btn-sm"
-                                    onclick="switchView('quarterly')">Quarterly</button>
-                                <button class="btn btn-secondary btn-sm" onclick="switchView('yearly')">Yearly</button>
-                            </div>
+                            
                         </div>
 
                         <style>
@@ -1050,68 +1044,49 @@ include '../organization_query.php';
                         <!-- Parent Flex Container -->
                         <div class="row justify-content-center mt-5" style="margin-bottom: 6px;">
                             <!-- Advisers Section -->
+                            <?php
+                            
+                            $query = "SELECT first_name, last_name, position, picture FROM advisers WHERE organization_id = ?";
+                            $stmt = $conn->prepare($query);
+                            $stmt->bind_param("i", $organization_id);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+
+                            $advisers = [];
+                            while ($row = $result->fetch_assoc()) {
+                                $advisers[] = $row;
+                            }
+
+                            $stmt->close();
+                            ?>
                             <div class="col-12 col-sm-4 d-flex justify-content-center mb-3 mb-sm-0">
                                 <div class="p-4 bg-white rounded shadow-sm" style="max-width: 300px; width: 100%;">
                                     <div class="d-flex justify-content-between">
                                         <p class="fw-semibold">Advisers</p>
-                                        <a href="#">
-                                            <p class="fw-semibold text-success">See All</p>
-                                        </a>
                                     </div>
 
                                     <div class="d-flex justify-content-evenly mt-3">
-                                        <div class="text-center">
-                                            <img class="rounded-circle mb-3 border border-dark d-block mx-auto"
-                                                src="../adviser_management/uploads/Sir_Renato.jpg" alt=""
-                                                style="width: 40px; height: 40px;" />
-                                            <p class="fw-semibold text-sm text-black">Renato Bautista</p>
-                                            <p class="text-xs text-gray">Instructor, DCS</p>
-                                        </div>
-
-                                        <div class="text-center">
-                                            <img class="rounded-circle mb-3 border border-dark d-block mx-auto"
-                                                src="../adviser_management/uploads/Maam_Janessa.jpg" alt=""
-                                                style="width: 40px; height: 40px;" />
-                                            <p class="fw-semibold text-sm text-black">Janessa Dela Cruz</p>
-                                            <p class="text-xs text-gray">Instructor, DCS</p>
-                                        </div>
+                                        <?php if (!empty($advisers)) : ?>
+                                            <?php foreach ($advisers as $adviser) : ?>
+                                                <div class="text-center">
+                                                    <img class="rounded-circle mb-3 border border-dark d-block mx-auto"
+                                                        src="<?= !empty($adviser['picture']) ? '../adviser_management/uploads/' . htmlspecialchars($adviser['picture']) : '../adviser_management/uploads/default.jpg'; ?>"
+                                                        alt=""
+                                                        style="width: 40px; height: 40px;" />
+                                                    <p class="fw-semibold text-sm text-black"><?= htmlspecialchars($adviser['first_name'] . ' ' . $adviser['last_name']); ?></p>
+                                                    <p class="text-xs text-gray"><?= htmlspecialchars($adviser['position']); ?></p>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        <?php else : ?>
+                                            <p class="text-muted">No advisers available.</p>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
+
                             <!-- End of Advisers Section -->
 
-                            <!-- Financial Deadlines Section -->
-                            <div class="col-12 col-sm-4 d-flex justify-content-center mb-3 mb-sm-0">
-                                <div class="p-4 bg-white rounded shadow-sm d-flex flex-column justify-content-between"
-                                    style="max-width: 300px; width: 100%;">
-                                    <div class="d-flex align-items-center">
-                                        <lord-icon src="https://cdn.lordicon.com/ysqeagpz.json" trigger="loop"
-                                            colors="primary:#6acbff"
-                                            style="width:40px;height:40px;transform: rotate(360deg);"></lord-icon>
-                                        <h1 class="text-black fw-bold h5 ms-2" style="font-size: 1rem;">Financial
-                                            Deadlines</h1>
-                                    </div>
-
-                                    <div class="ms-2 mt-2">
-                                        <div class="mt-1">
-                                            <h1 class="fw-bold text-xs fs-6 text-black">Office Supplies</h1>
-                                            <p class="text-gray fw-semibold text-xs mb-2">October 12, 2024</p>
-                                        </div>
-
-                                        <div class="mt-1">
-                                            <h1 class="fw-bold text-xs fs-6 text-black">Transportation</h1>
-                                            <p class="text-gray fw-semibold text-xs mb-2">L-300</p>
-                                        </div>
-
-                                        <div class="mt-1">
-                                            <h1 class="fw-bold text-xs fs-6 text-black">Speakers</h1>
-                                            <p class="text-gray fw-semibold text-xs mb-2">November 11, 2024</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End of Financial Deadlines Section -->
-
+                            
                             <?php
                                         // Query to fetch the first and latest balance for the current month
                                         $query = "
@@ -1196,15 +1171,40 @@ include '../organization_query.php';
                             </div>
                         </div> <!-- End of Parent Flex Container -->
                     </div> <!-- End of Right Column -->
-                    <!--Recent Transaction dashboard-->
+                    <?php
+
+                    // Fetch top 5 records from income and expenses tables
+                    $query = "
+                        SELECT 'Income' AS type, title AS description, amount, created_at AS date
+                    FROM income
+                    WHERE organization_id = ?
+                    UNION ALL
+                    SELECT 'Expense' AS type, title AS description, amount, created_at AS date
+                    FROM expenses
+                    WHERE organization_id = ?
+                    ORDER BY date DESC
+                    LIMIT 10;
+                    ";
+
+                    $stmt = $conn->prepare($query);
+                    $stmt->bind_param("ii", $organization_id, $organization_id);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+
+                    $transactions = [];
+                    while ($row = $result->fetch_assoc()) {
+                        $transactions[] = $row;
+                    }
+
+                    $stmt->close();
+                    ?>
                     <div>
                         <h3 class="welcome-message h5 fw-bold mb-4 mt-5">
                             <span class="text-warning fw-bold me-2">|</span>Recent Transactions
                         </h3>
                     </div>
                     <div class="container mt-5">
-
-                        <div id="tableContent" class="table-responsive"> <!-- Added table-responsive class -->
+                        <div id="tableContent" class="table-responsive">
                             <table class="table table-bordered">
                                 <thead class="thead-light fw-bold">
                                     <tr class="fw-bold fs-4 text-dark">
@@ -1216,32 +1216,32 @@ include '../organization_query.php';
                                 </thead>
                                 <tbody>
                                     <?php if (!empty($transactions)): ?>
-                                    <?php foreach ($transactions as $transaction): ?>
-                                    <tr>
-                                        <td>
-                                            <?php echo htmlspecialchars($transaction['type']); ?>
-                                        </td>
-                                        <td>
-                                            <?php echo htmlspecialchars($transaction['description']); ?>
-                                        </td>
-                                        <td>₱
-                                            <?php echo number_format($transaction['amount'], 2); ?>
-                                        </td>
-                                        <td>
-                                            <?php echo htmlspecialchars(date("F j, Y", strtotime($transaction['date']))); ?>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
+                                        <?php foreach ($transactions as $transaction): ?>
+                                            <tr>
+                                                <td>
+                                                    <?php echo htmlspecialchars($transaction['type']); ?>
+                                                </td>
+                                                <td>
+                                                    <?php echo htmlspecialchars($transaction['description']); ?>
+                                                </td>
+                                                <td>₱
+                                                    <?php echo number_format($transaction['amount'], 2); ?>
+                                                </td>
+                                                <td>
+                                                    <?php echo htmlspecialchars(date("F j, Y", strtotime($transaction['date']))); ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                     <?php else: ?>
-                                    <tr>
-                                        <td colspan="4" class="text-center">No transactions found for this
-                                            organization.</td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-center">No transactions found for this organization.</td>
+                                        </tr>
                                     <?php endif; ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
                 </div>
 
                 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -1340,9 +1340,6 @@ include '../organization_query.php';
                                                     aria-hidden="true"></i>
                                                 <?php echo date("d M Y", strtotime($event['event_start_date'])) . ' - ' . date("d M Y", strtotime($event['event_end_date'])); ?>
                                             </p>
-                                        </div>
-                                        <div class="text-end mt-auto">
-                                            <button class="btn btn-warning details-btn">Details</button>
                                         </div>
                                     </div>
                                 </div>
