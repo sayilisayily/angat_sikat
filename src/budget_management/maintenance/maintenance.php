@@ -484,7 +484,7 @@ $result = $conn->query($sql);
                         <thead>
                             <tr> 
                                 <th>Title</th>
-                                <th>Total Budget</th>
+                                <th>Total Amount</th>
                                 <th>Status</th>
                                 <th>Completed</th>
                                 <th>Actions</th>
