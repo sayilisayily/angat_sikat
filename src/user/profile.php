@@ -473,12 +473,6 @@ include '../organization_query.php';
 </style>
 
 <script>
-    function confirmDelete() {
-        const confirmation = confirm("Are you sure you want to delete your account? This action cannot be undone.");
-        if (confirmation) {
-            window.location.href = 'delete_account.php'; // replace with your delete action URL
-        }
-    }
 
     $(document).ready(function () {
                 
