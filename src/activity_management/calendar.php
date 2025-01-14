@@ -420,53 +420,47 @@ include '../organization_query.php';
                 });
 
                 function display_events() {
-                    var events = new Array();
-                    $.ajax({
-                        url: 'display_event.php',
-                        dataType: 'json',
-                        success: function (response) {
-                            var result = response.data;
-                            $.each(result, function (i, item) {
-                                events.push({
-                                    event_id: result[i].event_id,
-                                    title: result[i].title,
-                                    start: result[i].start,
-                                    end: result[i].end,
-                                    color: result[i].color,
-                                    url: result[i].url
-                                });
+                var events = new Array();
+                $.ajax({
+                    url: 'display_event.php',
+                    dataType: 'json',
+                    success: function (response) {
+                        var result = response.data;
+                        $.each(result, function (i, item) {
+                            events.push({
+                                event_id: result[i].event_id,
+                                title: result[i].title,
+                                start: result[i].start,
+                                end: result[i].end,
+                                color: result[i].color
                             });
+                        });
 
-                            // Calendar
-                            var calendar = $('#calendar').fullCalendar({
-                                header: {
-                                    left: 'prev,next today', // Add navigation buttons
-                                    center: 'title',
-                                    right: 'month,agendaWeek,agendaDay' // Toggle buttons for month, week, and day views
-                                },
-                                initialView: 'month',
-                                timeZone: 'local',
-                                disableDragging: true,
-                                selectable: true,
-                                selectHelper: true,
-                                select: function (start, end) {
-                                    $('#event_start_date').val(moment(start).format('YYYY-MM-DD'));
-                                    $('#event_end_date').val(moment(end).format('YYYY-MM-DD'));
-                                    $('#event_entry_modal').modal('show');
-                                },
-                                events: events,
-                                eventRender: function (event, element, view) {
-                                    element.bind('click', function () {
-                                        alert(event.event_id);
-                                    });
-                                }
-                            }); // End of fullCalendar block
-                        }, // End of success block
-                        error: function (xhr, status) {
-                            alert(response.msg);
-                        }
-                    }); // End of ajax block
-                }
+                        // Calendar
+                        var calendar = $('#calendar').fullCalendar({
+                            header: {
+                                left: 'prev,next today', // Add navigation buttons
+                                center: 'title',
+                                right: 'month,agendaWeek,agendaDay' // Toggle buttons for month, week, and day views
+                            },
+                            initialView: 'month',
+                            timeZone: 'local',
+                            disableDragging: true,
+                            selectable: true,
+                            selectHelper: true,
+                            select: function (start, end) {
+                                $('#event_start_date').val(moment(start).format('YYYY-MM-DD'));
+                                $('#event_end_date').val(moment(end).format('YYYY-MM-DD'));
+                            },
+                            events: events
+                        }); // End of fullCalendar block
+                    }, // End of success block
+                    error: function (xhr, status) {
+                        alert("An error occurred while loading events.");
+                    }
+                }); // End of ajax block
+            }
+
 
                                 
                 const notificationBtn = document.getElementById("notificationBtn");
