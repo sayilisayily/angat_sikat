@@ -27,6 +27,7 @@ class CustomPDF extends TCPDF {
     public function Footer() {
         $this->SetY(-25.4); // Position 1 inch from the bottom
         $this->SetFont('play', '', 10); // Set font
+        global $organization_name;
 
         // HTML content for footer with adjusted left and right margins
         $html = '
@@ -38,7 +39,7 @@ class CustomPDF extends TCPDF {
                 Financial Statement
             </div>
             <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
-                Name of Organization
+                '.$organization_name.'
             </div>
             <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
                 Page ' . $this->getAliasNumPage() . ' of ' . $this->getAliasNbPages() . '
@@ -206,8 +207,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         $total_outflows += $row['subtotal'];
     }
 }
-
-$html2 = '
+$html2 = ' 
 <table border="1" cellpadding="5" cellspacing="0" style="width:100%; text-align:left;">
     <tr>
         <th>Cash Outflows</th>
@@ -216,12 +216,28 @@ $html2 = '
     </tr>';
 
 foreach ($outflows as $outflow) {
+    // Add the category row with colspan across all three columns
     $html2 .= '
     <tr>
-        <td>' . htmlspecialchars($outflow['category']) . '</td>
-        <td>' . number_format($outflow['subtotal'], 2) . '</td>
-        <td>' . htmlspecialchars($outflow['details']) . '</td>
+        <td colspan="3" style="font-weight:bold;">' . htmlspecialchars($outflow['category']) . '</td>
     </tr>';
+
+    // Add each outflow detail (event title, amount, and reference) under the category
+    $details = explode(", ", $outflow['details']);
+    foreach ($details as $detail) {
+        // Example of detail split to show title and reference
+        // Assuming the details are in the format "Event Title (reference)"
+        preg_match('/(.*)\s\((.*)\)/', $detail, $matches);
+        $title = $matches[1];
+        $reference = $matches[2];
+
+        $html2 .= '
+        <tr>
+            <td>' . htmlspecialchars($title) . '</td>
+            <td>' . number_format($outflow['subtotal'], 2) . '</td>
+            <td>' . htmlspecialchars($reference) . '</td>
+        </tr>';
+    }
 }
 
 $html2 .= '
@@ -230,6 +246,7 @@ $html2 .= '
         <td colspan="2">' . number_format($total_outflows, 2) . '</td>
     </tr>
 </table>';
+
 
 // Fetch Cash Balance Beginning, Cash on Bank, and Cash on Hand from organizations table
 $organization_query = "
