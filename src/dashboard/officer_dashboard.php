@@ -1183,7 +1183,7 @@ include '../organization_query.php';
                     FROM expenses
                     WHERE organization_id = ?
                     ORDER BY date DESC
-                    LIMIT 10;
+                    LIMIT 5;
                     ";
 
                     $stmt = $conn->prepare($query);
