@@ -15,7 +15,8 @@ include '../user_query.php';
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Budget Approvals</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
@@ -206,9 +207,9 @@ include '../user_query.php';
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            <li class="nav-item">
+                        <li class="nav-item">
                                 <!-- Notification Icon -->
-                                <div style="position: relative; display: inline-block;">
+                                    <div style="position: relative; display: inline-block;">
                                     <button id="notificationBtn" style="background-color: transparent; border: none; padding: 0;">
                                         <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover" 
                                             colors="primary:#004024" style="width:30px; height:30px;">
@@ -281,87 +282,89 @@ include '../user_query.php';
         <h2><span class="text-warning fw-bold me-2">|</span> Budget Approvals</h2>
 
         <!-- Approval Table -->
-        <table class="table mt-4" id="approvalsTable">
-            <thead>
-                <tr>
-                    <th>Organization</th> <!-- New column for organization -->
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Attachment</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-            // Fetch budget approvals with organization names from the database
-            $query = "
-                SELECT b.*, o.organization_name 
-                FROM budget_approvals b 
-                JOIN organizations o ON b.organization_id = o.organization_id";
-            $result = mysqli_query($conn, $query);
+        <div class="table-responsive">
+            <table class="table mt-4" id="approvalsTable">
+                <thead>
+                    <tr>
+                        <th>Organization</th> <!-- New column for organization -->
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Attachment</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    // Fetch budget approvals with organization names from the database
+                    $query = "
+                        SELECT b.*, o.organization_name 
+                        FROM budget_approvals b 
+                        JOIN organizations o ON b.organization_id = o.organization_id";
+                    $result = mysqli_query($conn, $query);
 
-            while ($row = mysqli_fetch_assoc($result)) {
-                $organization = $row['organization_name'];  // Organization name
-                $title = $row['title'];
-                $category = $row['category'];
-                $attachment = $row['attachment'];
-                $status = $row['status'];
-                $id = $row['approval_id']; // Assuming there's an ID field in your budget_approvals table
-                ?>
-                <tr>
-                    <td>
-                        <?php echo htmlspecialchars($organization); ?>
-                    </td> <!-- Organization name -->
-                    <td>
-                        <?php echo htmlspecialchars($title); ?>
-                    </td>
-                    <td>
-                        <?php echo htmlspecialchars($category); ?>
-                    </td>
-                    <td>
-                        <a href="uploads/<?php echo htmlspecialchars($attachment); ?>"
-                            class='link-offset-2 link-underline link-underline-opacity-0' target="_blank">
-                            <?php echo htmlspecialchars($attachment); ?>
-                        </a>
-                    </td>
-                    <td>
-                        <?php 
-                        if ($row['status'] == 'Pending') {
-                            echo " <span class='badge rounded-pill pending'> ";
-                        } else if ($row['status'] == 'Approved') {
-                            echo " <span class='badge rounded-pill approved'> ";
-                        } else if ($row['status'] == 'Disapproved') {
-                            echo " <span class='badge rounded-pill disapproved'> ";
-                        }
-                        echo ucfirst($row['status']); 
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $organization = $row['organization_name'];  // Organization name
+                        $title = $row['title'];
+                        $category = $row['category'];
+                        $attachment = $row['attachment'];
+                        $status = $row['status'];
+                        $id = $row['approval_id']; // Assuming there's an ID field in your budget_approvals table
                         ?>
-                        </span>
-                    </td>
-                    <td>
-                    <button type="button" class="btn btn-sm btn-success mb-3" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#confirmationModal" 
-                            data-action="approve" 
-                            data-id="<?php echo $id; ?>">
-                        <i class="fa-solid fa-check"></i> Approve
-                    </button>
+                        <tr>
+                            <td>
+                                <?php echo htmlspecialchars($organization); ?>
+                            </td> <!-- Organization name -->
+                            <td>
+                                <?php echo htmlspecialchars($title); ?>
+                            </td>
+                            <td>
+                                <?php echo htmlspecialchars($category); ?>
+                            </td>
+                            <td>
+                                <a href="uploads/<?php echo htmlspecialchars($attachment); ?>"
+                                    class='link-offset-2 link-underline link-underline-opacity-0' target="_blank">
+                                    <?php echo htmlspecialchars($attachment); ?>
+                                </a>
+                            </td>
+                            <td>
+                                <?php 
+                                if ($row['status'] == 'Pending') {
+                                    echo " <span class='badge rounded-pill pending'> ";
+                                } else if ($row['status'] == 'Approved') {
+                                    echo " <span class='badge rounded-pill approved'> ";
+                                } else if ($row['status'] == 'Disapproved') {
+                                    echo " <span class='badge rounded-pill disapproved'> ";
+                                }
+                                echo ucfirst($row['status']); 
+                                ?>
+                                </span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-success mb-3" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#confirmationModal" 
+                                        data-action="approve" 
+                                        data-id="<?php echo $id; ?>">
+                                    <i class="fa-solid fa-check"></i> Approve
+                                </button>
 
-                    <!-- Disapprove Button -->
-                    <button type="button" class="btn btn-sm btn-danger mb-3"
-                            data-bs-toggle="modal" 
-                            data-bs-target="#confirmationModal" 
-                            data-action="disapprove" 
-                            data-id="<?php echo $id; ?>">
-                        <i class="fa-solid fa-xmark"></i> Disapprove
-                    </button>
-                    </td>
-                </tr>
-                <?php
-            }
-            ?>
-            </tbody>
-        </table>
+                                <!-- Disapprove Button -->
+                                <button type="button" class="btn btn-sm btn-danger mb-3"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#confirmationModal" 
+                                        data-action="disapprove" 
+                                        data-id="<?php echo $id; ?>">
+                                    <i class="fa-solid fa-xmark"></i> Disapprove
+                                </button>
+                            </td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Confirmation Modal -->
@@ -372,16 +375,16 @@ include '../user_query.php';
                     <h5 class="modal-title" id="confirmationModalLabel">Confirm Action</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    Are you sure you want to <span id="actionText"></span> this budget request?
-                    <!-- Success Message Alert -->
-                    <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                <!-- Success Message Alert -->
+                <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
                             Event added successfully!
                         </div>
                         <!-- Error Message Alert -->
                         <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
                             <ul id="errorList"></ul> <!-- List for showing validation errors -->
                         </div>
+                <div class="modal-body">
+                    Are you sure you want to <span id="actionText"></span> this budget request?
                 </div>
                 <div class="modal-footer">
                     <form id="confirmationForm" action="admin_budget_approval.php" method="POST">

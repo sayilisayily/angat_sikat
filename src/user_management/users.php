@@ -15,6 +15,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
 <html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Users Management</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
@@ -216,24 +218,34 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            <li class="nav-item">
-                                <button id="notificationBtn"
-                                    style="background-color: transparent; border: none; padding: 0; position: relative;">
-                                    <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover"
-                                        colors="primary:#004024" style="width:30px; height:30px;">
-                                    </lord-icon>
-                                    <!-- Notification Count Badge -->
-                                    <span id="notificationCount" style="
-                                    position: absolute;
-                                    top: -5px;
-                                    right: -5px;
-                                    background-color: red;
-                                    color: white;
-                                    font-size: 12px;
-                                    padding: 2px 6px;
-                                    border-radius: 50%;
-                                    display: none;">0</span>
-                                </button>
+                        <li class="nav-item">
+                                <!-- Notification Icon -->
+                                    <div style="position: relative; display: inline-block;">
+                                    <button id="notificationBtn" style="background-color: transparent; border: none; padding: 0;">
+                                        <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover" 
+                                            colors="primary:#004024" style="width:30px; height:30px;">
+                                        </lord-icon>
+                                        <!-- Notification Count Badge -->
+                                        <span id="notificationCount" style="position: absolute; top: -5px; right: -5px; 
+                                            background-color: red; color: white; font-size: 12px; padding: 2px 6px; 
+                                            border-radius: 50%; display: none;">0</span>
+                                    </button>
+
+                                    <!-- Notification Dropdown -->
+                                    <div id="notificationDropdown" class="dropdown-menu p-2 shadow" 
+                                        style="display: none; position: absolute; right: 0; top: 35px; width: 300px; max-height: 400px; 
+                                        overflow-y: auto; background-color: white; border-radius: 5px; z-index: 1000;">
+                                        <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                                            Notifications
+                                        </p>
+                                        <div id="notificationList">
+                                            <!-- Notifications will be dynamically loaded here -->
+                                        </div>
+                                        <p id="noNotifications" style="text-align: center; margin-top: 10px; color: gray; display: none;">
+                                            No new notifications
+                                        </p>
+                                    </div>
+                                </div>
                             </li>
                             <li class="nav-item dropdown">
                                 <!-- Profile Dropdown -->
@@ -271,66 +283,69 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
             </header>
             <!--  Header End -->
 
-         <div class="container mt-5 p-5">
-            <h2 class="mb-4">Users
-                <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addUserModal"
-                    style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
-                    <i class="fa-solid fa-plus"></i> Add User
-                </button>
-            </h2>
-            <table id="usersTable" class="table">
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Organization</th>
-                        <th>Position</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                // Fetch users with role = 'officer' and join with organizations table to get organization name
-                $userQuery = "SELECT users.*, organizations.organization_name 
-                            FROM users 
-                            JOIN organizations ON users.organization_id = organizations.organization_id 
-                            WHERE users.role = 'officer' AND users.archived = 0";
-                $userResult = $conn->query($userQuery);
+            <div class="container mt-5 p-5">
+                <h2 class="mb-4"><span class="text-warning fw-bold me-2">|</span>Users
+                    <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addUserModal"
+                        style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
+                        <i class="fa-solid fa-plus"></i> Add User
+                    </button>
+                </h2>
+                
+                <div class="table-responsive">
+                    <table id="usersTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Organization</th>
+                                <th>Position</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Fetch users with role = 'officer' and join with organizations table to get organization name
+                            $userQuery = "SELECT users.*, organizations.organization_name 
+                                        FROM users 
+                                        JOIN organizations ON users.organization_id = organizations.organization_id 
+                                        WHERE users.role = 'officer' AND users.archived = 0";
+                            $userResult = $conn->query($userQuery);
 
-                if ($userResult->num_rows > 0) {
-                    while ($userRow = $userResult->fetch_assoc()) {
-                        echo "<tr>
-                                <td>{$userRow['username']}</td>
-                                <td>{$userRow['first_name']}</td>
-                                <td>{$userRow['last_name']}</td>
-                                <td>{$userRow['email']}</td>
-                                <td>{$userRow['organization_name']}</td>
-                                <td>{$userRow['position']}</td>
-                                <td>
-                                    <button class='btn btn-primary btn-sm edit-btn mb-3' 
-                                            data-bs-toggle='modal' 
-                                            data-bs-target='#editUserModal' 
-                                            data-id='{$userRow['user_id']}'>
-                                        <i class='fa-solid fa-pen'></i> Edit
-                                    </button>
-                                    <button class='btn btn-danger btn-sm archive-btn mb-3' 
-                                            data-id='{$userRow['user_id']}'>
-                                        <i class='fa-solid fa-box-archive'></i> Archive
-                                    </button>
-                                </td>
-                            </tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='7' class='text-center'>No users found</td></tr>";
-                }
-                ?>
-                </tbody>
-            </table>
+                            if ($userResult->num_rows > 0) {
+                                while ($userRow = $userResult->fetch_assoc()) {
+                                    echo "<tr>
+                                            <td>{$userRow['username']}</td>
+                                            <td>{$userRow['first_name']}</td>
+                                            <td>{$userRow['last_name']}</td>
+                                            <td>{$userRow['email']}</td>
+                                            <td>{$userRow['organization_name']}</td>
+                                            <td>{$userRow['position']}</td>
+                                            <td>
+                                                <button class='btn btn-primary btn-sm edit-btn mb-3' 
+                                                        data-bs-toggle='modal' 
+                                                        data-bs-target='#editUserModal' 
+                                                        data-id='{$userRow['user_id']}'>
+                                                    <i class='fa-solid fa-pen'></i> Edit
+                                                </button>
+                                                <button class='btn btn-danger btn-sm archive-btn mb-3' 
+                                                        data-id='{$userRow['user_id']}'>
+                                                    <i class='fa-solid fa-box-archive'></i> Archive
+                                                </button>
+                                            </td>
+                                        </tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='7' class='text-center'>No users found</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-    </div>
-    <!-- End of Overall Body Wrapper -->
+        <!-- End of Overall Body Wrapper -->
 
     <!-- Add User Modal -->
     <div class="modal fade" id="addUserModal" tabindex="-1" role="dialog" aria-labelledby="addUserLabel"
@@ -342,6 +357,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                         <h5 class="modal-title" id="addUserLabel">Add New User</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <!-- Success Message Alert -->
+                    <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                            User added successfully!
+                        </div>
+
+                        <!-- Error Message Alert -->
+                        <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                            <ul id="errorList"></ul>
+                        </div>
                     <div class="modal-body">
                         <!-- Form fields -->
                         <div class="row mb-3">
@@ -431,15 +455,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                         </div>
 
                         <input type="hidden" name="role" id="role" value="Officer">
-                        <!-- Success Message Alert -->
-                        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-                            User added successfully!
-                        </div>
-
-                        <!-- Error Message Alert -->
-                        <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                            <ul id="errorList"></ul>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -460,6 +475,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                         <h5 class="modal-title" id="editUserLabel">Edit User</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <!-- Success Message Alert -->
+                    <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                            User updated successfully!
+                        </div>
+
+                        <!-- Error Message Alert -->
+                        <div id="editErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                            <ul id="editErrorList"></ul>
+                        </div>
                     <div class="modal-body">
                         <!-- Hidden field for user ID -->
                         <input type="hidden" id="editUserId" name="user_id">
@@ -531,16 +555,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                                 </select>
                             </div>
                         </div>
-                        
-                        <!-- Success Message Alert -->
-                        <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                            User updated successfully!
-                        </div>
-
-                        <!-- Error Message Alert -->
-                        <div id="editErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                            <ul id="editErrorList"></ul>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -559,17 +573,17 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
                     <h5 class="modal-title" id="archiveModalLabel">Archive User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    Are you sure you want to archive this user?
-                    <input type="hidden" id="archiveId">
-                    <!-- Success Message Alert -->
-                    <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                <!-- Success Message Alert -->
+                <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
                         User archived successfully!
                     </div>
                     <!-- Error Message Alert -->
                     <div id="archiveErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
                         <ul id="archiveErrorList"></ul> <!-- List for showing validation errors -->
                     </div>
+                <div class="modal-body">
+                    Are you sure you want to archive this user?
+                    <input type="hidden" id="archiveId">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

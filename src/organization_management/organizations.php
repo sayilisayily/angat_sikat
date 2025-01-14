@@ -17,6 +17,8 @@ $result = $conn->query($sql);
 <html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Organizations Management</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
@@ -216,24 +218,34 @@ $result = $conn->query($sql);
                     </ul>
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            <li class="nav-item">
-                                <button id="notificationBtn"
-                                    style="background-color: transparent; border: none; padding: 0; position: relative;">
-                                    <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover"
-                                        colors="primary:#004024" style="width:30px; height:30px;">
-                                    </lord-icon>
-                                    <!-- Notification Count Badge -->
-                                    <span id="notificationCount" style="
-                                    position: absolute;
-                                    top: -5px;
-                                    right: -5px;
-                                    background-color: red;
-                                    color: white;
-                                    font-size: 12px;
-                                    padding: 2px 6px;
-                                    border-radius: 50%;
-                                    display: none;">0</span>
-                                </button>
+                        <li class="nav-item">
+                                <!-- Notification Icon -->
+                                    <div style="position: relative; display: inline-block;">
+                                    <button id="notificationBtn" style="background-color: transparent; border: none; padding: 0;">
+                                        <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover" 
+                                            colors="primary:#004024" style="width:30px; height:30px;">
+                                        </lord-icon>
+                                        <!-- Notification Count Badge -->
+                                        <span id="notificationCount" style="position: absolute; top: -5px; right: -5px; 
+                                            background-color: red; color: white; font-size: 12px; padding: 2px 6px; 
+                                            border-radius: 50%; display: none;">0</span>
+                                    </button>
+
+                                    <!-- Notification Dropdown -->
+                                    <div id="notificationDropdown" class="dropdown-menu p-2 shadow" 
+                                        style="display: none; position: absolute; right: 0; top: 35px; width: 300px; max-height: 400px; 
+                                        overflow-y: auto; background-color: white; border-radius: 5px; z-index: 1000;">
+                                        <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                                            Notifications
+                                        </p>
+                                        <div id="notificationList">
+                                            <!-- Notifications will be dynamically loaded here -->
+                                        </div>
+                                        <p id="noNotifications" style="text-align: center; margin-top: 10px; color: gray; display: none;">
+                                            No new notifications
+                                        </p>
+                                    </div>
+                                </div>
                             </li>
                             <li class="nav-item dropdown">
                                 <!-- Profile Dropdown -->
@@ -271,71 +283,72 @@ $result = $conn->query($sql);
             </header>
             <!--  Header End -->
               
-    <div class="container mt-5 p-5">
-        <h2 class="mb-4">Organizations
-            <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addOrganizationModal"
-                style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
-                <i class="fa-solid fa-plus"></i> Add Organization
-            </button>
-        </h2>
-        <table id="organizationsTable" class="table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Acronym</th>
-                <th>Logo</th>
-                <th>Members</th>
-                <th>Status</th>
-                <th>Color</th> <!-- Added column for organization color -->
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        <?php
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                $organization_logo = $row['organization_logo']; // Assuming the logo is stored as the file name
-                // Check if logo exists and construct the path
-                $logo_path = !empty($organization_logo) && file_exists('uploads/' . $organization_logo) 
-                            ? 'uploads/' . $organization_logo 
-                            : 'uploads/default_logo.png';
-
-                // Get the organization color
-                $organization_color = !empty($row['organization_color']) ? $row['organization_color'] : '#FFFFFF'; // Default to white if no color is set
+            <div class="container mt-5 p-5">
+                <h2 class="mb-4"><span class="text-warning fw-bold me-2">|</span>Organizations
+                    <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addOrganizationModal"
+                        style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
+                        <i class="fa-solid fa-plus"></i> Add Organization
+                    </button>
+                </h2>
                 
-                // Display the organization data in the table
-                echo "<tr>
-                        <td>{$row['organization_name']}</td>
-                        <td>{$row['acronym']}</td>
-                        <td><img src='$logo_path' alt='Logo' style='width: 50px; height: 50px; object-fit: cover;'></td>
-                        <td>{$row['organization_members']}</td>
-                        <td>{$row['organization_status']}</td>
-                        <td style='background-color: {$organization_color}; color: white; text-align: center;'> <!-- Display color -->
-                            {$organization_color}
-                        </td>
-                        <td>
-                            <button class='btn btn-primary btn-sm edit-btn mb-3' 
-                                    data-bs-toggle='modal' 
-                                    data-bs-target='#editOrganizationModal' 
-                                    data-id='{$row['organization_id']}'>
-                                <i class='fa-solid fa-pen'></i> Edit
-                            </button>
-                            <button class='btn btn-danger btn-sm archive-btn mb-3' 
-                                    data-id='{$row['organization_id']}'>
-                                <i class='fa-solid fa-box-archive'></i> Archive
-                            </button>
-                        </td>
-                    </tr>";
-            }
-        } else {
-            echo "<tr><td colspan='6' class='text-center'>No organizations found</td></tr>"; // Updated colspan to 6
-        }
-        ?>
-        </tbody>
-    </table>
+                <div class="table-responsive">
+                    <table id="organizationsTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Acronym</th>
+                                <th>Logo</th>
+                                <th>Members</th>
+                                <th>Status</th>
+                                <th>Color</th> <!-- Added column for organization color -->
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                while($row = $result->fetch_assoc()) {
+                                    $organization_logo = $row['organization_logo']; // Assuming the logo is stored as the file name
+                                    // Check if logo exists and construct the path
+                                    $logo_path = !empty($organization_logo) && file_exists('uploads/' . $organization_logo) 
+                                                ? 'uploads/' . $organization_logo 
+                                                : 'uploads/default_logo.png';
 
-    </div>
-
+                                    // Get the organization color
+                                    $organization_color = !empty($row['organization_color']) ? $row['organization_color'] : '#FFFFFF'; // Default to white if no color is set
+                                    
+                                    // Display the organization data in the table
+                                    echo "<tr>
+                                            <td>{$row['organization_name']}</td>
+                                            <td>{$row['acronym']}</td>
+                                            <td><img src='$logo_path' alt='Logo' style='width: 50px; height: 50px; object-fit: cover;'></td>
+                                            <td>{$row['organization_members']}</td>
+                                            <td>{$row['organization_status']}</td>
+                                            <td style='background-color: {$organization_color}; color: white; text-align: center;'> <!-- Display color -->
+                                                {$organization_color}
+                                            </td>
+                                            <td>
+                                                <button class='btn btn-primary btn-sm edit-btn mb-3' 
+                                                        data-bs-toggle='modal' 
+                                                        data-bs-target='#editOrganizationModal' 
+                                                        data-id='{$row['organization_id']}'>
+                                                    <i class='fa-solid fa-pen'></i> Edit
+                                                </button>
+                                                <button class='btn btn-danger btn-sm archive-btn mb-3' 
+                                                        data-id='{$row['organization_id']}'>
+                                                    <i class='fa-solid fa-box-archive'></i> Archive
+                                                </button>
+                                            </td>
+                                        </tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='7' class='text-center'>No organizations found</td></tr>"; // Updated colspan to 7
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
     <!-- Add Organization Modal -->
     <div class="modal fade" id="addOrganizationModal" tabindex="-1" role="dialog" aria-labelledby="addOrganizationLabel"
         aria-hidden="true">
