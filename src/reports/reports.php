@@ -581,7 +581,7 @@
                                         <!-- Add an N/A option -->
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="collaborator_na"
-                                                name="collaborators[]" value="0" required>
+                                                name="collaborators[]" value="0">
                                             <label class="form-check-label" for="collaborator_na">None</label>
                                         </div>
                                         <?php

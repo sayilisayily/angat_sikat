@@ -3,11 +3,10 @@ require '../connection.php';
 
 $response = ['success' => false, 'errors' => []];
 
-if (isset($_POST['event_id'], $_POST['description'], $_POST['quantity'], $_POST['unit'], $_POST['amount'])) {
+if (isset($_POST['event_id'], $_POST['description'], $_POST['quantity'],  $_POST['amount'])) {
     $event_id = intval($_POST['event_id']);
     $description = trim($_POST['description']);
     $quantity = intval($_POST['quantity']);
-    $unit = trim($_POST['unit']);
     $amount = floatval($_POST['amount']);
     $date = trim($_POST['date']); 
     $profit = isset($_POST['profit']) ? floatval($_POST['profit']) : 0;
@@ -18,9 +17,6 @@ if (isset($_POST['event_id'], $_POST['description'], $_POST['quantity'], $_POST[
     }
     if ($quantity <= 0) {
         $response['errors']['quantity'] = 'Quantity must be greater than zero.';
-    }
-    if (empty($unit)) {
-        $response['errors']['unit'] = 'Unit is required.';
     }
     if ($amount <= 0) {
         $response['errors']['amount'] = 'Amount must be greater than zero.';
@@ -85,9 +81,9 @@ if (isset($_POST['event_id'], $_POST['description'], $_POST['quantity'], $_POST[
 
             // Insert new summary item
             $stmt = $conn->prepare("INSERT INTO event_summary_items 
-                (event_id, date, description, quantity, unit, amount, profit, total_profit, total_amount, reference) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("issiddddss", $event_id, $date, $description, $quantity, $unit, $amount, $profit, $total_profit, $total_amount, $reference);
+                (event_id, date, description, quantity, amount, profit, total_profit, total_amount, reference) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("issidddss", $event_id, $date, $description, $quantity, $amount, $profit, $total_profit, $total_amount, $reference);
 
             if (!$stmt->execute()) {
                 throw new Exception('Failed to insert the summary item.');
