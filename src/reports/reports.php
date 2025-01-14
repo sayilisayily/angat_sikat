@@ -918,54 +918,81 @@
     </div>
     <!-- End of Overall Body Wrapper -->
 
+    <!-- Include this script in the modal's page -->
     <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Handle Budget Request Modal
-        <?php if (isset($_SESSION['budget_request_success'])): ?>
-            const budgetRequestSuccessMessage = document.getElementById('successMessage');
-            budgetRequestSuccessMessage.textContent = <?php echo json_encode($_SESSION['budget_request_success']); ?>;
-            budgetRequestSuccessMessage.classList.remove('d-none');
-            new bootstrap.Modal(document.getElementById('budgetRequestModal')).show();
-        <?php unset($_SESSION['budget_request_success']); endif; ?>
+        document.addEventListener("DOMContentLoaded", function () {
+            <?php if (isset($_SESSION['budget_request_success'])): ?>
+                const successMessage = document.getElementById('successMessage');
+                successMessage.textContent = <?php echo json_encode($_SESSION['budget_request_success']); ?>;
+                successMessage.classList.remove('d-none');
+                new bootstrap.Modal(document.getElementById('budgetRequestModal')).show();
+            <?php unset($_SESSION['budget_request_success']); endif; ?>
 
-        <?php if (isset($_SESSION['budget_request_error'])): ?>
-            const budgetRequestErrorMessage = document.getElementById('errorMessage');
-            budgetRequestErrorMessage.innerHTML = "<li>" + <?php echo json_encode($_SESSION['budget_request_error']); ?> + "</li>";
-            budgetRequestErrorMessage.classList.remove('d-none');
-            new bootstrap.Modal(document.getElementById('budgetRequestModal')).show();
-        <?php unset($_SESSION['budget_request_error']); endif; ?>
+            <?php if (isset($_SESSION['budget_request_error'])): ?>
+                const errorMessage = document.getElementById('errorMessage');
+                errorMessage.innerHTML = "<li>" + <?php echo json_encode($_SESSION['budget_request_error']); ?> + "</li>";
+                errorMessage.classList.remove('d-none');
+                new bootstrap.Modal(document.getElementById('budgetRequestModal')).show();
+            <?php unset($_SESSION['budget_request_error']); endif; ?>
 
-        // Handle Project Proposal Modal
-        <?php if (isset($_SESSION['project_proposal_success'])): ?>
-            const projectProposalSuccessMessage = document.getElementById('proposalSuccessMessage');
-            projectProposalSuccessMessage.textContent = <?php echo json_encode($_SESSION['project_proposal_success']); ?>;
-            projectProposalSuccessMessage.classList.remove('d-none');
-            new bootstrap.Modal(document.getElementById('projectProposalModal')).show();
-        <?php unset($_SESSION['project_proposal_success']); endif; ?>
+            // Get the modal by ID
+            const budgetRequestModal = document.getElementById('budgetRequestModal');
+            const projectProposalModal = document.getElementById('projectProposalModal');
+            const permitModal = document.getElementById('permitModal');
+            const liquidationModal = document.getElementById('liquidationModal');
+            const statementModal = document.getElementById('statementModal');
 
-        <?php if (isset($_SESSION['project_proposal_error'])): ?>
-            const projectProposalErrorMessage = document.getElementById('proposalErrorMessage');
-            projectProposalErrorMessage.innerHTML = "<li>" + <?php echo json_encode($_SESSION['project_proposal_error']); ?> + "</li>";
-            projectProposalErrorMessage.classList.remove('d-none');
-            new bootstrap.Modal(document.getElementById('projectProposalModal')).show();
-        <?php unset($_SESSION['project_proposal_error']); endif; ?>
+            // Add event listener to reset the form when the modal is closed
+            budgetRequestModal.addEventListener('hidden.bs.modal', function () {
+                const form = budgetRequestModal.querySelector('form');
+                if (form) form.reset();
+            });
 
-        // Get the modal by ID
-        const budgetRequestModal = document.getElementById('budgetRequestModal');
-        const projectProposalModal = document.getElementById('projectProposalModal');
+            projectProposalModal.addEventListener('hidden.bs.modal', function () {
+                const form = projectProposalModal.querySelector('form');
+                if (form) form.reset();
+            });
 
-        // Add event listener to reset the form when the modal is closed
-        budgetRequestModal.addEventListener('hidden.bs.modal', function () {
-            const form = budgetRequestModal.querySelector('form');
-            if (form) form.reset();
+            permitModal.addEventListener('hidden.bs.modal', function () {
+                const form = permitModal.querySelector('form');
+                if (form) form.reset();
+            });
+
+            liquidationModal.addEventListener('hidden.bs.modal', function () {
+                const form = liquidationModal.querySelector('form');
+                if (form) form.reset();
+            });
+
+            statementModal.addEventListener('hidden.bs.modal', function () {
+                const form = statementModal.querySelector('form');
+                if (form) form.reset();
+            });
+
+            budgetRequestModal.addEventListener('hidden.bs.modal', function () {
+                const form = budgetRequestModal.querySelector('form');
+                if (form) form.reset();
+
+                // Hide messages
+                const successMessage = document.getElementById('successMessage');
+                const errorMessage = document.getElementById('errorMessage');
+                if (successMessage) successMessage.classList.add('d-none');
+                if (errorMessage) errorMessage.classList.add('d-none');
+            });
+
+            projectProposalModal.addEventListener('hidden.bs.modal', function () {
+                const form = projectProposalModal.querySelector('form');
+                if (form) form.reset();
+
+                // Hide messages
+                const successMessage = document.getElementById('proposalSuccessMessage');
+                const errorMessage = document.getElementById('proposalErrorMessage');
+                if (successMessage) successMessage.classList.add('d-none');
+                if (errorMessage) errorMessage.classList.add('d-none');
+            });
+
         });
+    </script>
 
-        projectProposalModal.addEventListener('hidden.bs.modal', function () {
-            const form = projectProposalModal.querySelector('form');
-            if (form) form.reset();
-        });
-    });
-</script>
 
 
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
