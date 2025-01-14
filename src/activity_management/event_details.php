@@ -526,34 +526,35 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
 
                                 
                                 <?php
-                                    // Prepare the SQL query to fetch the amount
-                                    $sql = "SELECT amount FROM financial_plan WHERE plan_id = ?";
-                                    $stmt = $conn->prepare($sql);
+                                // Prepare the SQL query to fetch the amount based on the plan_id from the events table
+                                $sql = "SELECT fp.amount 
+                                        FROM financial_plan fp 
+                                        INNER JOIN events e ON fp.plan_id = e.plan_id 
+                                        WHERE e.event_id = ?";
+                                $stmt = $conn->prepare($sql);
 
-                                    if ($stmt) {
-                                        // Bind the $event_id parameter to the query
-                                        $stmt->bind_param("i", $event_id);
+                                if ($stmt) {
+                                    // Bind the $event_id parameter to the query
+                                    $stmt->bind_param("i", $event_id);
 
-                                        // Execute the query
-                                        $stmt->execute();
+                                    // Execute the query
+                                    $stmt->execute();
 
-                                        // Fetch the result
-                                        $result = $stmt->get_result();
+                                    // Fetch the result
+                                    $result = $stmt->get_result();
 
-                                        if ($result && $result->num_rows > 0) {
-                                            // Fetch the amount
-                                            $row = $result->fetch_assoc();
-                                            $amount = $row['amount'];
-
-                                        } else {
-                                            echo "No record found for the provided plan_id.";
-                                        }
-
-                                        
+                                    if ($result && $result->num_rows > 0) {
+                                        // Fetch the amount
+                                        $row = $result->fetch_assoc();
+                                        $amount = $row['amount'];
                                     } else {
-                                        echo "Error preparing the statement: " . $conn->error;
+                                        echo "No record found for the provided event_id.";
                                     }
-                                ?>
+                                } else {
+                                    echo "Error preparing the statement: " . $conn->error;
+                                }
+                            ?>
+
                                 <!-- Display the grand total -->
                                 <div class="mt-3">
                                     <h6 class="text-center">

@@ -496,34 +496,35 @@ if (isset($_GET['maintenance_id']) && !empty($_GET['maintenance_id'])) {
                         </ul>
 
                         <?php
-                                    // Prepare the SQL query to fetch the amount
-                                    $sql = "SELECT amount FROM financial_plan WHERE plan_id = ?";
-                                    $stmt = $conn->prepare($sql);
+                        // Prepare the SQL query to fetch the amount based on the plan_id from the events table
+                        $sql = "SELECT fp.amount 
+                                FROM financial_plan fp 
+                                INNER JOIN maintenance m ON fp.plan_id = m.plan_id 
+                                WHERE m.maintenance_id = ?";
+                        $stmt = $conn->prepare($sql);
 
-                                    if ($stmt) {
-                                        // Bind the $event_id parameter to the query
-                                        $stmt->bind_param("i", $event_id);
+                        if ($stmt) {
+                            // Bind the $event_id parameter to the query
+                            $stmt->bind_param("i", $maintenance_id);
 
-                                        // Execute the query
-                                        $stmt->execute();
+                            // Execute the query
+                            $stmt->execute();
 
-                                        // Fetch the result
-                                        $result = $stmt->get_result();
+                            // Fetch the result
+                            $result = $stmt->get_result();
 
-                                        if ($result && $result->num_rows > 0) {
-                                            // Fetch the amount
-                                            $row = $result->fetch_assoc();
-                                            $amount = $row['amount'];
+                            if ($result && $result->num_rows > 0) {
+                                // Fetch the amount
+                                $row = $result->fetch_assoc();
+                                $amount = $row['amount'];
+                            } else {
+                                echo "No record found for the provided event_id.";
+                            }
+                        } else {
+                            echo "Error preparing the statement: " . $conn->error;
+                        }
+                    ?>
 
-                                        } else {
-                                            echo "No record found for the provided plan_id.";
-                                        }
-
-                                        
-                                    } else {
-                                        echo "Error preparing the statement: " . $conn->error;
-                                    }
-                                ?>
                         <div class="tab-content mt-4 mx-3">
                             <!-- Financial Plan Tab -->
                             <div class="tab-pane fade show active" id="financial-plan" role="tabpanel" aria-labelledby="financial-plan-tab">
