@@ -447,7 +447,7 @@ $pdf->SetFont($arial, 'B', 11);
 $pdf->Cell(0, 0, "Coordinator, SDS", 0, 1, 'C', 0, '', 1);
 
 // Generate the file name
-    $file_name = "Permit_to_Withdraw_" . time() . ".pdf";
+    $file_name = "Permit_to_Withdraw_". $eventTitle . date("F j, Y") . ".pdf";
 
     // Use the 'D' parameter to force download
     $pdf->Output($file_name, 'I'); 

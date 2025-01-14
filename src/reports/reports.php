@@ -643,7 +643,7 @@
                                 <div class="form-group mb-3">
                                     <label for="rationale" class="form-label">Rationale <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <textarea class="form-control" id="rationale" name="rationale" rows="3"
-                                        placeholder="Provide short rationale about your activity, focusing on who are the proponents and why this activity will be conducted."
+                                        placeholder="Rationale"
                                         required></textarea>
                                 </div>
 
@@ -651,7 +651,7 @@
                                 <div class="form-group mb-3">
                                     <label for="description" class="form-label">Description <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <textarea class="form-control" id="description" name="description" rows="3"
-                                        placeholder="Describe the event, focusing on when and where it will happen."
+                                        placeholder="Description"
                                         required></textarea>
                                 </div>
 
@@ -699,6 +699,14 @@
                                     <label for="funding_source" class="form-label">Funding Source <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <textarea class="form-control" id="funding_source" name="funding_source" rows="2"
                                         required></textarea>
+                                </div>
+                                <!-- Success Message Alert -->
+                                <div id="proposalSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                                    Budget request report generated successfully!
+                                </div>
+                                <!-- Error Message Alert -->
+                                <div id="proposalErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="proposalErrorList"></ul> <!-- List for showing validation errors -->
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -793,7 +801,7 @@
                             <div class="modal-body">
                                 <!-- Form fields -->
 
-                                <div class="form-group row mb-2">
+                                <div class="form-group mb-2">
                                     <!-- Event Title -->
                                     <div class="col-12">
                                         <label for="liquidation_title">Event Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
@@ -822,8 +830,15 @@
                                 <input type="hidden" class="form-control" id="liquidation_amount" name="total_amount"
                                     readonly>
 
-
-                                <div class="form-group row mb-2">
+                                <div class="form-group mb-2">
+                                    <!-- Event Start Date -->
+                                    <div class="col-12">
+                                        <label for="reference_number">Reference Number <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                        <input type="number" class="form-control" id="reference_number"
+                                            name="reference_number" required>
+                                    </div>
+                                </div>
+                                <div class="form-group mb-2">
                                     <!-- Event Start Date -->
                                     <div class="col-12">
                                         <label for="cash_received">Cash Received <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
@@ -902,6 +917,56 @@
         <!-- End of 2nd Body Wrapper -->
     </div>
     <!-- End of Overall Body Wrapper -->
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Handle Budget Request Modal
+        <?php if (isset($_SESSION['budget_request_success'])): ?>
+            const budgetRequestSuccessMessage = document.getElementById('successMessage');
+            budgetRequestSuccessMessage.textContent = <?php echo json_encode($_SESSION['budget_request_success']); ?>;
+            budgetRequestSuccessMessage.classList.remove('d-none');
+            new bootstrap.Modal(document.getElementById('budgetRequestModal')).show();
+        <?php unset($_SESSION['budget_request_success']); endif; ?>
+
+        <?php if (isset($_SESSION['budget_request_error'])): ?>
+            const budgetRequestErrorMessage = document.getElementById('errorMessage');
+            budgetRequestErrorMessage.innerHTML = "<li>" + <?php echo json_encode($_SESSION['budget_request_error']); ?> + "</li>";
+            budgetRequestErrorMessage.classList.remove('d-none');
+            new bootstrap.Modal(document.getElementById('budgetRequestModal')).show();
+        <?php unset($_SESSION['budget_request_error']); endif; ?>
+
+        // Handle Project Proposal Modal
+        <?php if (isset($_SESSION['project_proposal_success'])): ?>
+            const projectProposalSuccessMessage = document.getElementById('proposalSuccessMessage');
+            projectProposalSuccessMessage.textContent = <?php echo json_encode($_SESSION['project_proposal_success']); ?>;
+            projectProposalSuccessMessage.classList.remove('d-none');
+            new bootstrap.Modal(document.getElementById('projectProposalModal')).show();
+        <?php unset($_SESSION['project_proposal_success']); endif; ?>
+
+        <?php if (isset($_SESSION['project_proposal_error'])): ?>
+            const projectProposalErrorMessage = document.getElementById('proposalErrorMessage');
+            projectProposalErrorMessage.innerHTML = "<li>" + <?php echo json_encode($_SESSION['project_proposal_error']); ?> + "</li>";
+            projectProposalErrorMessage.classList.remove('d-none');
+            new bootstrap.Modal(document.getElementById('projectProposalModal')).show();
+        <?php unset($_SESSION['project_proposal_error']); endif; ?>
+
+        // Get the modal by ID
+        const budgetRequestModal = document.getElementById('budgetRequestModal');
+        const projectProposalModal = document.getElementById('projectProposalModal');
+
+        // Add event listener to reset the form when the modal is closed
+        budgetRequestModal.addEventListener('hidden.bs.modal', function () {
+            const form = budgetRequestModal.querySelector('form');
+            if (form) form.reset();
+        });
+
+        projectProposalModal.addEventListener('hidden.bs.modal', function () {
+            const form = projectProposalModal.querySelector('form');
+            if (form) form.reset();
+        });
+    });
+</script>
+
 
     <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

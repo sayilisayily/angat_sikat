@@ -7,6 +7,12 @@ header('Content-Type: application/json');
 try {
 // Get form data
 $event_id = $_POST['event_id'];
+// Example validation
+    if (empty($event_id)) {
+        $_SESSION['budget_request_error'] = "Event ID is required.";
+        header("Location: reports.php"); // Replace with the page where the modal is located
+        exit();
+    }
 $org_query = "SELECT organization_name, acronym FROM organizations WHERE organization_id = $organization_id";
                                     $org_result = mysqli_query($conn, $org_query);
 
@@ -160,9 +166,9 @@ if ($result->num_rows > 0) {
         $items[] = $row;
     }
 } else {
-    http_response_code(404); // Not Found
-    echo json_encode(['error' => 'No items found for the given event ID.']);
-    exit;
+    $_SESSION['budget_request_error'] = 'No items found for the given event.';
+    header("Location: reports.php"); // Replace with the page where the modal is located
+    exit();
 }
 
 // Create the table HTML
@@ -324,19 +330,20 @@ $pdf->Cell(0, 0, "JIMPLE JAY R. MALIGRO", 0, 1, 'C', 0, '', 1);
 $pdf->SetFont($arial, 'B', 11);
 $pdf->Cell(0, 0, "Coordinator, SDS", 0, 1, 'C', 0, '', 1);
 // Generate the file name
-    $file_name = "Budget_Request_" . $eventTitle . '_' . time() . ".pdf";
+    $file_name = "Budget_Request_" . $eventTitle . '_' . date("F j, Y") . ".pdf";
 
     // Use the 'D' parameter to force download
     $pdf->Output($file_name, 'I'); // Forces the PDF to be downloaded with the given filename
 
     // Exit to ensure no extra output
-    exit;
+    $_SESSION['budget_request_success'] = "Budget request report generated successfully!";
+        header("Location: reports.php"); // Redirect back to the modal page
+        exit();
 } catch (Exception $e) {
     // Return error response
-    echo json_encode([
-        "success" => false,
-        "errors" => [$e->getMessage()],
-    ]);
+    $_SESSION['budget_request_error'] = "An error occurred: " . $e->getMessage();
+        header("Location: reports.php");
+        exit();
 }
 
 ?>

@@ -116,6 +116,7 @@ if ($result->num_rows > 0) {
     $eventTitle = strtoupper("Event Not Found"); // Default title if event is not found
 }
 
+$referenceNumber = $_POST['reference_number'];
 $cashReceived = $_POST['cash_received']; // Amount received in numeric format
 // SQL query to fetch disbursements and their details
 $query = "
@@ -240,6 +241,11 @@ function convertNumberToWord($number) {
     return strtoupper(implode(' ', $words));
 }
 
+// Set font
+$pdf->SetFont('arial', '', 11);
+$pdf->Cell(0, 0, 'Reference Number: '.$referenceNumber, 0, 1, 'L', 0, '', 1);
+$pdf->Cell(0, 0, 'Date Prepared: '.date("F j, Y"), 0, 1, 'L', 0, '', 1);
+$pdf->Ln(5);
 
 // Set font
 $pdf->SetFont('arial', '', 11);
@@ -457,7 +463,7 @@ foreach ($disbursements as $disbursement) {
 
 
 // Generate the file name
-    $file_name = "Liquidation_" . $eventTitle . '_' . time() . ".pdf";
+    $file_name = "LR " . $referenceNumber . ".pdf";
 
     // Use the 'D' parameter to force download
     $pdf->Output($file_name, 'I'); // Forces the PDF to be downloaded with the given filename

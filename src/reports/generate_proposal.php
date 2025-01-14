@@ -2,9 +2,16 @@
 require_once('../../libs/tcpdf/TCPDF-main/tcpdf.php');
 require_once('../connection.php');
 include('../session_check.php');
+header('Content-Type: application/json');
 
+try {
 // Get form data
 $event_id =  $_POST['event_id'];
+if (empty($event_id)) {
+        $_SESSION['project_proposal_error'] = "Event ID is required.";
+        header("Location: reports.php"); // Replace with the page where the modal is located
+        exit();
+    }
 $org_query = "SELECT organization_name, acronym FROM organizations WHERE organization_id = $organization_id";
                                     $org_result = mysqli_query($conn, $org_query);
 
@@ -26,7 +33,7 @@ class CustomPDF extends TCPDF {
     public function Footer() {
         $this->SetY(-25.4); // Position 1 inch from the bottom
         $this->SetFont('play', '', 10); // Set font
-
+        global $organization_name;
         // HTML content for footer with adjusted left and right margins
         $html = '
         <div style="border-top: 1px solid #000; font-size: 10px; font-family: Play, sans-serif; line-height: 1; padding-left: 38.1mm; padding-right: 25.4mm;">
@@ -37,7 +44,7 @@ class CustomPDF extends TCPDF {
                 Financial Statement
             </div>
             <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
-                Name of Organization
+                '.$organization_name.'
             </div>
             <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
                 Page ' . $this->getAliasNumPage() . ' of ' . $this->getAliasNbPages() . '
@@ -235,7 +242,7 @@ $description = isset($_POST['description']) && !empty(trim($_POST['description']
     : 'Describe the event, focusing on when and where it will happen.';
 
 // Output description to PDF
-$pdf->MultiCell(0, 10, $description, 0, 'L', false, 1, '', '', true);
+$pdf->MultiCell(0, 10, $description, 0, 'J', false, 1, '', '', true);
 // VIII. OBJECTIVES
 $pdf->SetFont($arialBold, '', 11);
 $pdf->Cell(0, 10, 'VIII. OBJECTIVES', 0, 1);
@@ -479,7 +486,7 @@ $funding_source = isset($_POST['funding_source']) && !empty(trim($_POST['funding
     : 'Fund will come from the registration of participants. Income from this activity will be deposited on the bank account of ABC Organization and will be utilized for future activities.';
 
 // Output rationale to PDF
-$pdf->MultiCell(0, 10, $funding_source, 0, 'L', false, 1, '', '', true);
+$pdf->MultiCell(0, 10, $funding_source, 0, 'J', false, 1, '', '', true);
 
 
 $pdf->Ln(10); // Space for signatures above names
@@ -601,6 +608,17 @@ $pdf->Cell(0, 0, "JIMPLE JAY R. MALIGRO", 0, 1, 'C', 0, '', 1);
 $pdf->SetFont($arial, 'B', 11);
 $pdf->Cell(0, 0, "Coordinator, SDS", 0, 1, 'C', 0, '', 1);
 
-$pdfOutputPath = 'generated_pdfs/' . $eventTitle . '_proposal.pdf';
-$pdf->Output();
+$file_name = 'Project_Proposal_' . $eventTitle .date("F j, Y"). '.pdf';
+$pdf->Output($file_name, 'I');
+
+// Exit to ensure no extra output
+    $_SESSION['project_proposal_success'] = "Project proposal generated successfully!";
+        header("Location: reports.php"); // Redirect back to the modal page
+        exit();
+} catch (Exception $e) {
+    // Return error response
+    $_SESSION['project_proposal_error'] = "An error occurred: " . $e->getMessage();
+        header("Location: reports.php");
+        exit();
+}
 ?>
