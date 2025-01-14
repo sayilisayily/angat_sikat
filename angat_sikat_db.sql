@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 13, 2025 at 04:32 PM
+-- Generation Time: Jan 14, 2025 at 04:43 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -33,16 +33,17 @@ CREATE TABLE `advisers` (
   `last_name` varchar(255) NOT NULL,
   `picture` varchar(255) NOT NULL,
   `organization_id` int(11) NOT NULL,
-  `position` varchar(255) NOT NULL
+  `position` varchar(255) NOT NULL,
+  `archived` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `advisers`
 --
 
-INSERT INTO `advisers` (`adviser_id`, `first_name`, `last_name`, `picture`, `organization_id`, `position`) VALUES
-(1, 'Renato', 'Bautista', 'renato.jpg', 1, 'Senior Adviser'),
-(2, 'Janessa', 'Cruz', 'janessa.jpg', 1, 'Junior Adviser');
+INSERT INTO `advisers` (`adviser_id`, `first_name`, `last_name`, `picture`, `organization_id`, `position`, `archived`) VALUES
+(1, 'Renato', 'Bautista Jr.', 'renato.jpg', 1, 'Senior Adviser', 0),
+(2, 'Janessa Marielle', 'Cruz', 'janessa.jpg', 1, 'Junior Adviser', 0);
 
 -- --------------------------------------------------------
 
@@ -64,7 +65,8 @@ CREATE TABLE `balance_history` (
 INSERT INTO `balance_history` (`history_id`, `organization_id`, `balance`, `updated_at`) VALUES
 (5, 3, 24600.00, '2025-01-13 09:16:45'),
 (6, 1, 104000.00, '2025-01-13 11:25:17'),
-(7, 1, 79000.00, '2025-01-13 11:25:49');
+(7, 1, 79000.00, '2025-01-13 11:25:49'),
+(8, 1, 77750.00, '2025-01-14 03:02:09');
 
 -- --------------------------------------------------------
 
@@ -88,7 +90,7 @@ CREATE TABLE `budget_allocation` (
 
 INSERT INTO `budget_allocation` (`allocation_id`, `organization_id`, `category`, `allocated_budget`, `total_spent`, `created_at`, `updated_at`) VALUES
 (11, 1, 'Activities', 75000.00, 25000.00, '2025-01-13 05:49:36', '2025-01-13 11:25:49'),
-(12, 1, 'Purchases', 10000.00, 0.00, '2025-01-13 05:49:57', '2025-01-13 05:49:57'),
+(12, 1, 'Purchases', 10000.00, 1250.00, '2025-01-13 05:49:57', '2025-01-14 03:02:09'),
 (13, 1, 'Maintenance and Other Expenses', 15000.00, 0.00, '2025-01-13 05:50:09', '2025-01-13 05:50:09'),
 (14, 3, 'Activities', 10000.00, 400.00, '2025-01-13 09:05:55', '2025-01-13 09:16:45'),
 (15, 3, 'Purchases', 3000.00, 0.00, '2025-01-13 09:06:12', '2025-01-13 09:06:12'),
@@ -117,7 +119,8 @@ CREATE TABLE `budget_approvals` (
 
 INSERT INTO `budget_approvals` (`approval_id`, `title`, `category`, `attachment`, `status`, `organization_id`, `created_at`, `archived`) VALUES
 (5, 'Oplan Alisin ang mga Bading', 'Activities', 'Budget_Request_CyberCon 2025_1736416068.pdf', 'Approved', 3, '2025-01-13 09:13:10', 0),
-(6, 'CyberCon', 'Activities', 'example_014.pdf', 'Approved', 1, '2025-01-13 11:21:38', 0);
+(6, 'CyberCon', 'Activities', 'example_014.pdf', 'Approved', 1, '2025-01-13 11:21:38', 0),
+(7, 'Printing', 'Purchases', 'Liquidation_General Assembly_1736370703.pdf', 'Approved', 1, '2025-01-14 03:00:02', 0);
 
 -- --------------------------------------------------------
 
@@ -173,7 +176,9 @@ INSERT INTO `events` (`event_id`, `plan_id`, `title`, `event_venue`, `event_star
 (3, 4, 'Merchandise Sale', 'DCS', '2025-01-18', '2025-01-25', 'Income', 'Approved', 1, 20000.00, 4000.00, 1, NULL, '2025-01-11 06:53:06', 0),
 (4, 3, 'AI Seminar', 'DCS', '2025-02-03', '2025-02-06', 'Expense', 'Approved', 0, 20000.00, 0.00, 1, NULL, '2025-01-12 12:35:05', 0),
 (5, 7, 'Film Festival', 'Court I', '2025-01-16', '2025-01-17', 'Income', 'Approved', 1, 0.00, 0.00, 1, NULL, '2025-01-12 13:09:44', 0),
-(6, 8, 'Oplan Alisin ang mga Bading', 'Diyan lang', '2025-01-14', '2025-01-15', 'Expense', 'Approved', 1, 400.00, 0.00, 3, NULL, '2025-01-13 09:09:00', 0);
+(6, 8, 'Oplan Alisin ang mga Bading', 'Diyan lang', '2025-01-14', '2025-01-15', 'Expense', 'Approved', 1, 400.00, 0.00, 3, NULL, '2025-01-13 09:09:00', 0),
+(7, 9, 'Hackathon', 'DCS', '2025-01-15', '2025-01-15', 'Expense', 'Pending', 0, 3675.00, 0.00, 1, NULL, '2025-01-13 19:10:32', 0),
+(8, 10, 'Podcast', 'DCS', '2025-01-18', '2025-01-18', 'Expense', 'Pending', 0, 0.00, 0.00, 1, NULL, '2025-01-14 01:08:26', 0);
 
 -- --------------------------------------------------------
 
@@ -242,8 +247,12 @@ INSERT INTO `event_items` (`item_id`, `event_id`, `description`, `quantity`, `un
 (6, 2, 'Food for Officers', 10, '1', 150.00, 1500.00, 0.00, 0.00, 'expense'),
 (7, 2, 'Champion', 1, '1', 1500.00, 1500.00, 0.00, 0.00, 'expense'),
 (8, 2, 'Registration Fee', 500, '1', 90.00, 45000.00, 90.00, 45000.00, 'revenue'),
-(9, 4, 'Food for Participants', 100, '1', 200.00, 20000.00, 0.00, 0.00, 'revenue'),
-(10, 6, 'jsqjdjiwq', 2, '1', 200.00, 400.00, 0.00, 0.00, 'revenue');
+(9, 4, 'Food for Participants', 100, '1', 200.00, 20000.00, 0.00, 0.00, 'expense'),
+(10, 6, 'jsqjdjiwq', 2, '1', 200.00, 400.00, 0.00, 0.00, 'expense'),
+(11, 7, 'Champion Prize', 1, '1', 1500.00, 1500.00, 0.00, 0.00, 'expense'),
+(12, 7, '2nd Place Prize', 1, '1', 1000.00, 1000.00, 0.00, 0.00, 'expense'),
+(13, 7, '3rd Place Prize', 1, '1', 800.00, 800.00, 0.00, 0.00, 'expense'),
+(14, 7, 'Certificates', 15, NULL, 25.00, 375.00, 0.00, 0.00, 'expense');
 
 -- --------------------------------------------------------
 
@@ -300,7 +309,8 @@ CREATE TABLE `expenses` (
 
 INSERT INTO `expenses` (`expense_id`, `organization_id`, `summary_id`, `category`, `title`, `amount`, `reference`, `created_at`, `archived`) VALUES
 (3, 3, 5, 'Activities', 'Oplan Alisin ang mga Bading', 400.00, 'Budget_Request_CyberCon 2025_1736416068.pdf', '2025-01-13 09:16:45', 0),
-(4, 1, 3, 'Activities', 'AI Seminar', 25000.00, 'example_014.pdf', '2025-01-13 11:25:49', 0);
+(4, 1, 3, 'Activities', 'AI Seminar', 25000.00, 'example_014.pdf', '2025-01-13 11:25:49', 0),
+(5, 1, 3, 'Purchases', 'Printing', 1250.00, 'example_014.pdf', '2025-01-14 03:02:09', 0);
 
 -- --------------------------------------------------------
 
@@ -323,7 +333,8 @@ INSERT INTO `expense_history` (`history_id`, `organization_id`, `expense`, `upda
 (1, 1, 750.00, '2025-01-11 06:49:44'),
 (2, 1, 25000.00, '2025-01-12 12:55:36'),
 (3, 3, 400.00, '2025-01-13 09:16:45'),
-(4, 1, 25000.00, '2025-01-13 11:25:49');
+(4, 1, 25000.00, '2025-01-13 11:25:49'),
+(5, 1, 1250.00, '2025-01-14 03:02:09');
 
 -- --------------------------------------------------------
 
@@ -353,7 +364,9 @@ INSERT INTO `financial_plan` (`plan_id`, `title`, `category`, `organization_id`,
 (5, 'Printing', 'Purchases', 1, 'Expense', '0000-00-00', 5000.00),
 (6, 'Transportation', 'Purchases', 1, 'Expense', '0000-00-00', 10000.00),
 (7, 'Film Festival', '', 1, 'Income', '2025-01-16', 30000.00),
-(8, 'Oplan Alisin ang mga Bading', 'Activities', 3, 'Expense', '2025-01-14', 10000.00);
+(8, 'Oplan Alisin ang mga Bading', 'Activities', 3, 'Expense', '2025-01-14', 10000.00),
+(9, 'Hackathon', 'Activities', 1, 'Expense', '2025-01-15', 5000.00),
+(10, 'Podcast', 'Activities', 1, 'Expense', '2025-01-18', 4000.00);
 
 -- --------------------------------------------------------
 
@@ -512,10 +525,14 @@ INSERT INTO `notifications` (`id`, `recipient_id`, `organization_id`, `message`,
 (21, 10, 1, 'Your budget request for \'Film Festival\' has been approved.', 0, '2025-01-12 21:15:22'),
 (22, 3, 0, 'A new budget approval request for \'Oplan Alisin ang mga Bading\' has been submitted.', 0, '2025-01-13 17:13:10'),
 (23, 11, 3, 'Your budget request for \'Oplan Alisin ang mga Bading\' has been approved.', 0, '2025-01-13 17:14:24'),
-(24, 3, 0, 'A new budget approval request for \'CyberCon\' has been submitted.', 0, '2025-01-13 19:21:38'),
-(25, 3, 1, 'Your budget request for \'CyberCon\' has been approved.', 0, '2025-01-13 19:22:07'),
-(26, 9, 1, 'Your budget request for \'CyberCon\' has been approved.', 0, '2025-01-13 19:22:07'),
-(27, 10, 1, 'Your budget request for \'CyberCon\' has been approved.', 0, '2025-01-13 19:22:07');
+(24, 3, 0, 'A new budget approval request for \'CyberCon\' has been submitted.', 1, '2025-01-13 19:21:38'),
+(25, 3, 1, 'Your budget request for \'CyberCon\' has been approved.', 1, '2025-01-13 19:22:07'),
+(26, 9, 1, 'Your budget request for \'CyberCon\' has been approved.', 1, '2025-01-13 19:22:07'),
+(27, 10, 1, 'Your budget request for \'CyberCon\' has been approved.', 1, '2025-01-13 19:22:07'),
+(28, 3, 0, 'A new budget approval request for \'Printing\' has been submitted.', 0, '2025-01-14 11:00:02'),
+(29, 3, 1, 'Your budget request for \'Printing\' has been approved.', 0, '2025-01-14 11:01:12'),
+(30, 9, 1, 'Your budget request for \'Printing\' has been approved.', 0, '2025-01-14 11:01:12'),
+(31, 10, 1, 'Your budget request for \'Printing\' has been approved.', 0, '2025-01-14 11:01:12');
 
 -- --------------------------------------------------------
 
@@ -546,7 +563,7 @@ CREATE TABLE `organizations` (
 --
 
 INSERT INTO `organizations` (`organization_id`, `organization_name`, `acronym`, `organization_logo`, `organization_members`, `organization_status`, `organization_color`, `archived`, `created_at`, `balance`, `beginning_balance`, `income`, `expense`, `cash_on_bank`, `cash_on_hand`) VALUES
-(1, 'Beacon of Youth Technology Enthusiasts', 'BYTE', 'logo_67820e1e2686b9.12993510.png', 500, 'Level I', '#2d473a', 0, '2025-01-11 06:22:22', 79000.00, 100000.00, 104000.00, 25000.00, 0.00, 0.00),
+(1, 'Beacon of Youth Technology Enthusiasts', 'BYTE', 'logo_67820e1e2686b9.12993510.png', 500, 'Level I', '#2d473a', 0, '2025-01-11 06:22:22', 77750.00, 100000.00, 104000.00, 26250.00, 0.00, 0.00),
 (2, 'Computer Scientists and Developers Society', 'CO:DE', 'logo_67849b259beea0.69837837.png', 300, 'Level I', '#247cdb', 0, '2025-01-13 04:48:37', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
 (3, 'Future Educators Organization', 'FEO', 'logo_6784d61999de24.21054574.png', 500, 'Level I', '#22b2e2', 0, '2025-01-13 09:00:09', 24600.00, 25000.00, 25000.00, 400.00, 15000.00, 0.00),
 (4, 'Junior Marketing Association', 'JMA', 'logo_67851d7cf1e3e2.73446431.jpg', 700, 'Level I', '#001865', 0, '2025-01-13 14:04:44', 0.00, 0.00, 0.00, 0.00, 0.00, 0.00),
@@ -575,6 +592,13 @@ CREATE TABLE `purchases` (
   `organization_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `purchases`
+--
+
+INSERT INTO `purchases` (`purchase_id`, `plan_id`, `title`, `total_amount`, `purchase_status`, `completion_status`, `archived`, `created_at`, `organization_id`) VALUES
+(5, 5, 'Printing', 1250.00, 'Approved', 1, 0, '2025-01-14 02:58:41', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -594,6 +618,13 @@ CREATE TABLE `purchases_summary` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `purchases_summary`
+--
+
+INSERT INTO `purchases_summary` (`summary_id`, `purchase_id`, `title`, `organization_id`, `total_amount`, `purchase_status`, `completion_status`, `archived`, `created_at`, `updated_at`) VALUES
+(3, 5, 'Printing', 1, 1250.00, 'Approved', 1, 0, '2025-01-14 03:01:33', '2025-01-14 03:01:49');
+
 -- --------------------------------------------------------
 
 --
@@ -609,6 +640,13 @@ CREATE TABLE `purchase_items` (
   `amount` decimal(10,2) NOT NULL,
   `total_amount` decimal(10,2) GENERATED ALWAYS AS (`quantity` * `amount`) STORED
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `purchase_items`
+--
+
+INSERT INTO `purchase_items` (`item_id`, `purchase_id`, `description`, `quantity`, `unit`, `amount`) VALUES
+(4, 5, 'Ink', 5.00, '1', 250.00);
 
 -- --------------------------------------------------------
 
@@ -626,6 +664,13 @@ CREATE TABLE `purchase_summary_items` (
   `total_amount` decimal(15,2) NOT NULL,
   `reference` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `purchase_summary_items`
+--
+
+INSERT INTO `purchase_summary_items` (`summary_item_id`, `purchase_id`, `description`, `quantity`, `unit`, `amount`, `total_amount`, `reference`) VALUES
+(4, 5, 'Ink', 5, 1, 250.00, 1250.00, 'example_014.pdf');
 
 -- --------------------------------------------------------
 
@@ -695,7 +740,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `profile_picture`, `first_name`, `last_name`, `email`, `role`, `organization_id`, `archived`, `created_at`, `position`, `failed_attempts`, `is_locked`, `last_failed_attempt`) VALUES
-(3, 'admin', '$2y$10$ZhjHxFaq77LMDZK1WSfss.w6QvlSROnTpjIE9Gov/wb7soNaNY/f6', 'uploads/guill.jpg', 'Guilier', 'Parulan', 'admin@mail.com', 'admin', 1, 0, '2024-12-23 16:21:49', 'President', 0, 0, NULL),
+(3, 'admin', '$2y$10$ZhjHxFaq77LMDZK1WSfss.w6QvlSROnTpjIE9Gov/wb7soNaNY/f6', 'uploads/guill.jpg', 'Guillier', 'Parulan', 'admin@mail.com', 'admin', 1, 0, '2024-12-23 16:21:49', 'President', 0, 0, NULL),
 (9, 'Maphil', '$2y$10$rgoeHdju14TjzSh9meKP1exVzAiisOuKU6rFvSVtRtc/j0qtcp3N6', 'uploads/maphil.jpg', 'Maphil Grace', 'Alquizola', 'maphil.grace.alquizola@cvsu.edu.ph', 'officer', 1, 0, '2025-01-11 06:23:48', 'Treasurer', 0, 0, NULL),
 (10, 'Joshua', '$2y$10$rSt1JzKaU1lLchnwDqCA7e89aXsEw7PkX0VmAy2ppBgr7vboNQH3K', '', 'Joshua', 'Sanchez', 'joshua.sanchez@cvsu.edu.ph', 'officer', 1, 0, '2025-01-11 16:20:23', 'President', 0, 0, NULL),
 (11, 'cervyramos', '$2y$10$RaSN1K8P67YgLny2bWjO/.VPlsDIKgost6p44iEgakxxF1/WyJAny', '', 'Cervy', 'Ramos', 'cervy.ramos@cvsu.edu.ph', 'officer', 3, 0, '2025-01-13 09:01:56', 'President', 0, 0, NULL);
@@ -942,7 +987,7 @@ ALTER TABLE `advisers`
 -- AUTO_INCREMENT for table `balance_history`
 --
 ALTER TABLE `balance_history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `budget_allocation`
@@ -954,7 +999,7 @@ ALTER TABLE `budget_allocation`
 -- AUTO_INCREMENT for table `budget_approvals`
 --
 ALTER TABLE `budget_approvals`
-  MODIFY `approval_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `approval_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -966,7 +1011,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `event_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `events_summary`
@@ -978,7 +1023,7 @@ ALTER TABLE `events_summary`
 -- AUTO_INCREMENT for table `event_items`
 --
 ALTER TABLE `event_items`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `event_summary_items`
@@ -990,19 +1035,19 @@ ALTER TABLE `event_summary_items`
 -- AUTO_INCREMENT for table `expenses`
 --
 ALTER TABLE `expenses`
-  MODIFY `expense_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `expense_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `expense_history`
 --
 ALTER TABLE `expense_history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `financial_plan`
 --
 ALTER TABLE `financial_plan`
-  MODIFY `plan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `plan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `income`
@@ -1044,7 +1089,7 @@ ALTER TABLE `maintenance_summary_items`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `organizations`
@@ -1056,25 +1101,25 @@ ALTER TABLE `organizations`
 -- AUTO_INCREMENT for table `purchases`
 --
 ALTER TABLE `purchases`
-  MODIFY `purchase_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `purchase_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `purchases_summary`
 --
 ALTER TABLE `purchases_summary`
-  MODIFY `summary_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `summary_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `purchase_items`
 --
 ALTER TABLE `purchase_items`
-  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `purchase_summary_items`
 --
 ALTER TABLE `purchase_summary_items`
-  MODIFY `summary_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `summary_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `reports`
