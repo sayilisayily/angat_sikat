@@ -303,7 +303,7 @@ $result = $conn->query($sql);
                                 data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
                                 <div class="profile-pic-border"
                                     style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 50%; border: 2px solid #ccc;">
-                                    <img src="<?php echo !empty($profile_picture) ? '../../user/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
+                                    <img src="<?php echo !empty($profile_picture) ? '../../user/' . htmlspecialchars($profile_picture) : '../../user/uploads/default.png'; ?>"
                                         alt="Profile Picture" class="profile-pic"
                                         style="height: 100%; width: 100%; object-fit: cover;" />
                                 </div>
