@@ -10,37 +10,47 @@ include '../user_query.php';
 <html lang="en">
 
 <head>
+    <!-- Meta Information -->
     <meta charset="UTF-8">
-    <title>Budget Approvals</title>
-    <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/favicon_sikat.png"/>
-    <link rel="stylesheet" href="../assets/css/styles.min.css" />
-    <!--Custom CSS for Budget Overview-->
-    <link rel="stylesheet" href="../budget_management/css/budget.css" />
-    <!--Boxicon-->
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-    <!--Font Awesome-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Title and Favicon -->
+    <title>Budget Approvals & Activities Table</title>
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png"/>
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.min.css">
+    <link rel="stylesheet" href="../budget_management/css/budget.css">
+    <link rel="stylesheet" href="../activity_management/css/activities.css" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <!-- Lordicon (for animated icons) -->
-    <script src="https://cdn.lordicon.com/lordicon.js"></script>
-    <!--Bootstrap Script-->
-    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-    <!-- solar icons -->
-    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
-    <!-- DataTables JavaScript for table interactions and pagination -->
-    <script src="https://cdn.datatables.net/2.1.7/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.1.7/js/dataTables.bootstrap5.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.7/css/dataTables.bootstrap.min.css" />
+
+    <!-- JavaScript Libraries -->
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+    <script src="../assets/js/sidebarmenu.js"></script>
+    <script src="../assets/js/app.min.js"></script>
+    <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+
     <style>
-        #sidebar>div>div>span {
+        #sidebar > div > div > span {
             color: #fff;
             font-size: 20px;
             position: absolute;
             margin-left: 80px;
         }
 
-        #sidebarnav>li>a>span {
+        #sidebarnav > li > a > span {
             color: #fff;
         }
+
         .body-wrapper {
             height: 100vh; /* Ensures the element has a height */
             overflow-x: hidden;  /* Hide horizontal overflow */
@@ -78,7 +88,7 @@ include '../user_query.php';
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a class="text-nowrap logo-img">
-                        <img src="../../assets/images/logos/neon_sikat.png" alt="Angat Sikat Logo" class="logo contain"
+                        <img src="../assets/images/logos/neon_sikat.png" alt="Angat Sikat Logo" class="logo contain"
                             style="width: 60px; height: auto;" />
                     </a>
                     <span class="logo-text">ANGATSIKAT</span>
@@ -90,7 +100,7 @@ include '../user_query.php';
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <ul id="sidebarnav">
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="../../dashboard/officer_dashboard.php" aria-expanded="false">
+                            <a class="sidebar-link" href="../dashboard/officer_dashboard.php" aria-expanded="false">
                                 <i class="bx bxs-dashboard" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Dashboard</span>
                             </a>
@@ -189,27 +199,27 @@ include '../user_query.php';
                                     <span class="hide-menu">Budget</span>
                                 </a>
                                 <div class="submenu">
-                                    <a href="../../budget_management/budget_overview.php">Overview</a>
-                                    <a href="../../budget_management/financial_plan.php">Plan</a>
+                                    <a href="../budget_management/budget_overview.php">Overview</a>
+                                    <a href="../budget_management/financial_plan.php">Plan</a>
                                 </div>
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../../budget_management/purchases/purchases.php" aria-expanded="false">
+                                <a class="sidebar-link" href="../budget_management/purchases/purchases.php" aria-expanded="false">
                                     <i class="bx bxs-purchase-tag" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Purchases</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../../budget_management/maintenance/maintenance.php" aria-expanded="false">
+                                <a class="sidebar-link" href="../budget_management/maintenance/maintenance.php" aria-expanded="false">
                                     <i class="bx bxs-cog" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">MOE</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../../activity_management/activities.php" aria-expanded="false"
+                                <a class="sidebar-link" href="../activity_management/activities.php" aria-expanded="false"
                                     data-tooltip="Manage Events">
                                     <i class="bx bx-calendar-event" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Activities</span>
@@ -217,7 +227,7 @@ include '../user_query.php';
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../../activity_management/calendar.php" aria-expanded="false"
+                                <a class="sidebar-link" href="../activity_management/calendar.php" aria-expanded="false"
                                     data-tooltip="Manage Events">
                                     <i class="bx bx-calendar" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Calendar</span>
@@ -225,7 +235,7 @@ include '../user_query.php';
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="../../budget_management/budget_approval_table.php" aria-expanded="false"
+                                <a class="sidebar-link" href="../budget_management/budget_approval_table.php" aria-expanded="false"
                                     data-tooltip="Manage Events">
                                     <i class="bx bx-book-content" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Approval</span>
@@ -239,8 +249,8 @@ include '../user_query.php';
                                     <span class="hide-menu">Transactions</span>
                                 </a>
                                 <div class="submenu">
-                                    <a href="../../income_and_expenses/income.php" onclick="closeSubmenus()">Income</a>
-                                    <a href="../../income_and_expenses/expenses.php" onclick="closeSubmenus()">Expenses</a>
+                                    <a href="../income_and_expenses/income.php" onclick="closeSubmenus()">Income</a>
+                                    <a href="../income_and_expenses/expenses.php" onclick="closeSubmenus()">Expenses</a>
                                 </div>
                             </li>
                         </ul>
@@ -279,11 +289,11 @@ include '../user_query.php';
                         </li>
 
                         <li class="sidebar-item profile-container">
-                            <a class="sidebar-link" href="../../user/profile.php" aria-expanded="false"
+                            <a class="sidebar-link" href="../user/profile.php" aria-expanded="false"
                                 data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
                                 <div class="profile-pic-border"
                                     style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 50%; border: 2px solid #ccc;">
-                                    <img src="<?php echo !empty($profile_picture) ? '../../user/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
+                                    <img src="<?php echo !empty($profile_picture) ? '../user/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
                                         alt="Profile Picture" class="profile-pic"
                                         style="height: 100%; width: 100%; object-fit: cover;" />
                                 </div>
@@ -368,70 +378,138 @@ include '../user_query.php';
                 </nav>
             </header>
             <!--  Header End -->
+
+            <style>
+                .table-responsive {
+                    overflow-x: auto; /* Enable horizontal scrolling */
+                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                    width: 100%; /* Ensure it takes full width */
+                    height: auto; /* Allow height to adjust */
+                }
+
+                table {
+                    width: 100%; /* Full width for the table */
+                    border-collapse: collapse; /* Collapse borders */
+                }
+
+                th, td {
+                    text-align: left; /* Align text to the left */
+                    padding: 12px; /* Padding for table cells */
+                }
+
+                th {
+                    background-color: #007bff; /* Header background color */
+                    color: white; /* Header text color */
+                }
+
+                .btn {
+                    font-size: 12px; /* Button font size */
+                }
+
+                @media (max-width: 768px) {
+                    .table-responsive {
+                        display: block; /* Ensure it's a block-level element */
+                        overflow-x: auto; /* Enable horizontal scrolling */
+                    }
+
+                    table {
+                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
+                    }
+
+                    th, td {
+                        white-space: nowrap; /* Prevent text wrapping in table cells */
+                    }
+                }
+
+                /* Custom Scrollbar Styles */
+                .table-responsive::-webkit-scrollbar {
+                    height: 8px; /* Height of horizontal scrollbar */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
+                    border-radius: 4px; /* Round edges of the scrollbar thumb */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+                }
+
+                .table-responsive::-webkit-scrollbar-track {
+                    background: transparent; /* Transparent track */
+                }
+            </style>
+
             <div class="container mt-4 p-5">
-                <h2 class="mb-4"><span class="text-warning fw-bold me-2">|</span> Budget Approvals Archive</h2>
+                <h2 class="mb-4">
+                    <span class="text-warning fw-bold me-2">|</span> Budget Approvals Archive
+                </h2>
 
                 <!-- Approval Table -->
-                <table id="budgetApprovalsArchive" class="table mt-4">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Category</th>
-                            <th>Attachment</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                    // Fetch data from budget_approvals table for non-admin users
-                    $approvalsQuery = "SELECT * FROM budget_approvals WHERE organization_id = $organization_id AND archived = 1"; // Hardcoded for testing
-                    $approvalsResult = mysqli_query($conn, $approvalsQuery);
-                    while ($row = mysqli_fetch_assoc($approvalsResult)) {
-                        ?>
-                        <tr>
-                            <td>
-                                <?php echo $row['title']; ?>
-                            </td>
-                            <td>
-                                <?php echo ucfirst($row['category']); ?>
-                            </td>
-                            <td><a href="uploads/<?php echo $row['attachment']; ?>"
-                                    class='link-offset-2 link-underline link-underline-opacity-0' target="_blank">
-                                    <?php echo $row['attachment']; ?>
-                                </a></td>
-                            <td>
-                                <?php 
-                                // Display status but don't allow editing
-                                if ($row['status'] == 'Pending') {
-                                    echo " <span class='badge rounded-pill pending'> ";
-                                } else if ($row['status'] == 'Approved') {
-                                    echo " <span class='badge rounded-pill approved'> ";
-                                } else if ($row['status'] == 'Disapproved') {
-                                    echo " <span class='badge rounded-pill disapproved'> ";
-                                }
-                                echo ucfirst($row['status']); 
+                <div class="table-responsive" style="max-height: 400px;">
+                    <table id="budgetApprovalsArchive" class="table mt-4">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Attachment</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Fetch data from budget_approvals table for archived records
+                            $approvalsQuery = "SELECT * FROM budget_approvals WHERE organization_id = $organization_id AND archived = 1"; // Hardcoded for testing
+                            $approvalsResult = mysqli_query($conn, $approvalsQuery);
+                            
+                            while ($row = mysqli_fetch_assoc($approvalsResult)) {
                                 ?>
-                                </span>
-                            </td>
-                            <td>
-                                <!-- Non-admin users can edit other fields except status -->
-                                <button class='btn btn-primary btn-sm recover-btn mb-3' data-bs-toggle='modal'
-                                    data-bs-target='#recoverModal'
-                                    data-id="<?php echo $row['approval_id']; ?>"><i class='fa-solid fa-hammer'></i> Recover
-                                </button>
-                                <button class='btn btn-danger btn-sm delete-btn mb-3' data-bs-toggle='modal'
-                                    data-bs-target='#deleteModal'
-                                    data-id="<?php echo $row['approval_id']; ?>"><i class='fa-solid fa-trash'></i> Delete
-                                </button>
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                    </tbody>
-                </table>
+                                <tr>
+                                    <td><?php echo $row['title']; ?></td>
+                                    <td><?php echo ucfirst($row['category']); ?></td>
+                                    <td>
+                                        <a href="uploads/<?php echo $row['attachment']; ?>"
+                                        class='link-offset-2 link-underline link-underline-opacity-0' target="_blank">
+                                            <?php echo $row['attachment']; ?>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <?php 
+                                        // Display status but don't allow editing
+                                        if ($row['status'] == 'Pending') {
+                                            echo "<span class='badge rounded-pill pending'>";
+                                        } elseif ($row['status'] == 'Approved') {
+                                            echo "<span class='badge rounded-pill approved'>";
+                                        } elseif ($row['status'] == 'Disapproved') {
+                                            echo "<span class='badge rounded-pill disapproved'>";
+                                        }
+                                        echo ucfirst($row['status']); 
+                                        ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <!-- Non-admin users can recover or delete archived records -->
+                                        <button class='btn btn-primary btn-sm recover-btn mb-3' data-bs-toggle='modal'
+                                                data-bs-target='#recoverModal'
+                                                data-id="<?php echo $row['approval_id']; ?>">
+                                            <i class='fa-solid fa-hammer'></i> Recover
+                                        </button>
+                                        <button class='btn btn-danger btn-sm delete-btn mb-3' data-bs-toggle='modal'
+                                                data-bs-target='#deleteModal'
+                                                data-id="<?php echo $row['approval_id']; ?>">
+                                            <i class='fa-solid fa-trash'></i> Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
             <!-- Recover Event Modal -->
             <div class="modal fade" id="recoverModal" tabindex="-1" aria-labelledby="recoverLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -440,6 +518,13 @@ include '../user_query.php';
                                 <h5 class="modal-title">Recover Request</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success message -->
+                            <div id="recoverSuccessMessage" class="alert alert-success d-none"></div>
+                                
+                                <!-- Error message -->
+                                <div id="recoverErrorMessage" class="alert alert-danger d-none">
+                                    <ul id="recoverErrorList"></ul>
+                                </div>
                             <div class="modal-body">
                                 <p>Are you sure you want to recover this request?</p>
 
@@ -447,14 +532,6 @@ include '../user_query.php';
                                 <form id="recoverForm">
                                     <input type="hidden" name="approval_id" id="recover_approval_id"> <!-- Event ID -->
                                 </form>
-
-                                <!-- Success message -->
-                                <div id="recoverSuccessMessage" class="alert alert-success d-none"></div>
-                                
-                                <!-- Error message -->
-                                <div id="recoverErrorMessage" class="alert alert-danger d-none">
-                                    <ul id="recoverErrorList"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -472,6 +549,13 @@ include '../user_query.php';
                                 <h5 class="modal-title">Delete Request</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success message -->
+                            <div id="deleteSuccessMessage" class="alert alert-success d-none"></div>
+                                
+                                <!-- Error message -->
+                                <div id="deleteErrorMessage" class="alert alert-danger d-none">
+                                    <ul id="deleteErrorList"></ul>
+                                </div>
                             <div class="modal-body">
                                 <p>Are you sure you want to delete this request?</p>
 
@@ -479,14 +563,6 @@ include '../user_query.php';
                                 <form id="deleteForm">
                                     <input type="hidden" name="approval_id" id="delete_approval_id"> <!-- Event ID -->
                                 </form>
-
-                                <!-- Success message -->
-                                <div id="deleteSuccessMessage" class="alert alert-success d-none"></div>
-                                
-                                <!-- Error message -->
-                                <div id="deleteErrorMessage" class="alert alert-danger d-none">
-                                    <ul id="deleteErrorList"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

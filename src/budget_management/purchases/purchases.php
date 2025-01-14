@@ -18,6 +18,8 @@ $result = $conn->query($sql);
 <html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Purchases Table</title>
     <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/favicon_sikat.png"/>
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
@@ -236,7 +238,7 @@ $result = $conn->query($sql);
 
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="../../activity_management/calendar.php" aria-expanded="false"
-                                    data-tooltip="Manage Events">
+                                    data-tooltip="Calendar">
                                     <i class="bx bx-calendar" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Calendar</span>
                                 </a>
@@ -396,68 +398,145 @@ $result = $conn->query($sql);
             </header>
             <!--  Header End -->
         
+            <style>
+                html, body {
+                    height: 100%; /* Ensure the body and html take full height */
+                    margin: 0; /* Remove default margin */
+                }
+
+                .tablecontainer {
+                    padding: 1.5rem; /* Adjust padding */
+                    background-color: #f8f9fa; /* Light background for contrast */
+                    border-radius: 8px; /* Rounded corners */
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+                    overflow-y: auto; /* Enable vertical scrolling */
+                    max-height: calc(100vh - 100px); /* Set max height to fill the screen minus some space */
+                }
+
+                .table-responsive {
+                    overflow-x: auto; /* Enable horizontal scrolling */
+                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                    width: 100%; /* Ensure it takes full width */
+                    height: auto; /* Allow height to adjust */
+                }
+
+                table {
+                    width: 100%; /* Full width for the table */
+                    border-collapse: collapse; /* Collapse borders */
+                }
+
+                th, td {
+                    text-align: left; /* Align text to the left */
+                    padding: 12px; /* Padding for table cells */
+                }
+
+                th {
+                    background-color: #007bff; /* Header background color */
+                    color: white; /* Header text color */
+                }
+
+                .btn {
+                    font-size: 12px; /* Button font size */
+                }
+
+                @media (max-width: 768px) {
+                    .table-responsive {
+                        display: block; /* Ensure it's a block-level element */
+                        overflow-x: auto; /* Enable horizontal scrolling */
+                    }
+
+                    table {
+                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
+                    }
+
+                    th, td {
+                        white-space: nowrap; /* Prevent text wrapping in table cells */
+                    }
+                }
+
+                /* Custom Scrollbar Styles */
+                .table-responsive::-webkit-scrollbar {
+                    height: 8px; /* Height of horizontal scrollbar */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
+                    border-radius: 4px; /* Round edges of the scrollbar thumb */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+                }
+
+                .table-responsive::-webkit-scrollbar-track {
+                    background: transparent; /* Transparent track */
+                }
+            </style>
+
             <div class="container mt-5 p-5">
                 <h2 class="mb-4 d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-warning fw-bold me-2">|</span> Purchases
                         <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addPurchaseModal"
-                        style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
+                            style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
                             <i class="fa-solid fa-plus"></i> Add Purchase
                         </button>
                     </div>
                     <a href="purchases_archive.php" class="text-gray text-decoration-none fw-bold" 
-                    style="font-size: 14px;">
+                        style="font-size: 14px;">
                         View Archive
                     </a>
                 </h2>
+                <div class="table-responsive" style="max-height: 400px;">
                     <table id="purchasesTable" class="table">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Total Amount</th>
-                            <th>Status</th>
-                            <th>Completed</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if ($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {
-                                $checked = $row['completion_status'] ? 'checked' : '';
-                                $disabled = ($row['purchase_status'] !== 'Approved') ? 'disabled' : '';
-                                echo "<tr>
-                                        <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='purchase_details.php?purchase_id={$row['purchase_id']}'>{$row['title']}</a></td>
-                                        <td>{$row['total_amount']}</td>
-                                        <td>";
-                                
-                                // Display purchase status with appropriate badge
-                                if ($row['purchase_status'] == 'Pending') {
-                                    echo "<span class='badge rounded-pill pending'>Pending</span>";
-                                } elseif ($row['purchase_status'] == 'Approved') {
-                                    echo "<span class='badge rounded-pill approved'>Approved</span>";
-                                } elseif ($row['purchase_status'] == 'Disapproved') {
-                                    echo "<span class='badge rounded-pill disapproved'>Disapproved</span>";
-                                }
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Total Amount</th>
+                                <th>Status</th>
+                                <th>Completed</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $checked = $row['completion_status'] ? 'checked' : '';
+                                    $disabled = ($row['purchase_status'] !== 'Approved') ? 'disabled' : '';
+                                    echo "<tr>
+                                            <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='purchase_details.php?purchase_id={$row['purchase_id']}'>{$row['title']}</a></td>
+                                            <td>{$row['total_amount']}</td>
+                                            <td>";
+                                    
+                                    // Display purchase status with appropriate badge
+                                    if ($row['purchase_status'] == 'Pending') {
+                                        echo "<span class='badge rounded-pill pending'>Pending</span>";
+                                    } elseif ($row['purchase_status'] == 'Approved') {
+                                        echo "<span class='badge rounded-pill approved'>Approved</span>";
+                                    } elseif ($row['purchase_status'] == 'Disapproved') {
+                                        echo "<span class='badge rounded-pill disapproved'>Disapproved</span>";
+                                    }
 
-                                echo "</td>
-                                    <td>
-                                        <input type='checkbox' class='form-check-input' onclick='showConfirmationModal({$row['purchase_id']}, this.checked)' $checked $disabled>
-                                    </td>
-                                    <td>
-                                        <button class='btn btn-primary btn-sm edit-btn mb-3' data-bs-toggle='modal' data-bs-target='#editPurchaseModal' data-id='{$row['purchase_id']}'>
-                                            <i class='fa-solid fa-pen'></i> Edit
-                                        </button>
-                                        <button class='btn btn-danger btn-sm archive-btn mb-3' data-id='{$row['purchase_id']}'><i class='fa-solid fa-box-archive'></i> Archive</button>
-                                    </td>
-                                    </tr>";
+                                    echo "</td>
+                                        <td>
+                                            <input type='checkbox' class='form-check-input' onclick='showConfirmationModal({$row['purchase_id']}, this.checked)' $checked $disabled>
+                                        </td>
+                                        <td>
+                                            <button class='btn btn-primary btn-sm edit-btn mb-3' data-bs-toggle='modal' data-bs-target='#editPurchaseModal' data-id='{$row['purchase_id']}'>
+                                                <i class='fa-solid fa-pen'></i> Edit
+                                            </button>
+                                            <button class='btn btn-danger btn-sm archive-btn mb-3' data-id='{$row['purchase_id']}'><i class='fa-solid fa-box-archive'></i> Archive</button>
+                                        </td>
+                                        </tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='5' class='text-center'>No purchases found</td></tr>";
                             }
-                        } else {
-                            echo "<tr><td colspan='5' class='text-center'>No purchases found</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Confirmation Modal -->
@@ -468,8 +547,6 @@ $result = $conn->query($sql);
                             <h5 class="modal-title" id="confirmationModalLabel">Confirm Completion Status Change</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            Are you sure you want to change the completion status of this purchase?
                             <!-- Success Message Alert -->
                             <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
                                 Status updated successfully!
@@ -478,6 +555,8 @@ $result = $conn->query($sql);
                             <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
                                 <ul id="errorList"></ul> <!-- List for showing validation errors -->
                             </div>
+                        <div class="modal-body">
+                            Are you sure you want to change the completion status of this purchase?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -497,6 +576,14 @@ $result = $conn->query($sql);
                     <h5 class="modal-title" id="addPurchaseLabel">Add New Purchase</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                        <!-- Success Message Alert -->
+                        <div id="addSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                                Purchase added successfully!
+                        </div>  
+                        <!-- Error Message Alert -->
+                        <div id="addErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                            <ul id="addErrorList"></ul>
+                        </div>
                     <div class="modal-body">
                     <div class="form-group row mb-2">
                         <!-- Plan ID -->
@@ -522,14 +609,6 @@ $result = $conn->query($sql);
                                 ?>
                             </select>
                         </div>
-                        <!-- Success Message Alert -->
-                        <div id="addSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                                Purchase added successfully!
-                        </div>  
-                        <!-- Error Message Alert -->
-                        <div id="addErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                            <ul id="addErrorList"></ul>
-                        </div>
                     </div>
 
             
@@ -545,36 +624,35 @@ $result = $conn->query($sql);
 
             <!-- Edit Purchase Modal -->
             <div class="modal fade" id="editPurchaseModal" tabindex="-1" role="dialog" aria-labelledby="editPurchaseModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                <form id="editPurchaseForm">
-                    <div class="modal-header">
-                    <h5 class="modal-title" id="editPurchaseModalLabel">Edit Purchase</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <form id="editPurchaseForm">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editPurchaseModalLabel">Edit Purchase</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <!-- Success Message Alert -->
+                                <div id="successMessage2" class="alert alert-success d-none mt-3" role="alert">
+                                        Purchase added successfully!
+                                </div>  
+                                <!-- Error Message Alert -->
+                                <div id="errorMessage2" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="errorList2"></ul>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" id="editPurchaseId" name="edit_purchase_id">
+                                    
+                                    <div class="form-group">
+                                        <label for="editPurchaseTitle">Purchase Title</label>
+                                        <input type="text" class="form-control" id="editPurchaseTitle" name="title" required>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-body">
-                    <input type="hidden" id="editPurchaseId" name="edit_purchase_id">
-                    
-                    <div class="form-group">
-                        <label for="editPurchaseTitle">Purchase Title</label>
-                        <input type="text" class="form-control" id="editPurchaseTitle" name="title" required>
-                    </div>
-                    <!-- Success Message Alert -->
-                    <div id="successMessage2" class="alert alert-success d-none mt-3" role="alert">
-                            Purchase added successfully!
-                    </div>  
-                    <!-- Error Message Alert -->
-                    <div id="errorMessage2" class="alert alert-danger d-none mt-3" role="alert">
-                        <ul id="errorList2"></ul>
-                    </div>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>
-                </form>
                 </div>
-            </div>
             </div>
 
             <!-- Archive Confirmation Modal -->
@@ -585,17 +663,17 @@ $result = $conn->query($sql);
                             <h5 class="modal-title" id="archiveModalLabel">Archive Purchase</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            Are you sure you want to archive this Purchase?
-                            <input type="hidden" id="archivePurchaseId">
-                            <!-- Success Message Alert -->
-                            <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                        <!-- Success Message Alert -->
+                        <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
                                     Purchase archived successfully!
                             </div>  
                             <!-- Error Message Alert -->
                             <div id="archiveErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
                                 <ul id="archiveErrorList"></ul>
                             </div>
+                        <div class="modal-body">
+                            Are you sure you want to archive this Purchase?
+                            <input type="hidden" id="archivePurchaseId">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

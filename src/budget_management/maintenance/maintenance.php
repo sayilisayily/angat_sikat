@@ -19,6 +19,8 @@ $result = $conn->query($sql);
 <html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MOE Table</title>
     <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/favicon_sikat.png"/>
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
@@ -397,63 +399,131 @@ $result = $conn->query($sql);
             </header>
             <!--  Header End -->
 
+            <style>
+                html, body {
+                    height: 100%; /* Ensure the body and html take full height */
+                    margin: 0; /* Remove default margin */
+                }
+
+                .table-responsive {
+                    overflow-x: auto; /* Enable horizontal scrolling */
+                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                    width: 100%; /* Ensure it takes full width */
+                    height: auto; /* Allow height to adjust */
+                }
+
+                table {
+                    width: 100%; /* Full width for the table */
+                    border-collapse: collapse; /* Collapse borders */
+                }
+
+                th, td {
+                    text-align: left; /* Align text to the left */
+                    padding: 12px; /* Padding for table cells */
+                }
+
+                th {
+                    background-color: #007bff; /* Header background color */
+                    color: white; /* Header text color */
+                }
+
+                .btn {
+                    font-size: 12px; /* Button font size */
+                }
+
+                @media (max-width: 768px) {
+                    .table-responsive {
+                        display: block; /* Ensure it's a block-level element */
+                        overflow-x: auto; /* Enable horizontal scrolling */
+                    }
+
+                    table {
+                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
+                    }
+
+                    th, td {
+                        white-space: nowrap; /* Prevent text wrapping in table cells */
+                    }
+                }
+
+                /* Custom Scrollbar Styles */
+                .table-responsive::-webkit-scrollbar {
+                    height: 8px; /* Height of horizontal scrollbar */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
+                    border-radius: 4px; /* Round edges of the scrollbar thumb */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+                }
+
+                .table-responsive::-webkit-scrollbar-track {
+                    background: transparent; /* Transparent track */
+                }
+            </style>
+
             <div class="container mt-5 p-5">
                 <h2 class="mb-4 d-flex align-items-center justify-content-between">
                     <div>    
                         <span class="text-warning fw-bold me-2">|</span> Maintenance and Other Expenses
                         <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addModal"
-                        style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
+                            style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
                             <i class="fa-solid fa-plus"></i> Add MOE
                         </button>
                     </div>
                     <a href="maintenance_archive.php" class="text-gray text-decoration-none fw-bold" 
-                    style="font-size: 14px;">
+                        style="font-size: 14px;">
                         View Archive
                     </a>
                 </h2>
+                <div class="table-responsive" style="max-height: 400px;">
                     <table id="maintenanceTable" class="table">
-                    <thead>
-                        <tr> 
-                            <th>Title</th>
-                            <th>Total Budget</th>
-                            <th>Status</th>
-                            <th>Completed</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if ($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {
-                                $checked = $row['completion_status'] ? 'checked' : '';
-                                $disabled = ($row['maintenance_status'] !== 'Approved') ? 'disabled' : '';
-                                echo "<tr>
-                                        <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='maintenance_details.php?maintenance_id={$row['maintenance_id']}'>{$row['title']}</a></td>
-                                        <td>{$row['total_amount']}</td>
-                                        <td>";
-                                
-                                if ($row['maintenance_status'] == 'Pending') {
-                                    echo "<span class='badge rounded-pill pending'> ";
-                                } else if ($row['maintenance_status'] == 'Approved') {
-                                    echo "<span class='badge rounded-pill approved'> ";
-                                } else if ($row['maintenance_status'] == 'Disapproved') {
-                                    echo "<span class='badge rounded-pill disapproved'> ";
-                                }
+                        <thead>
+                            <tr> 
+                                <th>Title</th>
+                                <th>Total Budget</th>
+                                <th>Status</th>
+                                <th>Completed</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $checked = $row['completion_status'] ? 'checked' : '';
+                                    $disabled = ($row['maintenance_status'] !== 'Approved') ? 'disabled' : '';
+                                    echo "<tr>
+                                            <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='maintenance_details.php?maintenance_id={$row['maintenance_id']}'>{$row['title']}</a></td>
+                                            <td>{$row['total_amount']}</td>
+                                            <td>";
+                                    
+                                    if ($row['maintenance_status'] == 'Pending') {
+                                        echo "<span class='badge rounded-pill pending'> ";
+                                    } else if ($row['maintenance_status'] == 'Approved') {
+                                        echo "<span class='badge rounded-pill approved'> ";
+                                    } else if ($row['maintenance_status'] == 'Disapproved') {
+                                        echo "<span class='badge rounded-pill disapproved'> ";
+                                    }
 
-                                echo "{$row['maintenance_status']}</span></td>
-                                    <td><input type='checkbox' class='form-check-input' onclick='showConfirmationModal({$row['maintenance_id']}, this.checked)' $checked $disabled></td>
-                                    <td>
-                                        <button class='btn btn-primary btn-sm edit-btn mb-3' data-bs-toggle='modal' data-bs-target='#editMaintenanceModal' data-id='{$row['maintenance_id']}'><i class='fa-solid fa-pen'></i> Edit</button>
-                                        <button class='btn btn-danger btn-sm archive-btn mb-3' data-id='{$row['maintenance_id']}'><i class='fa-solid fa-box-archive'></i> Archive</button>
-                                    </td>
-                                    </tr>";
+                                    echo "{$row['maintenance_status']}</span></td>
+                                        <td><input type='checkbox' class='form-check-input' onclick='showConfirmationModal({$row['maintenance_id']}, this.checked)' $checked $disabled></td>
+                                        <td>
+                                            <button class='btn btn-primary btn-sm edit-btn mb-3' data-bs-toggle='modal' data-bs-target='#editMaintenanceModal' data-id='{$row['maintenance_id']}'><i class='fa-solid fa-pen'></i> Edit</button>
+                                            <button class='btn btn-danger btn-sm archive-btn mb-3' data-id='{$row['maintenance_id']}'><i class='fa-solid fa-box-archive'></i> Archive</button>
+                                        </td>
+                                        </tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='5' class='text-center'>No maintenance or other expenses found</td></tr>";
                             }
-                        } else {
-                            echo "<tr><td colspan='5' class='text-center'>No maintenance or other expenses found</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Confirmation Modal -->
@@ -464,16 +534,16 @@ $result = $conn->query($sql);
                             <h5 class="modal-title" id="confirmationModalLabel">Confirm Completion Status Change</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            Are you sure you want to change the completion status of this purchase?
-                            <!-- Success Message Alert -->
-                            <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                        <!-- Success Message Alert -->
+                        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
                                 Status updated successfully!
                             </div>
                             <!-- Error Message Alert -->
                             <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
                                 <ul id="errorList"></ul> <!-- List for showing validation errors -->
                             </div>
+                        <div class="modal-body">
+                            Are you sure you want to change the completion status of this purchase?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -492,6 +562,13 @@ $result = $conn->query($sql);
                     <div class="modal-header">
                     <h5 class="modal-title" id="addLabel">Add New Maintenance or Other Expense</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- Success and Error Message Alert -->
+                    <div id="addSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                            Maintenance added successfully!
+                    </div>  
+                    <div id="addErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                        <ul id="addErrorList"></ul>
                     </div>
                     <div class="modal-body">
                     <!-- Form fields -->
@@ -520,14 +597,6 @@ $result = $conn->query($sql);
                             </select>
                         </div>
                     </div>
-
-                    <!-- Success and Error Message Alert -->
-                    <div id="addSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                            Maintenance added successfully!
-                    </div>  
-                    <div id="addErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                        <ul id="addErrorList"></ul>
-                    </div>
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -548,6 +617,13 @@ $result = $conn->query($sql);
                     <h5 class="modal-title" id="editLabel">Edit Maintenance</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
+                    <!-- Success and Error Message Alert -->
+                    <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                            Maintenance or Other Expense added successfully!
+                    </div>  
+                    <div id="editErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                        <ul id="editErrorList"></ul>
+                    </div>
                     <div class="modal-body">
                     <!-- Hidden field for maintenance ID -->
                     <input type="hidden" id="editMaintenanceId" name="edit_maintenance_id">
@@ -556,14 +632,6 @@ $result = $conn->query($sql);
                     <div class="form-group">
                         <label for="editMaintenanceTitle">Maintenance or Other Expense Title</label>
                         <input type="text" class="form-control" id="editMaintenanceTitle" name="title" required>
-                    </div>
-
-                    <!-- Success and Error Message Alert -->
-                    <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                            Maintenance or Other Expense added successfully!
-                    </div>  
-                    <div id="editErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                        <ul id="editErrorList"></ul>
                     </div>
                     </div>
                     <div class="modal-footer">
@@ -584,14 +652,6 @@ $result = $conn->query($sql);
                             <h5 class="modal-title" id="archiveModalLabel">Archive Maintenance or Other Expense</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            Are you sure you want to archive this Maintence or Other Expense?
-                            <input type="hidden" id="archiveMaintenanceId">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" id="confirmArchiveBtn" class="btn btn-danger">Archive</button>
-                        </div>
                         <!-- Success Message Alert -->
                         <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
                                 Maintenance or Other Expense archived successfully!
@@ -599,6 +659,14 @@ $result = $conn->query($sql);
                         <!-- Error Message Alert -->
                         <div id="archiveErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
                             <ul id="archiveErrorList"></ul>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to archive this Maintence or Other Expense?
+                            <input type="hidden" id="archiveMaintenanceId">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" id="confirmArchiveBtn" class="btn btn-danger">Archive</button>
                         </div>
                     </div>
                 </div>

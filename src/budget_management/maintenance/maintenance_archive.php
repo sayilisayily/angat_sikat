@@ -19,6 +19,8 @@ $result = $conn->query($sql);
 <html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MOE Archive</title>
     <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/favicon_sikat.png"/>
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
@@ -390,70 +392,136 @@ $result = $conn->query($sql);
             <!--  Header End -->
 
     
-    <div class="container mt-5 p-5">
-        <h2 class="mb-4"><span class="text-warning fw-bold me-2">|</span> Maintenance and Other Expenses Archive
-        </h2>
-        <table id="archiveMaintenanceTable" class="table">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Total Budget</th>
-                    <th>Status</th>
-                    <th>Completed</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                if ($result->num_rows > 0) {
-                    while($row = $result->fetch_assoc()) {
-                        $checked = $row['completion_status'] ? 'checked' : '';
-                        $disabled = ($row['archived'] !== '0') ? 'disabled' : '';
-                        echo "<tr>
-                                <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='maintenance_details.php?maintenance_id={$row['maintenance_id']}'>{$row['title']}</a></td>
-                                <td>{$row['total_amount']}</td>
-                                <td>";
-                        
-                                if ($row['maintenance_status'] == 'Pending') {
-                                    echo "<span class='badge rounded-pill pending'> ";
-                                } else if ($row['maintenance_status'] == 'Approved') {
-                                    echo "<span class='badge rounded-pill approved'> ";
-                                } else if ($row['maintenance_status'] == 'Disapproved') {
-                                    echo "<span class='badge rounded-pill disapproved'> ";
-                                }
-
-                                echo "{$row['maintenance_status']}</span></td>
-                                        
-                                <td>
-                                    <input type='checkbox' 
-                                    class='form-check-input' 
-                                    $checked 
-                                    $disabled>
-
-                                </td>
-                                <td>
-                                    <button class='btn btn-primary btn-sm recover-btn mb-3' 
-                                            data-bs-toggle='modal' 
-                                            data-bs-target='#recoverModal' 
-                                            data-id='{$row['maintenance_id']}'>
-                                        <i class='fa-solid fa-hammer'></i> Recover
-                                    </button>
-                                    <button class='btn btn-danger btn-sm delete-btn mb-3' 
-                                            data-bs-toggle='modal' 
-                                            data-bs-target='#deleteModal'
-                                            data-id='{$row['maintenance_id']}'>
-                                        <i class='fa-solid fa-trash'></i> Delete
-                                    </button>
-                                </td>
-                            </tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='9' class='text-center'>No maintenance records found</td></tr>";
+            <style>
+                .table-responsive {
+                    overflow-x: auto; /* Enable horizontal scrolling */
+                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                    width: 100%; /* Ensure it takes full width */
                 }
-                ?>
-            </tbody>
-        </table>
-    </div>
+
+                table {
+                    width: 100%; /* Full width for the table */
+                    border-collapse: collapse; /* Collapse borders */
+                }
+
+                th, td {
+                    text-align: left; /* Align text to the left */
+                    padding: 12px; /* Padding for table cells */
+                }
+
+                th {
+                    background-color: #007bff; /* Header background color */
+                    color: white; /* Header text color */
+                }
+
+                .btn {
+                    font-size: 12px; /* Button font size */
+                }
+
+                @media (max-width: 768px) {
+                    .table-responsive {
+                        display: block; /* Ensure it's a block-level element */
+                        overflow-x: auto; /* Enable horizontal scrolling */
+                    }
+
+                    table {
+                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
+                    }
+
+                    th, td {
+                        white-space: nowrap; /* Prevent text wrapping in table cells */
+                    }
+                }
+
+                /* Custom Scrollbar Styles */
+                .table-responsive::-webkit-scrollbar {
+                    height: 8px; /* Height of horizontal scrollbar */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
+                    border-radius: 4px; /* Round edges of the scrollbar thumb */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+                }
+
+                .table-responsive::-webkit-scrollbar-track {
+                    background: transparent; /* Transparent track */
+                }
+
+                .badge {
+                    font-size: 12px; /* Adjust badge font size */
+                }
+            </style>
+
+            <div class="container mt-5 p-5">
+                <h2 class="mb-4"><span class="text-warning fw-bold me-2">|</span> Maintenance and Other Expenses Archive</h2>
+                
+                <div class="table-responsive">
+                    <table id="archiveMaintenanceTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Total Budget</th>
+                                <th>Status</th>
+                                <th>Completed</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                while($row = $result->fetch_assoc()) {
+                                    $checked = $row['completion_status'] ? 'checked' : '';
+                                    $disabled = ($row['archived'] !== '0') ? 'disabled' : '';
+                                    echo "<tr>
+                                            <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='maintenance_details.php?maintenance_id={$row['maintenance_id']}'>{$row['title']}</a></td>
+                                            <td>{$row['total_amount']}</td>
+                                            <td>";
+                                    
+                                    if ($row['maintenance_status'] == 'Pending') {
+                                        echo "<span class='badge rounded-pill pending'> ";
+                                    } elseif ($row['maintenance_status'] == 'Approved') {
+                                        echo "<span class='badge rounded-pill approved'> ";
+                                    } elseif ($row['maintenance_status'] == 'Disapproved') {
+                                        echo "<span class='badge rounded-pill disapproved'> ";
+                                    }
+
+                                    echo "{$row['maintenance_status']}</span></td>
+                                                    
+                                            <td>
+                                                <input type='checkbox' 
+                                                class='form-check-input' 
+                                                $checked 
+                                                $disabled>
+                                            </td>
+                                            <td>
+                                                <button class='btn btn-primary btn-sm recover-btn mb-3' 
+                                                        data-bs-toggle='modal' 
+                                                        data-bs-target='#recoverModal' 
+                                                        data-id='{$row['maintenance_id']}'>
+                                                    <i class='fa-solid fa-hammer'></i> Recover
+                                                </button>
+                                                <button class='btn btn-danger btn-sm delete-btn mb-3' 
+                                                        data-bs-toggle='modal' 
+                                                        data-bs-target='#deleteModal'
+                                                        data-id='{$row['maintenance_id']}'>
+                                                    <i class='fa-solid fa-trash'></i> Delete
+                                                </button>
+                                            </td>
+                                        </tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='5' class='text-center'>No maintenance records found</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
     <!-- Recover Event Modal -->
                 <div class="modal fade" id="recoverModal" tabindex="-1" aria-labelledby="recoverLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
@@ -462,6 +530,13 @@ $result = $conn->query($sql);
                                 <h5 class="modal-title">Recover Maintenance or Other Expense</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success message -->
+                            <div id="recoverSuccessMessage" class="alert alert-success d-none"></div>
+                                
+                                <!-- Error message -->
+                                <div id="recoverErrorMessage" class="alert alert-danger d-none">
+                                    <ul id="recoverErrorList"></ul>
+                                </div>
                             <div class="modal-body">
                                 <p>Are you sure you want to recover this maintenance or other expense?</p>
 
@@ -469,14 +544,6 @@ $result = $conn->query($sql);
                                 <form id="recoverForm">
                                     <input type="hidden" name="maintenance_id" id="recover_maintenance_id"> <!-- Event ID -->
                                 </form>
-
-                                <!-- Success message -->
-                                <div id="recoverSuccessMessage" class="alert alert-success d-none"></div>
-                                
-                                <!-- Error message -->
-                                <div id="recoverErrorMessage" class="alert alert-danger d-none">
-                                    <ul id="recoverErrorList"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -494,6 +561,13 @@ $result = $conn->query($sql);
                                 <h5 class="modal-title">Delete Maintenance or Other Expense</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success message -->
+                            <div id="deleteSuccessMessage" class="alert alert-success d-none"></div>
+                                
+                                <!-- Error message -->
+                                <div id="deleteErrorMessage" class="alert alert-danger d-none">
+                                    <ul id="deleteErrorList"></ul>
+                                </div>
                             <div class="modal-body">
                                 <p>Are you sure you want to delete this maintenance or other expense?</p>
 
@@ -501,14 +575,6 @@ $result = $conn->query($sql);
                                 <form id="deleteForm">
                                     <input type="hidden" name="maintenance_id" id="delete_maintenance_id"> <!-- Event ID -->
                                 </form>
-
-                                <!-- Success message -->
-                                <div id="deleteSuccessMessage" class="alert alert-success d-none"></div>
-                                
-                                <!-- Error message -->
-                                <div id="deleteErrorMessage" class="alert alert-danger d-none">
-                                    <ul id="deleteErrorList"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

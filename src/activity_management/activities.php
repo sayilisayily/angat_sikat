@@ -19,6 +19,8 @@ $result = $conn->query($sql);
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activities Table</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png"/>
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
@@ -399,66 +401,133 @@ $result = $conn->query($sql);
             <!--  Header End -->
        
 
+            <style>
+                .tablecontainer {
+                    padding: 1.5rem; /* Adjust padding */
+                    background-color: #f8f9fa; /* Light background for contrast */
+                    border-radius: 8px; /* Rounded corners */
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+                    overflow-y: hidden; /* Disable vertical scrolling */
+                    max-height: calc(100vh - 100px); /* Set max height to fill the screen minus some space */
+                }
+
+                .table-responsive {
+                    overflow-x: auto; /* Enable horizontal scrolling */
+                    overflow-y: auto; /* Enable vertical scrolling */
+                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                    width: 100%; /* Ensure it takes full width */
+                    height: 300px; /* Set a specific height for the inner table scroll */
+                }
+
+                table {
+                    width: 100%; /* Full width for the table */
+                    border-collapse: collapse; /* Collapse borders */
+                }
+
+                th, td {
+                    text-align: left; /* Align text to the left */
+                    padding: 12px; /* Padding for table cells */
+                }
+
+                th {
+                    background-color: #007bff; /* Header background color */
+                    color: white; /* Header text color */
+                }
+
+                .btn {
+                    font-size: 12px; /* Button font size */
+                }
+
+                @media (max-width: 768px) {
+                    .table-responsive {
+                        display: block; /* Ensure it's a block-level element */
+                        overflow-x: auto; /* Enable horizontal scrolling */
+                        overflow-y: auto; /* Enable vertical scrolling */
+                    }
+
+                    table {
+                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
+                    }
+
+                    th, td {
+                        white-space: nowrap; /* Prevent text wrapping in table cells */
+                    }
+                }
+
+                /* Custom Scrollbar Styles */
+                .table-responsive::-webkit-scrollbar {
+                    width: 8px; /* Width of vertical scrollbar */
+                    height: 8px; /* Height of horizontal scrollbar */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
+                    border-radius: 4px; /* Round edges of the scrollbar thumb */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+                }
+
+                .table-responsive::-webkit-scrollbar-track {
+                    background: transparent; /* Transparent track */
+                }
+            </style>
+
             <div class="container mt-5 p-5">
                 <h2 class="mb-4 d-flex align-items-center justify-content-between">
                     <div>
                         <span class="text-warning fw-bold me-2">|</span> Activities
                         <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addEventModal"
-                        style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
+                            style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
                             <i class="fa-solid fa-plus"></i> Add Activity
                         </button>
                     </div>
                     <a href="activities_archive.php" class="text-gray text-decoration-none fw-bold" 
-                            style="font-size: 14px;">
-                                View Archive
+                        style="font-size: 14px;">
+                        View Archive
                     </a>
                 </h2>
-                <table id="eventsTable" class="table">
-                    <thead>
-                        <tr>
-                            <th rowspan=2>Title</th>
-                            <th rowspan=2>Venue</th>
-                            <th colspan=2 style="text-align: center;"> Date </th>
-                            <th rowspan=2>Type</th>
-                            <th rowspan=2>Status</th>
-                            <th rowspan=2>Accomplished</th>
-                            <th rowspan=2>Actions</th>
-                        </tr>
-                        <tr>
-                            <th>Start</th>
-                            <th>End</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if ($result->num_rows > 0) {
-                            while($row = $result->fetch_assoc()) {
-                                $checked = $row['accomplishment_status'] ? 'checked' : '';
-                                $disabled = ($row['event_status'] !== 'Approved') ? 'disabled' : '';
-                                echo "<tr>
-                                        <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='event_details.php?event_id={$row['event_id']}'>{$row['title']}</a></td>
-                                        <td>{$row['event_venue']}</td>
-                                        <td>" . date('F j, Y', strtotime($row['event_start_date'])) . "</td>
-                                        <td>" . date('F j, Y', strtotime($row['event_end_date'])) . "</td>
-                                        <td>{$row['event_type']}</td>
-                                        <td>";
-                                        if ($row['event_status'] == 'Pending') {
-                                            echo " <span class='badge rounded-pill pending'> ";
-                                        } elseif ($row['event_status'] == 'Approved') {
-                                            echo " <span class='badge rounded-pill approved'> ";
-                                        } elseif ($row['event_status'] == 'Disapproved') {
-                                            echo " <span class='badge rounded-pill disapproved'> ";
-                                        }
-                                        echo "
-                                            {$row['event_status']}
-                                            </span>
-                                            </td>
+                <div class="table-responsive" style="max-height: 400px;">
+                    <table id="eventsTable" class="table">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Title</th>
+                                <th rowspan="2">Venue</th>
+                                <th colspan="2" style="text-align: center;">Date</th>
+                                <th rowspan="2">Type</th>
+                                <th rowspan="2">Status</th>
+                                <th rowspan="2">Accomplished</th>
+                                <th rowspan="2">Actions</th>
+                            </tr>
+                            <tr>
+                                <th>Start</th>
+                                <th>End</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $checked = $row['accomplishment_status'] ? 'checked' : '';
+                                    $disabled = ($row['event_status'] !== 'Approved') ? 'disabled' : '';
+                                    echo "<tr>
+                                            <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='event_details.php?event_id={$row['event_id']}'>{$row['title']}</a></td>
+                                            <td>{$row['event_venue']}</td>
+                                            <td>" . date('F j, Y', strtotime($row['event_start_date'])) . "</td>
+                                            <td>" . date('F j, Y', strtotime($row['event_end_date'])) . "</td>
+                                            <td>{$row['event_type']}</td>
+                                            <td>";
+                                    if ($row['event_status'] == 'Pending') {
+                                        echo "<span class='badge rounded-pill pending'>";
+                                    } elseif ($row['event_status'] == 'Approved') {
+                                        echo "<span class='badge rounded-pill approved'>";
+                                    } elseif ($row['event_status'] == 'Disapproved') {
+                                        echo "<span class='badge rounded-pill disapproved'>";
+                                    }
+                                    echo "{$row['event_status']}</span></td>
                                             <td>
-                                                <input type='checkbox' 
-                                                class='form-check-input' 
-                                                onclick='showConfirmationModal({$row['event_id']}, this.checked)' 
-                                                $checked 
-                                                $disabled>
+                                                <input type='checkbox' class='form-check-input' onclick='showConfirmationModal({$row['event_id']}, this.checked)' $checked $disabled>
                                             </td>
                                             <td>
                                                 <button class='btn btn-primary btn-sm edit-btn mb-3' 
@@ -473,14 +542,13 @@ $result = $conn->query($sql);
                                                 </button>
                                             </td>
                                         </tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='9' class='text-center'>No events found</td></tr>";
                                 }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+                            } else {
+                                echo "<tr><td colspan='8' class='text-center'>No events found</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -492,16 +560,16 @@ $result = $conn->query($sql);
                             <h5 class="modal-title" id="confirmationModalLabel">Confirm Accomplishment Status Change</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            Are you sure you want to change the accomplishment status of this event?
-                            <!-- Success Message Alert -->
-                            <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                        <!-- Success Message Alert -->
+                        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
                                 Status updated successfully!
                             </div>
                             <!-- Error Message Alert -->
                             <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
                                 <ul id="errorList"></ul> <!-- List for showing validation errors -->
                             </div>
+                        <div class="modal-body">
+                            Are you sure you want to change the accomplishment status of this event?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -521,6 +589,14 @@ $result = $conn->query($sql);
                                 <h5 class="modal-title" id="addEventLabel">Add New Event</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success Message Alert -->
+                            <div id="successMessage1" class="alert alert-success d-none mt-3" role="alert">
+                                    Event added successfully!
+                                </div>
+                                <!-- Error Message Alert -->
+                                <div id="errorMessage1" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="errorList1"></ul> <!-- List for showing validation errors -->
+                                </div>
                             <div class="modal-body">
                                 <!-- Form fields -->
                                 <div class="form-group row mb-2">
@@ -576,15 +652,6 @@ $result = $conn->query($sql);
                                         <input type="text" class="form-control" id="amount" name="amount" readonly>                                 
                                     </div>
                                 </div>
-
-                                <!-- Success Message Alert -->
-                                <div id="successMessage1" class="alert alert-success d-none mt-3" role="alert">
-                                    Event added successfully!
-                                </div>
-                                <!-- Error Message Alert -->
-                                <div id="errorMessage1" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="errorList1"></ul> <!-- List for showing validation errors -->
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -605,6 +672,14 @@ $result = $conn->query($sql);
                                 <h5 class="modal-title" id="editEventModalLabel">Edit Event</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success Message Alert -->
+                            <div id="successMessage2" class="alert alert-success d-none mt-3" role="alert">
+                                    Event updated successfully!
+                                </div>
+                                <!-- Error Message Alert -->
+                                <div id="errorMessage2" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="errorList2"></ul> <!-- List for showing validation errors -->
+                                </div>
                             <div class="modal-body">
                                 <!-- Hidden field for event ID -->
                                 <input type="hidden" id="editEventId" name="event_id">
@@ -640,15 +715,6 @@ $result = $conn->query($sql);
                                 </div>
                                 <input type="hidden" id="editEventStatus" name="event_status">
                                 <input type="hidden" id="editAccomplishmentStatus" name="accomplishment_status">
-
-                                <!-- Success Message Alert -->
-                                <div id="successMessage2" class="alert alert-success d-none mt-3" role="alert">
-                                    Event updated successfully!
-                                </div>
-                                <!-- Error Message Alert -->
-                                <div id="errorMessage2" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="errorList2"></ul> <!-- List for showing validation errors -->
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -668,17 +734,17 @@ $result = $conn->query($sql);
                             <h5 class="modal-title" id="archiveModalLabel">Archive Event</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            Are you sure you want to archive this event?
-                            <input type="hidden" id="archiveEventId">
-                            <!-- Success Message Alert -->
-                            <div id="successMessage3" class="alert alert-success d-none mt-3" role="alert">
+                        <!-- Success Message Alert -->
+                        <div id="successMessage3" class="alert alert-success d-none mt-3" role="alert">
                                     Event archived successfully!
                                 </div>
                                 <!-- Error Message Alert -->
                                 <div id="errorMessage3" class="alert alert-danger d-none mt-3" role="alert">
                                     <ul id="errorList3"></ul> <!-- List for showing validation errors -->
                                 </div>
+                        <div class="modal-body">
+                            Are you sure you want to archive this event?
+                            <input type="hidden" id="archiveEventId">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

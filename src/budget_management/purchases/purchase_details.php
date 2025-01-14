@@ -77,6 +77,8 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
 <html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Purchase Details</title>
     <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/favicon_sikat.png"/>
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
@@ -455,83 +457,121 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
             </header>
             <!--  Header End -->
 
-            <div class="container mt-5 p-4">
-                <h2><span class="text-warning fw-bold me-2">|</span> Purchase Details</h2>
-                <!-- Tabs for Financial Plan and Financial Summary -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" id="financial-plan-tab" data-bs-toggle="tab" href="#financial-plan"
-                            role="tab" aria-controls="financial-plan" aria-selected="true">Financial Plan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" id="financial-summary-tab" data-bs-toggle="tab" href="#financial-summary"
-                            role="tab" aria-controls="financial-summary" aria-selected="false">Financial Summary</a>
-                    </li>
-                </ul>
+                    <style>
+                        .tab-content {
+                            border: 1px solid #dee2e6; /* Add a border around the tab content */
+                            border-radius: 0.25rem; /* Rounded corners */
+                        }
 
+                        .table th, .table td {
+                            vertical-align: middle; /* Center align vertically */
+                        }
 
-                <div class="tab-content mt-4 mx-3">
-                <!-- Financial Plan Tab -->
-                <div class="tab-pane fade show active" id="financial-plan" role="tabpanel" aria-labelledby="financial-plan-tab">
+                        .btn {
+                            font-size: 12px; /* Button font size */
+                        }
 
-                    <!-- Purchase Information -->
-                    <h4>Title:
-                        <?php echo $purchase['title']; ?>
-                    </h4>
-
-                    <h4>Items<?php if ($purchase['completion_status'] === 0): ?>
-                        <button class="btn btn-sm btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addItemModal"><i class="fa-solid fa-plus"></i> Add Item</button>
-                    <?php endif; ?></h4>
-                    
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Description</th>
-                                <th>Quantity</th>
-                                <th>Unit</th>
-                                <th>Amount</th>
-                                <th>Total Amount</th>
-                                <?php if ($purchase['completion_status'] === 0): ?>
-                                    <th>Actions</th>
-                                <?php endif; ?>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $grand_total = 0; // Initialize the total amount for all items
-                            if (!empty($items)) {
-                                foreach ($items as $item) {
-                                    $total_amount = $item['quantity'] * $item['amount'];
-                                    $grand_total += $total_amount; // Add to the grand total
-                                    echo "<tr>
-                                            <td>{$item['description']}</td>
-                                            <td>{$item['quantity']}</td>
-                                            <td>{$item['unit']}</td>
-                                            <td>{$item['amount']}</td>
-                                            <td>{$total_amount}</td>";
-                                    if ($purchase['completion_status'] === 0) {
-                                        echo "<td>
-                                                <button class='btn edit-btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editItemModal' data-id='{$item['item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
-                                                <button class='btn delete-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#deleteItemModal' data-id='{$item['item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
-                                            </td>";
-                                    }
-                                    echo "</tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='6' class='text-center'>No items found</td></tr>";
+                        @media (max-width: 768px) {
+                            .btn {
+                                font-size: 10px; /* Smaller font size for buttons on mobile */
                             }
-                            ?>
-                        </tbody>
-                    </table>
+                        }
+                    </style>
 
-                    <!-- Display the grand total -->
-                    <div class="mt-3">
-                        <h6 class="text-end">Total Amount: <span>
-                            <?php echo number_format($grand_total, 2); ?>
-                        </span></h6>
+                    <div class="container mt-5 p-4">
+                        <h2><span class="text-warning fw-bold me-2">|</span> Purchase Details</h2>
+                        
+                        <!-- Tabs for Financial Plan and Financial Summary -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="financial-plan-tab" data-bs-toggle="tab" href="#financial-plan"
+                                role="tab" aria-controls="financial-plan" aria-selected="true">Financial Plan</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="financial-summary-tab" data-bs-toggle="tab" href="#financial-summary"
+                                role="tab" aria-controls="financial-summary" aria-selected="false">Financial Summary</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content mt-4 mx-3">
+                            <!-- Financial Plan Tab -->
+                            <div class="tab-pane fade show active" id="financial-plan" role="tabpanel" aria-labelledby="financial-plan-tab">
+
+                                <!-- Purchase Information -->
+                                <h4>Title: <?php echo $purchase['title']; ?></h4>
+
+                                <h4>Items 
+                                    <?php if ($purchase['completion_status'] === 0): ?>
+                                        <button class="btn btn-sm btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addItemModal">
+                                            <i class="fa-solid fa-plus"></i> Add Item
+                                        </button>
+                                    <?php endif; ?>
+                                </h4>
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Amount</th>
+                                            <th>Total Amount</th>
+                                            <?php if ($purchase['completion_status'] === 0): ?>
+                                                <th>Actions</th>
+                                            <?php endif; ?>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $grand_total = 0; // Initialize the total amount for all items
+                                        if (!empty($items)) {
+                                            foreach ($items as $item) {
+                                                $total_amount = $item['quantity'] * $item['amount'];
+                                                $grand_total += $total_amount; // Add to the grand total
+                                                echo "<tr>
+                                                        <td>{$item['description']}</td>
+                                                        <td>{$item['quantity']}</td>
+                                                        <td>{$item['unit']}</td>
+                                                        <td>{$item['amount']}</td>
+                                                        <td>{$total_amount}</td>";
+                                                if ($purchase['completion_status'] === 0) {
+                                                    echo "<td>
+                                                            <button class='btn edit-btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#editItemModal' 
+                                                            data-id='{$item['item_id']}' data-description='{$item['description']}' 
+                                                            data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' 
+                                                            data-amount='{$item['amount']}'>
+                                                                <i class='fa-solid fa-pen'></i> Edit
+                                                            </button>
+                                                            <button class='btn delete-btn btn-danger btn-sm' data-bs-toggle='modal' 
+                                                            data-bs-target='#deleteItemModal' data-id='{$item['item_id']}'>
+                                                                <i class='fa-solid fa-trash'></i> Delete
+                                                            </button>
+                                                        </td>";
+                                                }
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='6' class='text-center'>No items found</td></tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+
+                                <!-- Display the grand total -->
+                                <div class="mt-3">
+                                    <h6 class="text-end">Total Amount: <span>
+                                        <?php echo number_format($grand_total, 2); ?>
+                                    </span></h6>
+                                </div>
+                            </div>
+
+                            <!-- Financial Summary Tab -->
+                            <div class="tab-pane fade" id="financial-summary" role="tabpanel" aria-labelledby="financial-summary-tab">
+                                <h4>Financial Summary Content Goes Here</h4>
+                                <!-- You can add your financial summary content here -->
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
 
                     <!-- Financial Summary Tab -->
@@ -599,6 +639,14 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
+                                <!-- Success Message Alert -->
+                                <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                                        Item added successfully!
+                                    </div>
+                                    <!-- Error Message Alert -->
+                                    <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                        <ul id="errorList"></ul> <!-- List for showing validation errors -->
+                                    </div>
                                 <div class="modal-body">
 
                                     <!-- Modal content for adding item -->
@@ -627,15 +675,6 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                                 name="amount" required>
                                         </div>
                                     </div>
-
-                                    <!-- Success Message Alert -->
-                                    <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-                                        Item added successfully!
-                                    </div>
-                                    <!-- Error Message Alert -->
-                                    <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                                        <ul id="errorList"></ul> <!-- List for showing validation errors -->
-                                    </div>
                                     <div class="modal-footer">
                                         <button type="submit" class="btn btn-primary">Add Item</button>
                                     </div>
@@ -657,6 +696,14 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                     aria-label="Close"></button>
                             </div>
                             <form id="editItemForm">
+                                <!-- Success Message Alert -->
+                                <div id="successMessage2" class="alert alert-success d-none mt-3" role="alert">
+                                        Item updated successfully!
+                                    </div>
+                                    <!-- Error Message Alert -->
+                                    <div id="errorMessage2" class="alert alert-danger d-none mt-3" role="alert">
+                                        <ul id="errorList2"></ul> <!-- List for showing validation errors -->
+                                    </div>
                                 <div class="modal-body">
                                     <input type="hidden" id="edit_item_id" name="item_id">
                                     <input type="hidden" id="edit_event_id" name="purchase_id"
@@ -684,15 +731,6 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                                 name="amount" required>
                                         </div>
                                     </div>
-
-                                    <!-- Success Message Alert -->
-                                    <div id="successMessage2" class="alert alert-success d-none mt-3" role="alert">
-                                        Item updated successfully!
-                                    </div>
-                                    <!-- Error Message Alert -->
-                                    <div id="errorMessage2" class="alert alert-danger d-none mt-3" role="alert">
-                                        <ul id="errorList2"></ul> <!-- List for showing validation errors -->
-                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
@@ -713,6 +751,13 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                 <h5 class="modal-title">Delete Item</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success message -->
+                            <div id="successMessage3" class="alert alert-success d-none"></div>
+                                
+                                <!-- Error message -->
+                                <div id="errorMessage3" class="alert alert-danger d-none">
+                                    <ul id="errorList3"></ul>
+                                </div>
                             <div class="modal-body">
                                 <p>Are you sure you want to delete this item?</p>
 
@@ -721,14 +766,6 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                     <input type="hidden" name="item_id" id="delete_item_id"> <!-- Item ID -->
                                     <input type="hidden" name="purchase_id" id="delete_event_id" value="<?php echo $purchase_id; ?>"> <!-- Purchase ID -->
                                 </form>
-
-                                <!-- Success message -->
-                                <div id="successMessage3" class="alert alert-success d-none"></div>
-                                
-                                <!-- Error message -->
-                                <div id="errorMessage3" class="alert alert-danger d-none">
-                                    <ul id="errorList3"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -749,6 +786,11 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
+                                <div id="successMessage4" class="alert alert-success d-none mt-3"
+                                        role="alert">Item added successfully!</div>
+                                    <div id="errorMessage4" class="alert alert-danger d-none mt-3" role="alert">
+                                        <ul id="errorList4"></ul>
+                                    </div>
                                 <div class="modal-body">
                                     <input type="hidden" name="purchase_id" value="<?php echo $purchase_id; ?>">
                                     <!-- Dropdown to select an purchase -->
@@ -796,11 +838,6 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                             <label for="reference">Reference</label>
                                             <input type="file" class="form-control" id="reference" name="reference" required>
                                     </div>
-                                    <div id="successMessage4" class="alert alert-success d-none mt-3"
-                                        role="alert">Item added successfully!</div>
-                                    <div id="errorMessage4" class="alert alert-danger d-none mt-3" role="alert">
-                                        <ul id="errorList4"></ul>
-                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Add Item</button>
@@ -821,6 +858,12 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
+                                <div id="successMessage5" class="alert alert-success d-none mt-3"
+                                        role="alert">Item updated successfully!</div>
+                                    <div id="errorMessage5" class="alert alert-danger d-none mt-3"
+                                        role="alert">
+                                        <ul id="editErrorList5"></ul>
+                                    </div>
                                 <div class="modal-body">
                                     <input type="hidden" id="summary_edit_item_id" name="summary_item_id">
                                     <input type="hidden" id="summary_edit_event_id" name="purchase_id"
@@ -854,12 +897,6 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                             <input type="file" class="form-control" id="edit_reference" name="reference">
                                             <div id="currentAttachment" class="mt-2"></div>
                                     </div>
-                                    <div id="successMessage5" class="alert alert-success d-none mt-3"
-                                        role="alert">Item updated successfully!</div>
-                                    <div id="errorMessage5" class="alert alert-danger d-none mt-3"
-                                        role="alert">
-                                        <ul id="editErrorList5"></ul>
-                                    </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="submit" class="btn btn-primary">Save changes</button>
@@ -877,6 +914,13 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                 <h5 class="modal-title">Delete Item</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success message -->
+                            <div id="successMessage6" class="alert alert-success d-none"></div>
+                                
+                                <!-- Error message -->
+                                <div id="errorMessage6" class="alert alert-danger d-none">
+                                    <ul id="errorList6"></ul>
+                                </div>
                             <div class="modal-body">
                                 <p>Are you sure you want to delete this item?</p>
 
@@ -885,14 +929,6 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                     <input type="hidden" name="item_id" id="summary_delete_item_id"> <!-- Item ID -->
                                     <input type="hidden" name="purchase_id" id="summary_delete_event_id" value="<?php echo $purchase_id; ?>"> <!-- Purchase ID -->
                                 </form>
-
-                                <!-- Success message -->
-                                <div id="successMessage6" class="alert alert-success d-none"></div>
-                                
-                                <!-- Error message -->
-                                <div id="errorMessage6" class="alert alert-danger d-none">
-                                    <ul id="errorList6"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

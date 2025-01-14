@@ -3,6 +3,7 @@
 include '../connection.php';
 include '../session_check.php'; 
 include '../user_query.php';
+include '../organization_query.php';
 
 // Check if user is logged in and has officer role
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
@@ -17,41 +18,46 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
 
 <head>
     <!-- Meta Information -->
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Title and Favicon -->
-<title>Budget Approvals</title>
-<link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png"/>
+    <!-- Title and Favicon -->
+    <title>Budget Approvals & Activities Table</title>
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png"/>
 
-<!-- CSS Files -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="../assets/css/styles.min.css">
-<link rel="stylesheet" href="../budget_management/css/budget.css">
-<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-<link rel="stylesheet" href="../activity_management/css/activities.css" />
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="../assets/css/styles.min.css">
+    <link rel="stylesheet" href="../budget_management/css/budget.css">
+    <link rel="stylesheet" href="../activity_management/css/activities.css" />
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.7/css/dataTables.bootstrap.min.css" />
 
-<!-- JavaScript Libraries -->
-<script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.lordicon.com/lordicon.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+    <!-- JavaScript Libraries -->
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+    <script src="../assets/js/sidebarmenu.js"></script>
+    <script src="../assets/js/app.min.js"></script>
+    <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
 
     <style>
-        #sidebar>div>div>span {
+        #sidebar > div > div > span {
             color: #fff;
             font-size: 20px;
             position: absolute;
             margin-left: 80px;
         }
 
-        #sidebarnav>li>a>span {
+        #sidebarnav > li > a > span {
             color: #fff;
         }
+
         .body-wrapper {
             height: 100vh; /* Ensures the element has a height */
             overflow-x: hidden;  /* Hide horizontal overflow */
@@ -77,7 +83,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
             background: rgba(0, 0, 0, 0.8);  /* Thumb color on hover */
         }
     </style>
-
 </head>
 
 <body>
@@ -390,6 +395,72 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
             </header>
             <!--  Header End -->
 
+            <style>
+                html, body {
+                    height: 100%; /* Ensure the body and html take full height */
+                    margin: 0; /* Remove default margin */
+                }
+
+                .table-responsive {
+                    overflow-x: auto; /* Enable horizontal scrolling */
+                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                    width: 100%; /* Ensure it takes full width */
+                    height: auto; /* Allow height to adjust */
+                }
+
+                table {
+                    width: 100%; /* Full width for the table */
+                    border-collapse: collapse; /* Collapse borders */
+                }
+
+                th, td {
+                    text-align: left; /* Align text to the left */
+                    padding: 12px; /* Padding for table cells */
+                }
+
+                th {
+                    background-color: #007bff; /* Header background color */
+                    color: white; /* Header text color */
+                }
+
+                .btn {
+                    font-size: 12px; /* Button font size */
+                }
+
+                @media (max-width: 768px) {
+                    .table-responsive {
+                        display: block; /* Ensure it's a block-level element */
+                        overflow-x: auto; /* Enable horizontal scrolling */
+                    }
+
+                    table {
+                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
+                    }
+
+                    th, td {
+                        white-space: nowrap; /* Prevent text wrapping in table cells */
+                    }
+                }
+
+                /* Custom Scrollbar Styles */
+                .table-responsive::-webkit-scrollbar {
+                    height: 8px; /* Height of horizontal scrollbar */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
+                    border-radius: 4px; /* Round edges of the scrollbar thumb */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+                }
+
+                .table-responsive::-webkit-scrollbar-track {
+                    background: transparent; /* Transparent track */
+                }
+            </style>
+
             <div class="container mt-4 p-5">
                 <h2 class="mb-4 d-flex align-items-center justify-content-between">
                     <div>    
@@ -401,74 +472,74 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                         </button>
                     </div>
                     <a href="budget_approvals_archive.php" class="text-gray text-decoration-none fw-bold" 
-                    style="font-size: 14px;">
+                        style="font-size: 14px;">
                         View Archive
                     </a>
-
                 </h2>
 
                 <!-- Approval Table -->
-                <table id="budgetApprovalsTable" class="table mt-4">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Category</th>
-                            <th>Attachment</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                    // Fetch data from budget_approvals table for non-admin users
-                    $approvalsQuery = "SELECT * FROM budget_approvals WHERE organization_id = $organization_id AND archived = 0"; // Hardcoded for testing
-                    $approvalsResult = mysqli_query($conn, $approvalsQuery);
-                    while ($row = mysqli_fetch_assoc($approvalsResult)) {
-                        ?>
-                        <tr>
-                            <td>
-                                <?php echo $row['title']; ?>
-                            </td>
-                            <td>
-                                <?php echo ucfirst($row['category']); ?>
-                            </td>
-                            <td><a href="uploads/<?php echo $row['attachment']; ?>"
-                                    class='link-offset-2 link-underline link-underline-opacity-0' target="_blank">
-                                    <?php echo $row['attachment']; ?>
-                                </a></td>
-                            <td>
-                                <?php 
-                                // Display status but don't allow editing
-                                if ($row['status'] == 'Pending') {
-                                    echo " <span class='badge rounded-pill pending'> ";
-                                } else if ($row['status'] == 'Approved') {
-                                    echo " <span class='badge rounded-pill approved'> ";
-                                } else if ($row['status'] == 'Disapproved') {
-                                    echo " <span class='badge rounded-pill disapproved'> ";
-                                }
-                                echo ucfirst($row['status']); 
+                <div class="table-responsive" style="max-height: 400px;">
+                    <table id="budgetApprovalsTable" class="table mt-4">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Attachment</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Fetch data from budget_approvals table for non-admin users
+                            $approvalsQuery = "SELECT * FROM budget_approvals WHERE organization_id = $organization_id AND archived = 0"; // Hardcoded for testing
+                            $approvalsResult = mysqli_query($conn, $approvalsQuery);
+                            
+                            while ($row = mysqli_fetch_assoc($approvalsResult)) {
                                 ?>
-                                </span>
-                            </td>
-                            <td>
-                                <!-- Non-admin users can edit other fields except status -->
-                                <button class='btn btn-primary btn-sm edit-btn mb-3' data-bs-toggle='modal'
-                                    data-bs-target='#editBudgetApprovalModal'
-                                    data-id="<?php echo $row['approval_id']; ?>"><i class='fa-solid fa-pen'></i> Edit
-                                </button>
-                                <button class='btn btn-danger btn-sm archive-btn mb-3'
-                                    data-id="<?php echo $row['approval_id']; ?>"><i class='fa-solid fa-box-archive'></i>
-                                    Archive</button>
-                            </td>
-                        </tr>
-                        <?php
-                    }
-                    ?>
-                    </tbody>
-                </table>
+                                <tr>
+                                    <td><?php echo $row['title']; ?></td>
+                                    <td><?php echo ucfirst($row['category']); ?></td>
+                                    <td>
+                                        <a href="uploads/<?php echo $row['attachment']; ?>"
+                                        class='link-offset-2 link-underline link-underline-opacity-0' target="_blank">
+                                            <?php echo $row['attachment']; ?>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <?php 
+                                        // Display status but don't allow editing
+                                        if ($row['status'] == 'Pending') {
+                                            echo "<span class='badge rounded-pill pending'>";
+                                        } elseif ($row['status'] == 'Approved') {
+                                            echo "<span class='badge rounded-pill approved'>";
+                                        } elseif ($row['status'] == 'Disapproved') {
+                                            echo "<span class='badge rounded-pill disapproved'>";
+                                        }
+                                        echo ucfirst($row['status']); 
+                                        ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <!-- Non-admin users can edit other fields except status -->
+                                        <button class='btn btn-primary btn-sm edit-btn mb-3' data-bs-toggle='modal'
+                                                data-bs-target='#editBudgetApprovalModal'
+                                                data-id="<?php echo $row['approval_id']; ?>">
+                                            <i class='fa-solid fa-pen'></i> Edit
+                                        </button>
+                                        <button class='btn btn-danger btn-sm archive-btn mb-3'
+                                                data-id="<?php echo $row['approval_id']; ?>">
+                                            <i class='fa-solid fa-box-archive'></i> Archive
+                                        </button>
+                                    </td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
-
 
             <!-- Add Budget Approval Modal -->
             <div class="modal fade" id="budgetApprovalModal" tabindex="-1" aria-labelledby="budgetApprovalModalLabel"
@@ -479,6 +550,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                             <h5 class="modal-title" id="budgetApprovalModalLabel">Budget Approval Request</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+                        <!-- Success Message Alert -->
+                        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                                    Request added successfully!
+                                </div>
+                                <!-- Error Message Alert -->
+                                <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="errorList"></ul> <!-- List for showing validation errors -->
+                                </div>
                         <div class="modal-body">
 
                             <form id="addBudgetApprovalForm" enctype="multipart/form-data">
@@ -528,14 +607,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                                     <label for="attachment" class="form-label">Attachment: <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <input type="file" name="attachment" id="attachment" class="form-control" required>
                                 </div>
-                                <!-- Success Message Alert -->
-                                <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-                                    Request added successfully!
-                                </div>
-                                <!-- Error Message Alert -->
-                                <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="errorList"></ul> <!-- List for showing validation errors -->
-                                </div>
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </form>
                             
@@ -553,9 +624,15 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                             <h5 class="modal-title" id="editBudgetApprovalModalLabel">Edit Budget Approval</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+                        <!-- Success Message Alert -->
+                        <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                                    Request updated successfully!
+                                </div>
+                                <!-- Error Message Alert -->
+                                <div id="editErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="editErrorList"></ul> <!-- List for showing validation errors -->
+                                </div>
                         <div class="modal-body">
-
-
                             <form id="editBudgetApprovalForm" enctype="multipart/form-data">
                                 <input type="hidden" name="approval_id" id="editApprovalId">
                                 
@@ -568,14 +645,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                                     <label for="editAttachment" class="form-label">Attachment:</label>
                                     <input type="file" name="attachment" id="editAttachment" class="form-control">
                                     <div id="currentAttachment" class="mt-2"></div> <!-- Display current file -->
-                                </div>
-                                <!-- Success Message Alert -->
-                                <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                                    Request updated successfully!
-                                </div>
-                                <!-- Error Message Alert -->
-                                <div id="editErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="editErrorList"></ul> <!-- List for showing validation errors -->
                                 </div>
                                 <button type="submit" class="btn btn-primary">Save Changes</button>
                             </form>                            
@@ -593,18 +662,18 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                             <h5 class="modal-title" id="archiveModalLabel">Archive Request</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            Are you sure you want to archive this budget approval?
-                            <input type="hidden" id="archiveBudgetApprovalId" value="">
-                            <!-- Hidden input to store the ID -->
-                             <!-- Success Message Alert -->
-                            <div id="successMessage3" class="alert alert-success d-none mt-3" role="alert">
+                        <!-- Success Message Alert -->
+                        <div id="successMessage3" class="alert alert-success d-none mt-3" role="alert">
                                 Request archived successfully!
                             </div>
                             <!-- Error Message Alert -->
                             <div id="errorMessage3" class="alert alert-danger d-none mt-3" role="alert">
                                 <ul id="errorList3"></ul> <!-- List for showing validation errors -->
                             </div>
+                        <div class="modal-body">
+                            Are you sure you want to archive this budget approval?
+                            <input type="hidden" id="archiveBudgetApprovalId" value="">
+                            <!-- Hidden input to store the ID -->
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

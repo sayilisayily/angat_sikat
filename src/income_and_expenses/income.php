@@ -12,6 +12,7 @@ $result = $conn->query($sql);
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Income Table</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png"/>
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
@@ -72,7 +73,6 @@ $result = $conn->query($sql);
         }
     </style>
 </head>
-
 
 <body>
     <!--  Body Wrapper -->
@@ -383,52 +383,114 @@ $result = $conn->query($sql);
             </header>
             <!--  Header End -->
 
+            <style>
+                .table-responsive {
+                    overflow-x: auto; /* Enable horizontal scrolling */
+                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                    width: 100%; /* Ensure it takes full width */
+                    height: auto; /* Allow height to adjust */
+                }
+
+                table {
+                    width: 100%; /* Full width for the table */
+                    border-collapse: collapse; /* Collapse borders */
+                }
+
+                th, td {
+                    text-align: left; /* Align text to the left */
+                    padding: 12px; /* Padding for table cells */
+                }
+
+                th {
+                    background-color: #007bff; /* Header background color */
+                    color: white; /* Header text color */
+                }
+
+                .btn {
+                    font-size: 12px; /* Button font size */
+                }
+
+                @media (max-width: 768px) {
+                    .table-responsive {
+                        display: block; /* Ensure it's a block-level element */
+                        overflow-x: auto; /* Enable horizontal scrolling */
+                    }
+
+                    table {
+                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
+                    }
+
+                    th, td {
+                        white-space: nowrap; /* Prevent text wrapping in table cells */
+                    }
+                }
+
+                /* Custom Scrollbar Styles */
+                .table-responsive::-webkit-scrollbar {
+                    height: 8px; /* Height of horizontal scrollbar */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
+                    border-radius: 4px; /* Round edges of the scrollbar thumb */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+                }
+
+                .table-responsive::-webkit-scrollbar-track {
+                    background: transparent; /* Transparent track */
+                }
+            </style>
+
             <div class="container mt-5 p-5">
-                <h2 class="mb-4"><span class="text-warning fw-bold me-2">|</span> Income
+                <h2 class="mb-4">
+                    <span class="text-warning fw-bold me-2">|</span> Income
                     <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addModal"
                         style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
                         <i class="fa-solid fa-plus"></i> Add Income
                     </button>
                 </h2>
-                <table id="incomeTable" class="table">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Amount</th>
-                            <th>Reference</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-            if ($result->num_rows > 0) {
-                while($row = $result->fetch_assoc()) {
-                    
-                    echo "<tr>
-                            <td>{$row['title']}</td>
-                            <td>{$row['amount']}</td>
-                            <td>{$row['reference']}</td>
-                            
-                            <td>
-                                <button class='btn btn-primary btn-sm edit-btn' 
-                                        data-bs-toggle='modal' 
-                                        data-bs-target='#editModal' 
-                                        data-id='{$row['income_id']}'>
-                                    <i class='fa-solid fa-pen'></i> Edit
-                                </button>
-                                <button class='btn btn-danger btn-sm archive-btn' 
-                                        data-id='{$row['income_id']}'>
-                                    <i class='fa-solid fa-box-archive'></i> Archive
-                                </button>
-                            </td>
-                        </tr>";
-                }
-            } else {
-                echo "<tr><td colspan='7' class='text-center'>No expenses found</td></tr>";
-            }
-            ?>
-                    </tbody>
-                </table>
+                <div class="table-responsive" style="max-height: 400px;">
+                    <table id="incomeTable" class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Amount</th>
+                                <th>Reference</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                while($row = $result->fetch_assoc()) {
+                                    echo "<tr>
+                                            <td>{$row['title']}</td>
+                                            <td>{$row['amount']}</td>
+                                            <td>{$row['reference']}</td>
+                                            <td>
+                                                <button class='btn btn-primary btn-sm edit-btn' 
+                                                        data-bs-toggle='modal' 
+                                                        data-bs-target='#editModal' 
+                                                        data-id='{$row['income_id']}'>
+                                                    <i class='fa-solid fa-pen'></i> Edit
+                                                </button>
+                                                <button class='btn btn-danger btn-sm archive-btn' 
+                                                        data-id='{$row['income_id']}'>
+                                                    <i class='fa-solid fa-box-archive'></i> Archive
+                                                </button>
+                                            </td>
+                                        </tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='4' class='text-center'>No income found</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Add Income Modal -->
@@ -440,6 +502,15 @@ $result = $conn->query($sql);
                                 <h5 class="modal-title" id="addIncomeLabel">Add New Income</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success Message Alert -->
+                            <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                                    Income added successfully!
+                                </div>
+
+                                <!-- Error Message Alert -->
+                                <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="errorList"></ul>
+                                </div>
                             <div class="modal-body">
 
                                 <!-- Title Selector -->
@@ -488,16 +559,6 @@ $result = $conn->query($sql);
                                     <label for="reference">Reference <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <input type="file" class="form-control" id="reference" name="reference" accept=".pdf,.jpg,.png,.doc,.docx" required>
                                 </div>
-
-                                <!-- Success Message Alert -->
-                                <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-                                    Income added successfully!
-                                </div>
-
-                                <!-- Error Message Alert -->
-                                <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="errorList"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -521,6 +582,14 @@ $result = $conn->query($sql);
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
+                            <!-- Success Message Alert -->
+                            <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                                    Income updated successfully!
+                                </div>
+                                <!-- Error Message Alert -->
+                                <div id="editErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="editErrorList"></ul>
+                                </div>
                             <div class="modal-body">
                                 <input type="hidden" id="editIncomeId" name="income_id">
 
@@ -536,15 +605,6 @@ $result = $conn->query($sql);
                                 <div class="form-group">
                                     <label for="editReference">Reference</label>
                                     <input type="file" class="form-control" id="editReference" name="reference">
-                                </div>
-
-                                <!-- Success Message Alert -->
-                                <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                                    Income updated successfully!
-                                </div>
-                                <!-- Error Message Alert -->
-                                <div id="editErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="editErrorList"></ul>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -565,17 +625,17 @@ $result = $conn->query($sql);
                             <h5 class="modal-title" id="archiveModalLabel">Archive Income</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            Are you sure you want to archive this income?
-                            <input type="hidden" id="archiveId">
-                            <!-- Success Message Alert -->
-                            <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                        <!-- Success Message Alert -->
+                        <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
                                 Income archived successfully!
                             </div>
                             <!-- Error Message Alert -->
                             <div id="archiveErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
                                 <ul id="archiveErrorList"></ul> <!-- List for showing validation errors -->
                             </div>
+                        <div class="modal-body">
+                            Are you sure you want to archive this income?
+                            <input type="hidden" id="archiveId">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
