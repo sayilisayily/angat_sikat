@@ -582,7 +582,13 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                                     if ($event['event_type'] === 'Income'){ 
                                                         echo "<td>{$item['total_profit']}</td>";
                                                     }
-                                                    echo "<td>{$item['reference']}</td>
+                                                    echo "<td>
+                                                            <a href='uploads/references/{$item['reference']}' 
+                                                                class='link-offset-2 link-underline link-underline-opacity-0' 
+                                                                target='_blank'>
+                                                                {$item['reference']}
+                                                            </a>
+                                                        </td>
                                                     <td>
                                                         <button class='btn summary-edit-btn btn-primary btn-sm mb-3' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['summary_item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
                                                         <button class='btn summary-delete-btn btn-danger btn-sm mb-3' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['summary_item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>

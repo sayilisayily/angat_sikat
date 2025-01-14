@@ -608,7 +608,13 @@ if (isset($_GET['maintenance_id']) && !empty($_GET['maintenance_id'])) {
                                                 <td>{$item['unit']}</td>
                                                 <td>{$item['amount']}</td>
                                                 <td>{$total_amount}</td>
-                                                <td>{$item['reference']}</td>
+                                                <td>
+                                                    <a href='uploads/references/{$item['reference']}' 
+                                                        class='link-offset-2 link-underline link-underline-opacity-0' 
+                                                        target='_blank'>
+                                                        {$item['reference']}
+                                                    </a>
+                                                </td>
                                                 <td>
                                                     <button class='btn summary-edit-btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['summary_item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
                                                     <button class='btn summary-delete-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['summary_item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
