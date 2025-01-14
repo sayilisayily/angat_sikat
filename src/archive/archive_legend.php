@@ -8,7 +8,8 @@ include '../user_query.php';
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Archive Legend Table</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
@@ -203,23 +204,33 @@ include '../user_query.php';
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
                             <li class="nav-item">
-                                <button id="notificationBtn"
-                                    style="background-color: transparent; border: none; padding: 0; position: relative;">
-                                    <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover"
-                                        colors="primary:#004024" style="width:30px; height:30px;">
-                                    </lord-icon>
-                                    <!-- Notification Count Badge -->
-                                    <span id="notificationCount" style="
-                                    position: absolute;
-                                    top: -5px;
-                                    right: -5px;
-                                    background-color: red;
-                                    color: white;
-                                    font-size: 12px;
-                                    padding: 2px 6px;
-                                    border-radius: 50%;
-                                    display: none;">0</span>
-                                </button>
+                                <!-- Notification Icon -->
+                                    <div style="position: relative; display: inline-block;">
+                                    <button id="notificationBtn" style="background-color: transparent; border: none; padding: 0;">
+                                        <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover" 
+                                            colors="primary:#004024" style="width:30px; height:30px;">
+                                        </lord-icon>
+                                        <!-- Notification Count Badge -->
+                                        <span id="notificationCount" style="position: absolute; top: -5px; right: -5px; 
+                                            background-color: red; color: white; font-size: 12px; padding: 2px 6px; 
+                                            border-radius: 50%; display: none;">0</span>
+                                    </button>
+
+                                    <!-- Notification Dropdown -->
+                                    <div id="notificationDropdown" class="dropdown-menu p-2 shadow" 
+                                        style="display: none; position: absolute; right: 0; top: 35px; width: 300px; max-height: 400px; 
+                                        overflow-y: auto; background-color: white; border-radius: 5px; z-index: 1000;">
+                                        <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                                            Notifications
+                                        </p>
+                                        <div id="notificationList">
+                                            <!-- Notifications will be dynamically loaded here -->
+                                        </div>
+                                        <p id="noNotifications" style="text-align: center; margin-top: 10px; color: gray; display: none;">
+                                            No new notifications
+                                        </p>
+                                    </div>
+                                </div>
                             </li>
                             <li class="nav-item dropdown">
                                 <!-- Profile Dropdown -->
@@ -268,50 +279,52 @@ include '../user_query.php';
                             <i class="fa-solid fa-plus"></i> Add Year
                         </button>
                     </h3>
-                    <table id="yearsTable" class="table">
-                        <thead>
-                            <tr>
-                                <th>Period</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $years_query = "SELECT * FROM years";
-                            $years_result = $conn->query($years_query);
+                    <div class="table-responsive">
+                        <table id="yearsTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Period</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $years_query = "SELECT * FROM years";
+                                $years_result = $conn->query($years_query);
 
-                            if ($years_result->num_rows > 0) {
-                                while ($year = $years_result->fetch_assoc()) {
-                                    $status_class = $year['status'] === 'Active' ? 'approved' : 'disapproved';
+                                if ($years_result->num_rows > 0) {
+                                    while ($year = $years_result->fetch_assoc()) {
+                                        $status_class = $year['status'] === 'Active' ? 'approved' : 'disapproved';
 
-                                    echo "<tr>
-                                        <td>{$year['name']}</td>
-                                        <td>" . date('F d, Y', strtotime($year['start_date'])) . "</td>
-                                        <td>" . date('F d, Y', strtotime($year['end_date'])) . "</td>
-                                        <td><span class='badge rounded-pill {$status_class}'>{$year['status']}</span></td>
-                                        <td>
-                                            <button class='btn btn-primary btn-sm edit-year-btn mb-3' 
-                                                    data-bs-toggle='modal' 
-                                                    data-bs-target='#editYearModal' 
-                                                    data-id='{$year['year_id']}'>
-                                                <i class='fa-solid fa-pen'></i> Edit
-                                            </button>
-                                            <button class='btn btn-danger btn-sm delete-year-btn mb-3' 
-                                                    data-id='{$year['year_id']}'>
-                                                <i class='fa-solid fa-trash'></i> Delete
-                                            </button>
-                                        </td>
-                                    </tr>";
+                                        echo "<tr>
+                                            <td>{$year['name']}</td>
+                                            <td>" . date('F d, Y', strtotime($year['start_date'])) . "</td>
+                                            <td>" . date('F d, Y', strtotime($year['end_date'])) . "</td>
+                                            <td><span class='badge rounded-pill {$status_class}'>{$year['status']}</span></td>
+                                            <td>
+                                                <button class='btn btn-primary btn-sm edit-year-btn mb-3' 
+                                                        data-bs-toggle='modal' 
+                                                        data-bs-target='#editYearModal' 
+                                                        data-id='{$year['year_id']}'>
+                                                    <i class='fa-solid fa-pen'></i> Edit
+                                                </button>
+                                                <button class='btn btn-danger btn-sm delete-year-btn mb-3' 
+                                                        data-id='{$year['year_id']}'>
+                                                    <i class='fa-solid fa-trash'></i> Delete
+                                                </button>
+                                            </td>
+                                        </tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='5' class='text-center'>No years found</td></tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='5' class='text-center'>No years found</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <!-- Semesters Table -->
@@ -322,56 +335,56 @@ include '../user_query.php';
                             <i class="fa-solid fa-plus"></i> Add Semester
                         </button>
                     </h3>
-                    <table id="semestersTable" class="table">
-                        <thead>
-                            <tr>
-                                <th>Period</th>
-                                <th>Year</th>
-                                <th>Start Date</th>
-                                <th>End Date</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $semesters_query = "SELECT s.*, y.name AS year_name FROM semesters s JOIN years y ON s.year_id = y.year_id";
-                            $semesters_result = $conn->query($semesters_query);
+                    <div class="table-responsive">
+                        <table id="semestersTable" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Period</th>
+                                    <th>Year</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $semesters_query = "SELECT s.*, y.name AS year_name FROM semesters s JOIN years y ON s.year_id = y.year_id";
+                                $semesters_result = $conn->query($semesters_query);
 
-                            if ($semesters_result->num_rows > 0) {
-                                while ($semester = $semesters_result->fetch_assoc()) {
-                                    $status_class = $semester['status'] === 'Active' ? 'approved' : 'disapproved';
+                                if ($semesters_result->num_rows > 0) {
+                                    while ($semester = $semesters_result->fetch_assoc()) {
+                                        $status_class = $semester['status'] === 'Active' ? 'approved' : 'disapproved';
 
-                                    echo "<tr>
-                                        <td>{$semester['name']}</td>
-                                        <td>{$semester['year_name']}</td>
-                                        <td>" . date('F d, Y', strtotime($semester['start_date'])) . "</td>
-                                        <td>" . date('F d, Y', strtotime($semester['end_date'])) . "</td>
-                                        <td><span class='badge rounded-pill {$status_class}'>{$semester['status']}</span></td>
-                                        <td>
-                                            <button class='btn btn-primary btn-sm edit-semester-btn mb-3' 
-                                                    data-bs-toggle='modal' 
-                                                    data-bs-target='#editSemesterModal' 
-                                                    data-id='{$semester['semester_id']}'>
-                                                <i class='fa-solid fa-pen'></i> Edit
-                                            </button>
-                                            <button class='btn btn-danger btn-sm delete-semester-btn mb-3' 
-                                                    data-id='{$semester['semester_id']}'>
-                                                <i class='fa-solid fa-trash'></i> Delete
-                                            </button>
-                                        </td>
-                                    </tr>";
+                                        echo "<tr>
+                                            <td>{$semester['name']}</td>
+                                            <td>{$semester['year_name']}</td>
+                                            <td>" . date('F d, Y', strtotime($semester['start_date'])) . "</td>
+                                            <td>" . date('F d, Y', strtotime($semester['end_date'])) . "</td>
+                                            <td><span class='badge rounded-pill {$status_class}'>{$semester['status']}</span></td>
+                                            <td>
+                                                <button class='btn btn-primary btn-sm edit-semester-btn mb-3' 
+                                                        data-bs-toggle='modal' 
+                                                        data-bs-target='#editSemesterModal' 
+                                                        data-id='{$semester['semester_id']}'>
+                                                    <i class='fa-solid fa-pen'></i> Edit
+                                                </button>
+                                                <button class='btn btn-danger btn-sm delete-semester-btn mb-3' 
+                                                        data-id='{$semester['semester_id']}'>
+                                                    <i class='fa-solid fa-trash'></i> Delete
+                                                </button>
+                                            </td>
+                                        </tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='6' class='text-center'>No semesters found</td></tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='6' class='text-center'>No semesters found</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-
-
 
             <!-- Add Year Modal -->
             <div class="modal fade" id="addYearModal" tabindex="-1" role="dialog" aria-labelledby="addYearLabel" aria-hidden="true">
@@ -382,6 +395,15 @@ include '../user_query.php';
                                 <h5 class="modal-title" id="addYearLabel">Add New Year</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success Message Alert -->
+                            <div id="yearSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                                    Year added successfully!
+                                </div>
+
+                                <!-- Error Message Alert -->
+                                <div id="yearErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="yearErrorList"></ul>
+                                </div>
                             <div class="modal-body">
 
                                 <!-- Start Date Field -->
@@ -405,16 +427,6 @@ include '../user_query.php';
                                         <option value="Inactive">Inactive</option>
                                     </select>
                                 </div>
-
-                                <!-- Success Message Alert -->
-                                <div id="yearSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                                    Year added successfully!
-                                </div>
-
-                                <!-- Error Message Alert -->
-                                <div id="yearErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="yearErrorList"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -434,6 +446,15 @@ include '../user_query.php';
                                 <h5 class="modal-title" id="addSemesterLabel">Add New Semester</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success Message Alert -->
+                            <div id="semesterSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                                    Semester added successfully!
+                                </div>
+
+                                <!-- Error Message Alert -->
+                                <div id="semesterErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="semesterErrorList"></ul>
+                                </div>
                             <div class="modal-body">
 
                                 <!-- Year Dropdown Field -->
@@ -484,16 +505,6 @@ include '../user_query.php';
                                         <option value="Inactive">Inactive</option>
                                     </select>
                                 </div>
-
-                                <!-- Success Message Alert -->
-                                <div id="semesterSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                                    Semester added successfully!
-                                </div>
-
-                                <!-- Error Message Alert -->
-                                <div id="semesterErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="semesterErrorList"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -515,6 +526,15 @@ include '../user_query.php';
                                 <h5 class="modal-title" id="editSemesterLabel">Edit Semester</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success Message Alert -->
+                            <div id="semesterEditSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                                    Semester updated successfully!
+                                </div>
+
+                                <!-- Error Message Alert -->
+                                <div id="semesterEditErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="semesterEditErrorList"></ul>
+                                </div>
                             <div class="modal-body">
 
                                 <!-- Hidden input to store the semester ID -->
@@ -568,16 +588,6 @@ include '../user_query.php';
                                         <option value="Inactive">Inactive</option>
                                     </select>
                                 </div>
-
-                                <!-- Success Message Alert -->
-                                <div id="semesterEditSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                                    Semester updated successfully!
-                                </div>
-
-                                <!-- Error Message Alert -->
-                                <div id="semesterEditErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="semesterEditErrorList"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -598,6 +608,15 @@ include '../user_query.php';
                                 <h5 class="modal-title" id="editYearLabel">Edit Year</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+                            <!-- Success Message Alert -->
+                            <div id="yearEditSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                                    Year updated successfully!
+                                </div>
+
+                                <!-- Error Message Alert -->
+                                <div id="yearEditErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                    <ul id="yearEditErrorList"></ul>
+                                </div>
                             <div class="modal-body">
 
                                 <!-- Hidden input to store the year ID -->
@@ -624,16 +643,6 @@ include '../user_query.php';
                                         <option value="Inactive">Inactive</option>
                                     </select>
                                 </div>
-
-                                <!-- Success Message Alert -->
-                                <div id="yearEditSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                                    Year updated successfully!
-                                </div>
-
-                                <!-- Error Message Alert -->
-                                <div id="yearEditErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                                    <ul id="yearEditErrorList"></ul>
-                                </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -653,17 +662,17 @@ include '../user_query.php';
                             <h5 class="modal-title" id="archiveModalLabel">Archive Income</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
-                            Are you sure you want to archive this expense?
-                            <input type="hidden" id="archiveId">
-                            <!-- Success Message Alert -->
-                            <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
+                        <!-- Success Message Alert -->
+                        <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
                                 Expense archived successfully!
                             </div>
                             <!-- Error Message Alert -->
                             <div id="archiveErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
                                 <ul id="archiveErrorList"></ul> <!-- List for showing validation errors -->
                             </div>
+                        <div class="modal-body">
+                            Are you sure you want to archive this expense?
+                            <input type="hidden" id="archiveId">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

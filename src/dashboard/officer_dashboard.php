@@ -814,13 +814,13 @@ include '../organization_query.php';
                             }
 
                             .organization-logo {
-                                width: 200px;
+                                width: 150px;
                                 /* Increase logo size for mobile */
                                 height: auto;
                                 /* Maintain aspect ratio */
                                 margin: 0 auto;
                                 /* Center logo */
-                                margin-left: 43px;
+                                margin-left: 20px;
                             }
 
                             .organization-details {

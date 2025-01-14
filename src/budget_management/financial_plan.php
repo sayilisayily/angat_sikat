@@ -19,6 +19,8 @@ $result = $conn->query($sql);
 <html lang="en">
 
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Plan of Activities</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png"/>
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
@@ -362,26 +364,19 @@ $result = $conn->query($sql);
               
             <!-- Table -->
             <style>
-                html, body {
-                    height: 100%; /* Ensure the body and html take full height */
-                    margin: 0; /* Remove default margin */
-                }
-
                 .tablecontainer {
                     padding: 1.5rem; /* Adjust padding */
                     background-color: #f8f9fa; /* Light background for contrast */
                     border-radius: 8px; /* Rounded corners */
                     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-                    overflow-y: hidden; /* Enable vertical scrolling */
-                    max-height: calc(100vh - 100px); /* Set max height to fill the screen minus some space */
+                    max-height: calc(300vh - 300px); /* Set max height to fill the screen minus some space */
                 }
 
                 .table-responsive {
                     overflow-x: auto; /* Enable horizontal scrolling */
-                    overflow-y: auto; /* Enable vertical scrolling */
                     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
                     width: 100%; /* Ensure it takes full width */
-                    height: 100%; /* Ensure it takes full height */
+                    height: 1500px; /* Ensure it takes full height */
                 }
 
                 table {
@@ -410,10 +405,16 @@ $result = $conn->query($sql);
 
                     .table-responsive {
                         transform: scale(1); /* No zoom for better visibility */
+                        display: block; /* Ensure it's a block-level element */
+                        overflow-x: auto; /* Enable horizontal scrolling */
                     }
 
                     table {
                         min-width: 600px; /* Set a minimum width for the table to enable scrolling */
+                    }
+
+                    th, td {
+                        white-space: nowrap; /* Prevent text wrapping in table cells */
                     }
                 }
 
@@ -566,7 +567,6 @@ $result = $conn->query($sql);
                                 <h5 class="modal-title" id="addPlanLabel">Add New Plan</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
                                 <!-- Success Message Alert -->
                                 <div id="successMessage1" class="alert alert-success d-none text-center" role="alert" style="padding: 10px; margin: 0 auto;">
                                     Plan added successfully!
@@ -575,7 +575,7 @@ $result = $conn->query($sql);
                                 <div id="errorMessage1" class="alert alert-danger d-none text-center" role="alert" style="padding: 10px; margin: 0 auto;">
                                     <ul id="errorList1"></ul> <!-- List for showing validation errors -->
                                 </div>
-
+                            <div class="modal-body">
                                 <!-- Form fields -->
                                 <div class="form-group mb-2">
                                     <div class="col">
@@ -650,10 +650,6 @@ $result = $conn->query($sql);
                                 <h5 class="modal-title" id="editPlanModalLabel">Edit Plan</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body">
-                                <!-- Hidden field for plan ID -->
-                                <input type="hidden" id="editPlanId" name="edit_plan_id">
-
                                 <!-- Alerts -->
                                 <div id="successMessage2" class="alert alert-success d-none text-center" role="alert" style="padding: 10px; margin: 0 auto;">
                                     Plan updated successfully!
@@ -661,7 +657,9 @@ $result = $conn->query($sql);
                                 <div id="errorMessage2" class="alert alert-danger d-none text-center" role="alert" style="padding: 10px; margin: 0 auto;">
                                     <ul id="errorList2"></ul>
                                 </div>
-
+                            <div class="modal-body">
+                                <!-- Hidden field for plan ID -->
+                                <input type="hidden" id="editPlanId" name="edit_plan_id">
                                 <!-- Title -->
                                 <div class="form-group mb-2">
                                     <label for="editTitle">Title</label>
@@ -737,7 +735,6 @@ $result = $conn->query($sql);
                             <h5 class="modal-title" id="deleteModalLabel">Archive Event</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
                             <!-- Alerts -->
                             <div id="successMessage3" class="alert alert-success d-none text-center" role="alert" style="padding: 10px; margin: 0 auto;">
                                 Plan deleted successfully!
@@ -745,7 +742,7 @@ $result = $conn->query($sql);
                             <div id="errorMessage3" class="alert alert-danger d-none text-center" role="alert" style="padding: 10px; margin: 0 auto;">
                                 <ul id="errorList3"></ul> <!-- List for showing validation errors -->
                             </div>
-
+                        <div class="modal-body">
                             Are you sure you want to delete this plan?
                             <input type="hidden" id="deletePlanId">
                         </div>

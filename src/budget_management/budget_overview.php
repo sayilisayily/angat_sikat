@@ -237,7 +237,7 @@
 
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="../activity_management/activities.php" aria-expanded="false"
-                                    data-tooltip="Manage Events">
+                                    data-tooltip="Activities">
                                     <i class="bx bx-calendar-event" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Activities</span>
                                 </a>
@@ -245,7 +245,7 @@
 
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="../activity_management/calendar.php" aria-expanded="false"
-                                    data-tooltip="Manage Events">
+                                    data-tooltip="Calendar">
                                     <i class="bx bx-calendar" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Calendar</span>
                                 </a>
@@ -253,14 +253,14 @@
 
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="../budget_management/budget_approval_table.php" aria-expanded="false"
-                                    data-tooltip="Manage Events">
+                                    data-tooltip="Approval">
                                     <i class="bx bx-book-content" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Approval</span>
                                 </a>
                             </li>
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" aria-expanded="false" data-tooltip="Income & Expenses"
+                                <a class="sidebar-link" aria-expanded="false" data-tooltip="Transactions"
                                     onclick="toggleSubmenu(event)">
                                     <i class="bx bx-dollar-circle" style="color: #fff; font-size: 35px;"></i>
                                     <span class="hide-menu">Transactions</span>
@@ -299,7 +299,7 @@
 
                         <li class="sidebar-item">
                             <a class="sidebar-link" href="../reports/reports.php" aria-expanded="false"
-                                data-tooltip="Manage Events">
+                                data-tooltip="Reports">
                                 <i class="bx bx-bar-chart-alt-2" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Reports</span>
                             </a>
@@ -696,7 +696,6 @@
                             <h5 class="modal-title" id="editBeginningBalanceLabel">Edit Beginning Balance</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
                             <!-- Success Message Alert -->
                             <div id="successMessage1" class="alert alert-success d-none position-relative mb-3" role="alert">
                                 Beginning Balance updated successfully!
@@ -706,7 +705,7 @@
                             <div id="errorMessage1" class="alert alert-danger d-none position-relative mb-3" role="alert">
                                 <ul id="errorList1"></ul>
                             </div>
-
+                        <div class="modal-body">
                             <form id="editBeginningBalanceForm">
                                 <!-- Current Beginning Balance (Readonly) -->
                                 <div class="mb-3">
@@ -751,7 +750,6 @@
                             <h5 class="modal-title" id="editCashOnBankLabel">Edit Cash on Bank</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
                             <!-- Success Message Alert -->
                             <div id="successMessage2" class="alert alert-success d-none position-relative mb-3" role="alert">
                                 Cash on Bank updated successfully!
@@ -760,7 +758,7 @@
                             <div id="errorMessage2" class="alert alert-danger d-none position-relative mb-3" role="alert">
                                 <ul id="errorList2"></ul> <!-- List for showing validation errors -->
                             </div>
-
+                        <div class="modal-body">
                             <form id="editCashOnBankForm">
                                 <!-- Current Cash on Bank (Readonly) -->
                                 <div class="mb-3">
@@ -802,7 +800,6 @@
                             <h5 class="modal-title" id="editCashOnHandLabel">Edit Cash on Hand</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
                             <!-- Success Message Alert -->
                             <div id="successMessage3" class="alert alert-success d-none position-relative mb-3" role="alert">
                                 Cash on Hand updated successfully!
@@ -811,7 +808,7 @@
                             <div id="errorMessage3" class="alert alert-danger d-none position-relative mb-3" role="alert">
                                 <ul id="errorList3"></ul> <!-- List for showing validation errors -->
                             </div>
-
+                        <div class="modal-body">
                             <form id="editCashOnHandForm">
                                 <!-- Current Cash on Hand (Readonly) -->
                                 <div class="mb-3">
@@ -852,7 +849,6 @@
                             <h5 class="modal-title" id="addBudgetModalLabel">Add Budget</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
                             <!-- Success Message Alert -->
                             <div id="successMessage4" class="alert alert-success d-none position-relative mb-3" role="alert">
                                 Budget allocation added successfully!
@@ -861,7 +857,7 @@
                             <div id="errorMessage4" class="alert alert-danger d-none position-relative mb-3" role="alert">
                                 <ul id="errorList4"></ul> <!-- List for showing validation errors -->
                             </div>
-
+                        <div class="modal-body">
                             <form id="addBudgetForm">
                                 <input type="hidden" id="allocationId" name="allocation_id">
                                 <!-- Hidden input for allocation ID -->
@@ -915,7 +911,6 @@
                             <h5 class="modal-title" id="editBudgetModalLabel">Edit Budget</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div class="modal-body">
                             <!-- Success Message Alert -->
                             <div id="successMessage" class="alert alert-success d-none position-relative mb-3" role="alert">
                                 Budget updated successfully!
@@ -924,7 +919,7 @@
                             <div id="errorMessage" class="alert alert-danger d-none position-relative mb-3" role="alert">
                                 <ul id="errorList"></ul> <!-- List for showing validation errors -->
                             </div>
-                            
+                        <div class="modal-body">
                             <form id="editBudgetForm">
                                 <input type="hidden" id="edit_allocation_id" name="edit_allocation_id">
                                 <input type="hidden" name="edit_organization_id" value="<?php echo $organization_id; ?>">
