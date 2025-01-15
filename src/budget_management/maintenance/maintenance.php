@@ -318,6 +318,7 @@ $result = $conn->query($sql);
                 <!-- End Sidebar navigation -->
             </div>
             <!-- End Sidebar scroll-->
+             <!--  links update -->
         </aside>
         <!-- Sidebar End -->
 
