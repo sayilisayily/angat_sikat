@@ -4,6 +4,12 @@ require 'connection.php';
 include '../session_check.php';
 include '../user_query.php';
 
+// Check if user is logged in and has officer role
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
+    header("Location: ../user/login.html");
+    exit();
+}
+
 // Check if 'event_id' is passed in the URL
 if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
     $event_id = intval($_GET['event_id']); // Get and sanitize the event_id from the URL
@@ -389,7 +395,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                         <!-- Notification Count Badge -->
                                         <span id="notificationCount" style="position: absolute; top: -5px; right: -5px; 
                                             background-color: red; color: white; font-size: 12px; padding: 2px 6px; 
-                                            border-radius: 50%; display: none;">0</span>
+                                            border-radius: 50%; display: none;"></span>
                                     </button>
 
                                     <!-- Notification Dropdown -->
@@ -465,9 +471,18 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                 <!-- Event Information -->
                                 <h4>Title: <?php echo $event['title']; ?></h4>
                                 <p>Venue: <?php echo $event['event_venue']; ?></p>
-                                <p>Start Date: <?php echo $event['event_start_date']; ?></p>
-                                <p>End Date: <?php echo $event['event_end_date']; ?></p>
-
+                                <p>
+                                    Start Date: <?php 
+                                        $start_date = new DateTime($event['event_start_date']);
+                                        echo $start_date->format('F j, Y'); 
+                                    ?>
+                                </p>
+                                <p>
+                                    End Date: <?php 
+                                        $end_date = new DateTime($event['event_end_date']); // Corrected this line
+                                        echo $end_date->format('F j, Y');  
+                                    ?>
+                                </p>
                                 <h4>Items<?php if ($event['accomplishment_status'] === 0): ?>
                                     <button class="btn btn-sm btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addItemModal"><i class="fa-solid fa-plus"></i> Add Item</button>
                                 <?php endif; ?></h4>

@@ -4,6 +4,12 @@ include '../../connection.php';
 include '../../session_check.php'; 
 include '../../user_query.php';
 
+// Check if user is logged in and has officer role
+if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
+    header("Location: ../../user/login.html");
+    exit();
+}
+
 // Check if 'maintenance_id' is passed in the URL
 if (isset($_GET['maintenance_id']) && !empty($_GET['maintenance_id'])) {
     $maintenance_id = intval($_GET['maintenance_id']); // Get and sanitize the maintenance_id from the URL
