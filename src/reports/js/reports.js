@@ -68,11 +68,9 @@ document
 
 document.getElementById("permit_title").addEventListener("change", function () {
   const selectedOption = this.options[this.selectedIndex];
-  const eventAmount = selectedOption.getAttribute("data-amount");
   const eventId = selectedOption.getAttribute("data-event-id");
 
   // Set the event_start_date field
-  document.getElementById("total_amount").value = eventAmount || "";
   document.getElementById("permit_id").value = eventId || "";
 });
 
