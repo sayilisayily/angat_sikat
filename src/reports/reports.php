@@ -720,23 +720,21 @@
             </div>
 
             <!-- Permit to Withdraw Modal -->
-            <div class="modal fade" id="permitModal" tabindex="-1" role="dialog" aria-labelledby="permitLabel"
-                aria-hidden="true">
+            <div class="modal fade" id="permitModal" tabindex="-1" role="dialog" aria-labelledby="permitLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <form id="permitForm" action="generate_permit.php" method="POST" target="_blank">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="permitLabel">Generate Permit to Withdraw</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
                                 <!-- Form fields -->
-
+                                    
                                 <div class="form-group row mb-2">
                                     <!-- Event Title -->
                                     <div class="col-12">
-                                        <label for="permit_title">Event Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                        <label for="permit_title">Event Title</label>
                                         <select class="form-control" id="permit_title" name="event_title" required>
                                             <option value="">Select Event Title</option>
                                             <?php
@@ -760,14 +758,13 @@
                                         </select>
                                     </div>
                                 </div>
-                                <input type="hidden" class="form-control" id="total_amount" name="total_amount"
-                                    readonly>
-
+                                        <input type="hidden" class="form-control" id="total_amount" name="total_amount" readonly>
+                                       
                                 <!-- Hidden input fields-->
-                                <input type="hidden" class="form-control" id="permit_name" name="organization_name"
+                                <input type="hidden" class="form-control" id="permit_name" name="organization_name" 
                                     value="<?php echo htmlspecialchars($organization_name); ?>" readonly>
-                                <input type="hidden" class="form-control" id="permit_id" name="event_id" required>
-
+                                <input type="hidden" class="form-control" id="permit_id" name="event_id">
+                                
 
                                 <!-- Success Message Alert -->
                                 <div id="successMessage3" class="alert alert-success d-none mt-3" role="alert">
@@ -786,7 +783,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Liquidation Report Modal -->
             <div class="modal fade" id="liquidationModal" tabindex="-1" role="dialog" aria-labelledby="liquidationLabel"
                 aria-hidden="true">
