@@ -1280,6 +1280,111 @@ include '../organization_query.php';
                                     .from(element)
                                     .save('transaction_report.pdf');
                             });
+
+                            const notificationBtn = document.getElementById("notificationBtn");
+                            const notificationDropdown = document.getElementById("notificationDropdown");
+                            const notificationList = document.getElementById("notificationList");
+                            const notificationCount = document.getElementById("notificationCount");
+                            const noNotifications = document.getElementById("noNotifications");
+
+                            // Toggle Dropdown Visibility
+                            notificationBtn.addEventListener("click", () => {
+                            const isVisible = notificationDropdown.style.display === "block";
+                            notificationDropdown.style.display = isVisible ? "none" : "block";
+                            });
+
+                            // Load Notifications Dynamically
+                            function loadNotifications() {
+                            fetch("../get_notifications.php")
+                                .then((response) => response.json())
+                                .then((data) => {
+                                notificationList.innerHTML = ""; // Clear existing notifications
+                                if (data.length > 0) {
+                                    data.forEach((notification) => {
+                                    const notificationItem = document.createElement("div");
+                                    notificationItem.classList.add("notification-item");
+                                    notificationItem.style.padding = "10px";
+                                    notificationItem.style.borderBottom = "1px solid #ccc";
+                                    notificationItem.textContent = notification.message;
+
+                                    // Add data-id attribute for the notification ID
+                                    notificationItem.dataset.id = notification.id;
+
+                                    // Attach click event to visually mark as read
+                                    notificationItem.addEventListener("click", () => {
+                                        markAsRead(notificationItem);
+                                    });
+
+                                    notificationList.appendChild(notificationItem);
+                                    });
+
+                                    // Set notification count in localStorage
+                                    updateNotificationCount(data.length);
+                                } else {
+                                    noNotifications.style.display = "block";
+                                    notificationCount.style.display = "none";
+                                }
+                                })
+                                .catch((error) => {
+                                console.error("Error loading notifications:", error);
+                                });
+                            }
+
+                            // Initial Load
+                            loadNotifications();
+
+                            // Optionally, refresh notifications periodically (e.g., every 30 seconds)
+                            setInterval(loadNotifications, 30000);
+
+                            // Close dropdown if clicked outside
+                            document.addEventListener("click", (e) => {
+                            if (
+                                !notificationBtn.contains(e.target) &&
+                                !notificationDropdown.contains(e.target)
+                            ) {
+                                notificationDropdown.style.display = "none";
+                            }
+                            });
+
+                            // Function to mark a notification as read visually
+                            function markAsRead(notificationItem) {
+                            // Change the styling to indicate the notification has been read
+                            notificationItem.style.opacity = 0.5; // Visual indicator
+                            notificationItem.style.textDecoration = "line-through"; // Optional: strike through text
+                            notificationItem.style.color = "#aaa"; // Optional: change text color
+
+                            // Update the notification count in localStorage
+                            updateNotificationCount(-1);
+                            }
+
+                            // Update notification count and localStorage
+                            function updateNotificationCount(change = 0) {
+                            let currentCount = parseInt(localStorage.getItem("notificationCount"), 10) || 0;
+                            currentCount += change;
+
+                            // Update localStorage
+                            localStorage.setItem("notificationCount", currentCount);
+
+                            // Update UI
+                            if (currentCount > 0) {
+                                notificationCount.textContent = currentCount;
+                                notificationCount.style.display = "inline-block";
+                                noNotifications.style.display = "none";
+                            } else {
+                                notificationCount.style.display = "none";
+                                noNotifications.style.display = "block";
+                            }
+                            }
+
+                            // On page load, set initial count from localStorage
+                            document.addEventListener("DOMContentLoaded", () => {
+                            const storedCount = localStorage.getItem("notificationCount");
+                            if (storedCount) {
+                                notificationCount.textContent = storedCount;
+                                notificationCount.style.display = storedCount > 0 ? "inline-block" : "none";
+                                noNotifications.style.display = storedCount > 0 ? "none" : "block";
+                            }
+                            });
                         </script>
                     </div>
                     <div class="py-6 px-6 text-center d-none d-sm-block">

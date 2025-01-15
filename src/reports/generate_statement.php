@@ -27,27 +27,16 @@ class CustomPDF extends TCPDF {
     public function Footer() {
         $this->SetY(-25.4); // Position 1 inch from the bottom
         $this->SetFont('play', '', 10); // Set font
-        global $organization_name;
+        global $acronym;
+
+        $this->SetLineWidth(0.5); // Set line width
+        $this->Line(10, $this->GetY() - 5, 200, $this->GetY() - 5); // Draw line (x1, y1, x2, y2)
 
         // HTML content for footer with adjusted left and right margins
-        $html = '
-        <div style="border-top: 1px solid #000; font-size: 10px; font-family: Play, sans-serif; line-height: 1; padding-left: 38.1mm; padding-right: 25.4mm;">
-            <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
-                SASCO
-            </div>
-            <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
-                Financial Statement
-            </div>
-            <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
-                '.$organization_name.'
-            </div>
-            <div style="width: 100%; text-align: left; margin: 0; padding: 0;">
-                Page ' . $this->getAliasNumPage() . ' of ' . $this->getAliasNbPages() . '
-            </div>
-        </div>';
-
-        // Write the HTML footer with the border
-        $this->writeHTML($html, true, false, true, false, 'L');
+        $this->Cell(0, 5, 'SASCO', 0, 1, 'L');
+        $this->Cell(0, 5, 'FINANCIAL STATEMENT', 0, 1, 'L');
+        $this->Cell(0, 5, $acronym, 0, 1, 'L');
+        $this->Cell(0, 5, ' Page ' . $this->getAliasNumPage() . ' of ' . $this->getAliasNbPages(), 0, 1, 'L');
     }
 }
 
