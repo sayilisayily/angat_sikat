@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 15, 2025 at 07:15 AM
+-- Generation Time: Jan 15, 2025 at 07:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -232,7 +232,7 @@ INSERT INTO `events_summary` (`summary_id`, `event_id`, `title`, `venue`, `start
 (5, 6, 'Oplan Alisin ang mga Bading', 'Diyan lang', '2025-01-14', '2025-01-15', 'Expense', 3, 400.00, 0.00, 'Approved', NULL, 0, '2025-01-13 09:15:05', '2025-01-13 09:15:29'),
 (6, 9, 'Engineering Day', 'Bahay ni Norwin', '2025-01-30', '2026-01-14', 'Expense', 7, 300.00, 0.00, 'Approved', NULL, 0, '2025-01-14 06:17:03', '2025-01-14 06:21:08'),
 (7, 10, 'Merch', 'Bahay ni Norwin', '2025-01-16', '2025-01-16', 'Income', 7, 400.00, 100.00, 'Approved', NULL, 0, '2025-01-14 06:24:20', '2025-01-14 06:24:50'),
-(8, 4, 'AI Seminar', 'DCS', '2025-02-03', '2025-02-06', 'Expense', 1, 25107.00, 0.00, 'Approved', NULL, 0, '2025-01-14 07:52:47', '2025-01-15 06:13:33'),
+(8, 4, 'AI Seminar', 'DCS', '2025-02-03', '2025-02-06', 'Expense', 1, 25137.00, 0.00, 'Approved', NULL, 0, '2025-01-14 07:52:47', '2025-01-15 06:18:56'),
 (9, 8, 'Podcast', 'DCS', '2025-01-18', '2025-01-18', 'Expense', 1, 6000.00, 0.00, 'Approved', NULL, 0, '2025-01-14 08:22:50', '2025-01-14 08:23:40');
 
 -- --------------------------------------------------------
@@ -311,10 +311,7 @@ INSERT INTO `event_summary_items` (`summary_item_id`, `event_id`, `description`,
 (12, 4, 'excess 2', 1, 0, 1.00, 0.00, 1.00, 0.00, 'Budget_Request_General Assembly1736368948.pdf', '2025-01-18'),
 (14, 4, 'excess 2', 1, 0, 1.00, 0.00, 1.00, 0.00, 'Budget_Request_General Assembly1736368948.pdf', '2025-01-18'),
 (15, 4, 'excess 2', 1, 0, 1.00, 0.00, 1.00, 0.00, 'Budget_Request_General Assembly1736368948.pdf', '2025-01-18'),
-(16, 4, 'excess 2', 1, 0, 1.00, 0.00, 1.00, 0.00, 'Budget_Request_Podcast_January 14, 2025.pdf', '0000-00-00'),
-(17, 4, 'excess 2', 1, 0, 1.00, 0.00, 1.00, 0.00, 'Budget_Request_Podcast_January 14, 2025.pdf', '0000-00-00'),
-(18, 4, 'excess 2', 1, 0, 1.00, 0.00, 1.00, 0.00, 'Budget_Request_Podcast_January 14, 2025.pdf', '0000-00-00'),
-(19, 4, 'excess 2', 1, 0, 1.00, 0.00, 1.00, 0.00, 'Budget_Request_Podcast_January 14, 2025.pdf', '0000-00-00');
+(20, 4, 'excess 2', 1, 0, 30.00, 0.00, 30.00, 0.00, 'ProjectProposal.pdf', '2025-01-17');
 
 -- --------------------------------------------------------
 
@@ -542,6 +539,14 @@ CREATE TABLE `notifications` (
   `is_read` tinyint(1) DEFAULT 0,
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `recipient_id`, `organization_id`, `message`, `is_read`, `created_at`) VALUES
+(65, 9, 1, 'The total amount for the event \'AI Seminar\' has exceeded the allocated budget.', 0, '2025-01-15 14:18:56'),
+(66, 10, 1, 'The total amount for the event \'AI Seminar\' has exceeded the allocated budget.', 0, '2025-01-15 14:18:56');
 
 -- --------------------------------------------------------
 
@@ -1040,7 +1045,7 @@ ALTER TABLE `event_items`
 -- AUTO_INCREMENT for table `event_summary_items`
 --
 ALTER TABLE `event_summary_items`
-  MODIFY `summary_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `summary_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -1100,7 +1105,7 @@ ALTER TABLE `maintenance_summary_items`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `organizations`
