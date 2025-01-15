@@ -29,12 +29,6 @@ if (empty($_POST['quantity']) || intval($_POST['quantity']) <= 0) {
     $quantity = intval($_POST['quantity']);
 }
 
-if (empty($_POST['unit'])) {
-    $errors['unit'] = 'Unit is required.';
-} else {
-    $unit = mysqli_real_escape_string($conn, trim($_POST['unit']));
-}
-
 if (empty($_POST['amount']) || floatval($_POST['amount']) <= 0) {
     $errors['amount'] = 'Amount must be greater than zero.';
 } else {
@@ -117,12 +111,12 @@ if (empty($errors)) {
 
             // Update event_summary_items table
             $query = "UPDATE event_summary_items 
-                      SET description = ?, quantity = ?, unit = ?, amount = ?, profit = ?, total_profit = ?, total_amount = ?, reference = ? 
+                      SET description = ?, quantity = ?, amount = ?, profit = ?, total_profit = ?, total_amount = ?, reference = ? 
                       WHERE summary_item_id = ?";
             $stmt = $conn->prepare($query);
 
             if ($stmt) {
-                $stmt->bind_param("siddddssi", $description, $quantity, $unit, $amount, $profit, $total_profit, $total_amount, $reference, $summary_item_id);
+                $stmt->bind_param("sidddssi", $description, $quantity, $amount, $profit, $total_profit, $total_amount, $reference, $summary_item_id);
                 if (!$stmt->execute()) {
                     throw new Exception('Failed to update income summary item.');
                 }
@@ -134,12 +128,12 @@ if (empty($errors)) {
 
             // Update event_summary_items table
             $query = "UPDATE event_summary_items 
-                      SET description = ?, quantity = ?, unit = ?, amount = ?, total_amount = ?, reference = ? 
+                      SET description = ?, quantity = ?, amount = ?, total_amount = ?, reference = ? 
                       WHERE summary_item_id = ?";
             $stmt = $conn->prepare($query);
 
             if ($stmt) {
-                $stmt->bind_param("sidddsi", $description, $quantity, $unit, $amount, $total_amount, $reference, $summary_item_id);
+                $stmt->bind_param("siddsi", $description, $quantity, $amount, $total_amount, $reference, $summary_item_id);
                 if (!$stmt->execute()) {
                     throw new Exception('Failed to update expense summary item.');
                 }
@@ -182,7 +176,7 @@ if (empty($errors)) {
                 $stmt->close();
 
                 if ($event_title) {
-                    // Create notification for users in the organization
+                    // Create notification for user
                     $notification_message = "The total amount for the event '$event_title' has exceeded the allocated budget.";
                     $stmt = $conn->prepare("
                         INSERT INTO notifications (recipient_id, organization_id, message, is_read, created_at)
@@ -191,6 +185,8 @@ if (empty($errors)) {
                         WHERE organization_id = (SELECT organization_id FROM events WHERE event_id = ?)
                     ");
                     $stmt->bind_param("si", $notification_message, $event_id);
+
+                    $stmt->execute();
 
                     if (!$stmt->execute()) {
                         throw new Exception('Failed to create notification.');
