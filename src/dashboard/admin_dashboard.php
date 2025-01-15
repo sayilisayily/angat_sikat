@@ -652,7 +652,7 @@ include '../organization_query.php';
                     SELECT e.title, e.event_start_date, e.event_end_date, e.event_venue, o.organization_name
                     FROM events e
                     JOIN organizations o ON e.organization_id = o.organization_id
-                    WHERE e.event_start_date > CURDATE() 
+                    WHERE e.archived=0 AND e.event_start_date > CURDATE() 
                     ORDER BY e.event_start_date ASC
                     LIMIT 2
                     ";
@@ -1058,8 +1058,8 @@ include '../organization_query.php';
                                             <tbody>
                                                 <?php $query = "
                                                     SELECT b.*, o.organization_name 
-                                                    FROM budget_approvals b 
-                                                    JOIN organizations o ON b.organization_id = o.organization_id";
+                                                    FROM budget_approvals b
+                                                    JOIN organizations o ON b.organization_id = o.organization_id WHERE b.archived=0";
                                                 $result = mysqli_query($conn, $query);
                                                 if ($result->num_rows > 0) {
                                                     while ($row = mysqli_fetch_assoc($result)) {
@@ -1159,7 +1159,7 @@ include '../organization_query.php';
                             SELECT e.title, e.event_start_date, e.event_end_date, e.event_venue, o.organization_name
                             FROM events e
                             JOIN organizations o ON e.organization_id = o.organization_id
-                            WHERE e.event_start_date > CURDATE() 
+                            WHERE e.archived=0 AND e.event_start_date > CURDATE() 
                             ORDER BY e.event_start_date ASC
                             LIMIT 2
                             ";
