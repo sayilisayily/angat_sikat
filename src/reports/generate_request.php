@@ -184,10 +184,10 @@ $html = '
 foreach ($items as $item) {
     $html .= '
         <tr>
-            <td style="text-align: left;">' . htmlspecialchars($item['description']) . '</td>
-            <td>' . $item['quantity'] . '</td>
-            <td>' . number_format($item['unit_price'], 2) . '</td>
-            <td>' . number_format($item['total'], 2) . '</td>
+            <td style="text-align: left; width: 50%;">' . htmlspecialchars($item['description']) . '</td>
+            <td style="width: 15%;">' . $item['quantity'] . '</td>
+            <td style="width: 15%;">' . number_format($item['unit_price'], 2) . '</td>
+            <td style="width: 20%;">' . number_format($item['total'], 2) . '</td>
         </tr>';
 }
 

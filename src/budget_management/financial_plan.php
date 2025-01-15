@@ -362,7 +362,6 @@ $result = $conn->query($sql);
             </header>
             <!--  Header End -->
               
-            <!-- Table -->
             <style>
                 .tablecontainer {
                     padding: 1.5rem; /* Adjust padding */
@@ -376,7 +375,7 @@ $result = $conn->query($sql);
                     overflow-x: auto; /* Enable horizontal scrolling */
                     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
                     width: 100%; /* Ensure it takes full width */
-                    height: 1500px; /* Ensure it takes full height */
+                    max-height: 400px; /* Set a max height for the table */
                 }
 
                 table {
@@ -445,14 +444,14 @@ $result = $conn->query($sql);
                         <i class="fa-solid fa-plus"></i> Add Plan
                     </button>
                 </h2>
-                <div class="table-responsive" style="max-height: 400px;">
+                <div class="table-responsive">
                     <table id="financialPlanTable" class="table">
                         <thead>
                             <tr>
-                                <th style="background-color:rgb(38, 196, 124);">Projected Income</th>
-                                <th style="text-align: center; background-color:rgb(38, 196, 124);">Proposed Date</th>
-                                <th style="text-align: center; background-color:rgb(38, 196, 124);">Amount</th>
-                                <th style="background-color:rgb(38, 196, 124);">Actions</th>
+                                <th style="background-color:#D9DFC6;">Projected Income</th>
+                                <th style="text-align: center; background-color:#D9DFC6;">Proposed Date</th>
+                                <th style="text-align: center; background-color:#D9DFC6;">Amount</th>
+                                <th style="background-color:#D9DFC6;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -496,7 +495,7 @@ $result = $conn->query($sql);
 
                         <thead>
                             <tr>
-                                <th colspan="4" style="background-color:rgb(38, 196, 124);">Projected Expenses</th>
+                                <th colspan="4" style="background-color:#AAB99A;">Projected Expenses</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -506,7 +505,7 @@ $result = $conn->query($sql);
 
                             $categories = ['Activities', 'Purchases', 'Maintenance and Other Expenses'];
                             foreach ($categories as $category) {
-                                echo "<tr><th colspan='4' style='background-color:rgb(249, 248, 194);'>$category</th></tr>";
+                                echo "<tr><th colspan='4' style='background-color:#D9DFC6;'>$category</th></tr>";
 
                                 // Loop through expense records by category
                                 $has_expenses_for_category = false;
