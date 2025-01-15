@@ -255,10 +255,6 @@ include '../organization_query.php';
                             <div><?php echo htmlspecialchars($email); ?></div>
                         </div>
                         <div class="info-text">
-                            <div class="info-label">Organization</div>
-                            <div>20241111</div>
-                        </div>
-                        <div class="info-text">
                             <div class="info-label">Role</div>
                             <div><?php echo htmlspecialchars($role); ?></div>
                         </div>
@@ -294,6 +290,7 @@ include '../organization_query.php';
                             <div class="info-label">Email</div>
                             <input type="email" name="email" value="<?php echo htmlspecialchars($email); ?>">
                         </div>
+                        <h6> Enter password to confirm changes:</h6>
                         <div class="info-text">
                             <div class="info-label">Password</div>
                             <input type="password" name="password" required>
@@ -304,11 +301,17 @@ include '../organization_query.php';
                             <input type="password" name="confirm_password" required>
 
                         </div>
+
+                        <!-- Success Message Alert -->
+                        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
+                                        Profile updated successfully!
+                                    </div>
+                                    <!-- Error Message Alert -->
+                                    <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                                        <ul id="errorList"></ul> <!-- List for showing validation errors -->
+                                    </div>
                         
                         <div class="save-delete">
-                            <div class="delete-btn">
-                                <button type="button" onclick="confirmDelete()">Delete Account</button>
-                            </div>
                             <div class="save-btn">
                                 <button type="submit">Save Changes</button>
                             </div>
@@ -317,16 +320,6 @@ include '../organization_query.php';
                 </div>
             </div>
         </div>
-
-        <script>
-            function confirmDelete() {
-                const confirmation = confirm("Are you sure you want to delete your account? This action cannot be undone.");
-                if (confirmation) {
-                    // Proceed with deletion, redirect to delete action
-                    window.location.href = 'delete_account.php'; // replace with your delete action URL
-                }
-            }
-        </script>
 
     </div>
     <!-- End of Overall Body Wrapper -->
@@ -349,29 +342,29 @@ include '../organization_query.php';
                             console.log(response);
 
                             if (response.success) {
-                                $("#editErrorMessage").addClass("d-none");
-                                $("#editSuccessMessage").removeClass("d-none");
+                                $("#errorMessage").addClass("d-none");
+                                $("#successMessage").removeClass("d-none");
 
                                 setTimeout(function () {
                                     $("#edit-profile-form")[0].reset();
-                                    $("#editSuccessMessage").addClass("d-none");
+                                    $("#successMessage").addClass("d-none");
                                     location.reload();
                                 }, 2000);
                             } else {
-                                $("#editSuccessMessage").addClass("d-none");
-                                $("#editErrorMessage").removeClass("d-none");
+                                $("#successMessage").addClass("d-none");
+                                $("#errorMessage").removeClass("d-none");
                                 let errorHtml = "";
                                 for (let field in response.errors) {
                                     errorHtml += `<li>${response.errors[field]}</li>`;
                                 }
-                                $("#editErrorList").html(errorHtml);
+                                $("#errorList").html(errorHtml);
                             }
                         } catch (error) {
                             console.error("Error parsing JSON:", error);
                         }
                     },
                     error: function (xhr, status, error) {
-                        console.error("Error updating organization:", error);
+                        console.error("Error updating profile:", error);
                         console.log(xhr.responseText);
                     },
                 });

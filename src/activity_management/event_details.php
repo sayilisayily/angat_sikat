@@ -524,82 +524,172 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                     </table>
                                 </div>
 
+                                
+                                <?php
+                                // Prepare the SQL query to fetch the amount based on the plan_id from the events table
+                                $sql = "SELECT fp.amount 
+                                        FROM financial_plan fp 
+                                        INNER JOIN events e ON fp.plan_id = e.plan_id 
+                                        WHERE e.event_id = ?";
+                                $stmt = $conn->prepare($sql);
+
+                                if ($stmt) {
+                                    // Bind the $event_id parameter to the query
+                                    $stmt->bind_param("i", $event_id);
+
+                                    // Execute the query
+                                    $stmt->execute();
+
+                                    // Fetch the result
+                                    $result = $stmt->get_result();
+
+                                    if ($result && $result->num_rows > 0) {
+                                        // Fetch the amount
+                                        $row = $result->fetch_assoc();
+                                        $amount = $row['amount'];
+                                    } else {
+                                        echo "No record found for the provided event_id.";
+                                    }
+                                } else {
+                                    echo "Error preparing the statement: " . $conn->error;
+                                }
+                            ?>
+
                                 <!-- Display the grand total -->
                                 <div class="mt-3">
-                                    <h6 class="text-end">Total Amount: <span>
-                                        <?php echo number_format($grand_total, 2); ?>
-                                    </span></h6>
+                                    <h6 class="text-center">
+                                        Total/Allocated Amount: 
+                                        <span>
+                                            <?php echo number_format($grand_total, 2); ?> / <?php echo number_format($amount, 2); ?>
+                                        </span>
+                                    </h6>
+                                    <?php 
+                                        // Calculate the progress percentage
+                                        $progress_percentage = ($amount > 0) ? min(($grand_total / $amount) * 100, 100) : 0;
+                                    ?>
+                                    <!-- Progress bar container -->
+                                    <div class="progress mt-2" style="height: 20px;">
+                                        <div 
+                                            class="progress-bar 
+                                                <?php echo ($progress_percentage >= 100) ? 'bg-danger' : 'bg-success'; ?>" 
+                                            role="progressbar" 
+                                            style="width: <?php echo $progress_percentage; ?>%;" 
+                                            aria-valuenow="<?php echo $progress_percentage; ?>" 
+                                            aria-valuemin="0" 
+                                            aria-valuemax="100"
+                                        >
+                                            <?php echo round($progress_percentage, 2); ?>%
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                            <!-- Financial Summary Tab -->
+                            <div class="tab-pane fade" id="financial-summary" role="tabpanel" aria-labelledby="financial-summary-tab">
+                                <?php if ($event['accomplishment_status'] === 1): ?>
+                                <!-- Event Information -->
+                                <h4>Title: <?php echo $event['title']; ?></h4>
+                                <p>Venue: <?php echo $event['event_venue']; ?></p>
+                                <p>Start Date: <?php echo $event['event_start_date']; ?></p>
+                                <p>End Date: <?php echo $event['event_end_date']; ?></p>
+
+                                <h4>Items<button class="btn btn-sm btn-primary ms-3" data-bs-toggle="modal"
+                                data-bs-target="#summaryAddItemModal"><i class="fa-solid fa-plus"></i> Add Item</button></h4>
+                                
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Description</th>
+                                                <th>Quantity</th>
+                                                <th>Amount</th>
+                                                <?php if ($event['event_type'] === 'Income'): ?>
+                                                    <th>Profit</th>
+                                                <?php endif; ?>
+                                                <th>Total Amount</th>
+                                                <?php if ($event['event_type'] === 'Income'): ?>
+                                                    <th>Total Profit</th>
+                                                <?php endif; ?>
+                                                <th>References</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
+                                            $grand_total = 0;
+                                            
+                                            if (!empty($summaryItems)) {
+                                                foreach ($summaryItems as $item) {
+                                                    $grand_total += $item['total_amount'];
+                                                    echo "<tr>
+                                                            <td>{$item['date']}</td>
+                                                            <td>{$item['description']}</td>
+                                                            <td>{$item['quantity']}</td>
+                                                            <td>{$item['amount']}</td>";
+                                                            if ($event['event_type'] === 'Income'){ 
+                                                                echo "<td>{$item['profit']}</td>";
+                                                            }
+                                                            echo "<td>{$item['total_amount']}</td>";
+                                                            if ($event['event_type'] === 'Income'){ 
+                                                                echo "<td>{$item['total_profit']}</td>";
+                                                            }
+                                                            echo "<td>
+                                                                    <a href='uploads/references/{$item['reference']}' 
+                                                                        class='link-offset-2 link-underline link-underline-opacity-0' 
+                                                                        target='_blank'>
+                                                                        {$item['reference']}
+                                                                    </a>
+                                                                </td>
+                                                            <td>
+                                                                <button class='btn summary-edit-btn btn-primary btn-sm mb-3' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['summary_item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
+                                                                <button class='btn summary-delete-btn btn-danger btn-sm mb-3' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['summary_item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
+                                                            </td>
+                                                        </tr>";
+                                                }
+                                            } else {
+                                                echo "<tr><td colspan='8' class='text-center'>No summary items found</td></tr>";
+                                            }
+                                            ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                    <!-- Display the grand total -->
+                                        <div class="mt-3">
+                                            <h6 class="text-center">
+                                                Total/Allocated Amount: 
+                                                <span>
+                                                    <?php echo number_format($grand_total, 2); ?> / <?php echo number_format($amount, 2); ?>
+                                                </span>
+                                            </h6>
+                                            <?php 
+                                                // Calculate the progress percentage
+                                                $progress_percentage = ($amount > 0) ? min(($grand_total / $amount) * 100, 100) : 0;
+                                            ?>
+                                            <!-- Progress bar container -->
+                                            <div class="progress mt-2" style="height: 20px;">
+                                                <div 
+                                                    class="progress-bar 
+                                                        <?php echo ($progress_percentage >= 100) ? 'bg-danger' : 'bg-success'; ?>" 
+                                                    role="progressbar" 
+                                                    style="width: <?php echo $progress_percentage; ?>%;" 
+                                                    aria-valuenow="<?php echo $progress_percentage; ?>" 
+                                                    aria-valuemin="0" 
+                                                    aria-valuemax="100"
+                                                >
+                                                    <?php echo round($progress_percentage, 2); ?>%
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                <?php else: ?>
+                                <p>This event has not been accomplished yet. The financial summary will be available once the event is marked as accomplished.</p>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
 
 
-                    <!-- Financial Summary Tab -->
-                    <div class="tab-pane fade" id="financial-summary" role="tabpanel" aria-labelledby="financial-summary-tab">
-                        <?php if ($event['accomplishment_status'] === 1): ?>
-                        <!-- Event Information -->
-                        <h4>Title: <?php echo $event['title']; ?></h4>
-                        <p>Venue: <?php echo $event['event_venue']; ?></p>
-                        <p>Start Date: <?php echo $event['event_start_date']; ?></p>
-                        <p>End Date: <?php echo $event['event_end_date']; ?></p>
-
-                        <h4>Items<button class="btn btn-sm btn-primary ms-3" data-bs-toggle="modal"
-                        data-bs-target="#summaryAddItemModal"><i class="fa-solid fa-plus"></i> Add Item</button></h4>
-                        
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Description</th>
-                                        <th>Quantity</th>
-                                        <th>Amount</th>
-                                        <?php if ($event['event_type'] === 'Income'): ?>
-                                            <th>Profit</th>
-                                        <?php endif; ?>
-                                        <th>Total Amount</th>
-                                        <?php if ($event['event_type'] === 'Income'): ?>
-                                            <th>Total Profit</th>
-                                        <?php endif; ?>
-                                        <th>References</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    if (!empty($summaryItems)) {
-                                        foreach ($summaryItems as $item) {
-                                            echo "<tr>
-                                                    <td>{$item['date']}</td>
-                                                    <td>{$item['description']}</td>
-                                                    <td>{$item['quantity']}</td>
-                                                    <td>{$item['amount']}</td>";
-                                                    if ($event['event_type'] === 'Income'){ 
-                                                        echo "<td>{$item['profit']}</td>";
-                                                    }
-                                                    echo "<td>{$item['total_amount']}</td>";
-                                                    if ($event['event_type'] === 'Income'){ 
-                                                        echo "<td>{$item['total_profit']}</td>";
-                                                    }
-                                                    echo "<td>{$item['reference']}</td>
-                                                    <td>
-                                                        <button class='btn summary-edit-btn btn-primary btn-sm mb-3' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['summary_item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
-                                                        <button class='btn summary-delete-btn btn-danger btn-sm mb-3' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['summary_item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
-                                                    </td>
-                                                </tr>";
-                                        }
-                                    } else {
-                                        echo "<tr><td colspan='8' class='text-center'>No summary items found</td></tr>";
-                                    }
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
-                        <?php else: ?>
-                        <p>This event has not been accomplished yet. The financial summary will be available once the event is marked as accomplished.</p>
-                        <?php endif; ?>
-                    </div>
+                    
                 
 
 

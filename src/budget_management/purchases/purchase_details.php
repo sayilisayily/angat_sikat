@@ -492,6 +492,36 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                 role="tab" aria-controls="financial-summary" aria-selected="false">Financial Summary</a>
                             </li>
                         </ul>
+                        <?php
+                            // Prepare the SQL query to fetch the amount based on the plan_id from the events table
+                            $sql = "SELECT fp.amount 
+                                    FROM financial_plan fp 
+                                    INNER JOIN purchases p ON fp.plan_id = p.plan_id 
+                                    WHERE p.purchase_id = ?";
+                            $stmt = $conn->prepare($sql);
+
+                            if ($stmt) {
+                                // Bind the $event_id parameter to the query
+                                $stmt->bind_param("i", $purchase_id);
+
+                                // Execute the query
+                                $stmt->execute();
+
+                                // Fetch the result
+                                $result = $stmt->get_result();
+
+                                if ($result && $result->num_rows > 0) {
+                                    // Fetch the amount
+                                    $row = $result->fetch_assoc();
+                                    $amount = $row['amount'];
+                                } else {
+                                    echo "No record found for the provided event_id.";
+                                }
+                            } else {
+                                echo "Error preparing the statement: " . $conn->error;
+                            }
+                        ?>
+
 
                         <div class="tab-content mt-4 mx-3">
                             <!-- Financial Plan Tab -->
@@ -559,74 +589,122 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
 
                                 <!-- Display the grand total -->
                                 <div class="mt-3">
-                                    <h6 class="text-end">Total Amount: <span>
-                                        <?php echo number_format($grand_total, 2); ?>
-                                    </span></h6>
+                                    <h6 class="text-center">
+                                        Total/Allocated Amount: 
+                                        <span>
+                                            <?php echo number_format($grand_total, 2); ?> / <?php echo number_format($amount, 2); ?>
+                                        </span>
+                                    </h6>
+                                    <?php 
+                                        // Calculate the progress percentage
+                                        $progress_percentage = ($amount > 0) ? min(($grand_total / $amount) * 100, 100) : 0;
+                                    ?>
+                                    <!-- Progress bar container -->
+                                    <div class="progress mt-2" style="height: 20px;">
+                                        <div 
+                                            class="progress-bar 
+                                                <?php echo ($progress_percentage >= 100) ? 'bg-danger' : 'bg-success'; ?>" 
+                                            role="progressbar" 
+                                            style="width: <?php echo $progress_percentage; ?>%;" 
+                                            aria-valuenow="<?php echo $progress_percentage; ?>" 
+                                            aria-valuemin="0" 
+                                            aria-valuemax="100"
+                                        >
+                                            <?php echo round($progress_percentage, 2); ?>%
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Financial Summary Tab -->
                             <div class="tab-pane fade" id="financial-summary" role="tabpanel" aria-labelledby="financial-summary-tab">
-                                <h4>Financial Summary Content Goes Here</h4>
-                                <!-- You can add your financial summary content here -->
+                                <?php if ($purchase['completion_status'] === 1): ?>
+                                <!-- Purchase Information -->
+                                <h4>Title:
+                                    <?php echo $purchase['title']; ?>
+                                </h4>
+
+                                <h4>Items<button class="btn btn-sm btn-primary ms-3" data-bs-toggle="modal"
+                                data-bs-target="#summaryAddItemModal"><i class="fa-solid fa-plus"></i> Add Item</button></h4>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Quantity</th>
+                                            <th>Unit</th>
+                                            <th>Amount</th>
+                                            <th>Total Amount</th>
+                                            <th>References</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $grand_total = 0;
+                                        
+                                        if (!empty($summaryItems)) {
+                                            foreach ($summaryItems as $item) {
+                                                $total_amount = $item['quantity'] * $item['amount'];
+                                                $grand_total += $item['total_amount'];
+                                                echo "<tr>
+                                                        <td>{$item['description']}</td>
+                                                        <td>{$item['quantity']}</td>
+                                                        <td>{$item['unit']}</td>
+                                                        <td>{$item['amount']}</td>
+                                                        <td>{$total_amount}</td>
+                                                        <td>
+                                                            <a href='uploads/references/{$item['reference']}' 
+                                                                class='link-offset-2 link-underline link-underline-opacity-0' 
+                                                                target='_blank'>
+                                                                {$item['reference']}
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <button class='btn summary-edit-btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['summary_item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
+                                                            <button class='btn summary-delete-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['summary_item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
+                                                        </td>
+                                                    </tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='5' class='text-center'>No summary items found</td></tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                                <div class="mt-3">
+                                    <h6 class="text-center">
+                                        Total/Allocated Amount: 
+                                        <span>
+                                            <?php echo number_format($grand_total, 2); ?> / <?php echo number_format($amount, 2); ?>
+                                        </span>
+                                    </h6>
+                                    <?php 
+                                        // Calculate the progress percentage
+                                        $progress_percentage = ($amount > 0) ? min(($grand_total / $amount) * 100, 100) : 0;
+                                    ?>
+                                    <!-- Progress bar container -->
+                                    <div class="progress mt-2" style="height: 20px;">
+                                        <div 
+                                            class="progress-bar 
+                                                <?php echo ($progress_percentage >= 100) ? 'bg-danger' : 'bg-success'; ?>" 
+                                            role="progressbar" 
+                                            style="width: <?php echo $progress_percentage; ?>%;" 
+                                            aria-valuenow="<?php echo $progress_percentage; ?>" 
+                                            aria-valuemin="0" 
+                                            aria-valuemax="100"
+                                        >
+                                            <?php echo round($progress_percentage, 2); ?>%
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php else: ?>
+                                <p>This purchase has not been completed yet. The financial summary will be available once the purchase is marked as completed.</p>
+                                <?php endif; ?>
                             </div>
                         </div>
+                        
+                        </div>
                     </div>
-
-
-                    <!-- Financial Summary Tab -->
-                    <div class="tab-pane fade" id="financial-summary" role="tabpanel" aria-labelledby="financial-summary-tab">
-                        <?php if ($purchase['completion_status'] === 1): ?>
-                        <!-- Purchase Information -->
-                        <h4>Title:
-                            <?php echo $purchase['title']; ?>
-                        </h4>
-
-                        <h4>Items<button class="btn btn-sm btn-primary ms-3" data-bs-toggle="modal"
-                        data-bs-target="#summaryAddItemModal"><i class="fa-solid fa-plus"></i> Add Item</button></h4>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Description</th>
-                                    <th>Quantity</th>
-                                    <th>Unit</th>
-                                    <th>Amount</th>
-                                    <th>Total Amount</th>
-                                    <th>References</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                if (!empty($summaryItems)) {
-                                    foreach ($summaryItems as $item) {
-                                        $total_amount = $item['quantity'] * $item['amount'];
-                                        echo "<tr>
-                                                <td>{$item['description']}</td>
-                                                <td>{$item['quantity']}</td>
-                                                <td>{$item['unit']}</td>
-                                                <td>{$item['amount']}</td>
-                                                <td>{$total_amount}</td>
-                                                <td>{$item['reference']}</td>
-                                                <td>
-                                                    <button class='btn summary-edit-btn btn-primary btn-sm' data-bs-toggle='modal' data-bs-target='#summaryEditItemModal' data-id='{$item['summary_item_id']}' data-description='{$item['description']}' data-quantity='{$item['quantity']}' data-unit='{$item['unit']}' data-amount='{$item['amount']}'><i class='fa-solid fa-pen'></i> Edit</button>
-                                                    <button class='btn summary-delete-btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#summaryDeleteItemModal' data-id='{$item['summary_item_id']}'><i class='fa-solid fa-trash'></i> Delete</button>
-                                                </td>
-                                            </tr>";
-                                    }
-                                } else {
-                                    echo "<tr><td colspan='5' class='text-center'>No summary items found</td></tr>";
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                        <?php else: ?>
-                        <p>This purchase has not been completed yet. The financial summary will be available once the purchase is marked as completed.</p>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                
-
 
                 <!-- Add Item Modal -->
                 <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="addItemModalLabel"

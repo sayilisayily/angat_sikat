@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $last_name = trim($_POST['last_name']);
     $email = trim($_POST['email']);
     $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
     $profile_picture = '';
 
     // Validate first name
@@ -31,12 +30,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['email'] = "Valid email is required.";
     }
 
-    // Validate password and confirm password
-    if ($password !== $confirm_password) {
-        $errors['password'] = "Passwords do not match.";
+    // Verify the provided password
+    $query = "SELECT password FROM users WHERE user_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $stmt->bind_result($hashed_password);
+    if ($stmt->fetch()) {
+        if (!password_verify($password, $hashed_password)) {
+            $errors['password'] = "Incorrect password. Changes cannot be saved.";
+        }
     } else {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT); // Hash the password
+        $errors['database'] = "User not found.";
     }
+    $stmt->close();
 
     // Handle profile picture upload if a file was uploaded
     if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
