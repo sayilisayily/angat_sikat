@@ -39,9 +39,10 @@ function loadNotifications() {
           // Add data-id attribute for the notification ID
           notificationItem.dataset.id = notification.id;
 
-          // Attach click event to visually mark as read
+          // Attach click event to mark as read
           notificationItem.addEventListener("click", () => {
-            markAsRead(notificationItem);
+            markAsRead(notification.id);
+            notificationItem.style.opacity = 0.5; // Visual indicator (optional)
           });
 
           notificationList.appendChild(notificationItem);
@@ -60,6 +61,17 @@ function loadNotifications() {
     });
 }
 
+function updateNotificationCount() {
+  const currentCount = parseInt(notificationCount.textContent, 10) || 0;
+  if (currentCount > 0) {
+    notificationCount.textContent = currentCount - 1;
+    if (currentCount - 1 === 0) {
+      notificationCount.style.display = "none";
+      noNotifications.style.display = "block";
+    }
+  }
+}
+
 // Initial Load
 loadNotifications();
 
@@ -76,27 +88,24 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// Function to mark a notification as read visually
-function markAsRead(notificationItem) {
-  // Change the styling to indicate the notification has been read
-  notificationItem.style.opacity = 0.5; // Visual indicator
-  notificationItem.style.textDecoration = "line-through"; // Optional: strike through text
-  notificationItem.style.color = "#aaa"; // Optional: change text color
+// Function to mark a notification as read
+async function markAsRead(notificationId) {
+  try {
+    await fetch("../notification_read.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: notificationId }),
+    });
 
-  // Update the notification count
-  updateNotificationCount();
-}
-
-function updateNotificationCount() {
-  const currentCount = parseInt(notificationCount.textContent, 10) || 0;
-  if (currentCount > 0) {
-    notificationCount.textContent = currentCount - 1;
-    if (currentCount - 1 === 0) {
-      notificationCount.style.display = "none";
-      noNotifications.style.display = "block";
-    }
+    // Optional: update notification count after marking as read
+    updateNotificationCount();
+  } catch (error) {
+    console.error("Error marking notification as read:", error);
   }
 }
+
 // Add an event listener to the title selector dropdown
 document.getElementById("title").addEventListener("change", function () {
   const selectedOption = this.options[this.selectedIndex];
