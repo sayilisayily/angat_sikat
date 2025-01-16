@@ -895,7 +895,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                     </div>
                                 <div class="modal-body">
                                     <input type="hidden" name="event_id" value="<?php echo $event_id; ?>">
-                                    <!-- Dropdown to select an event -->
+                                    <!-- Dropdown to select an item -->
                                     <div class="form-group mb-2">
                                         <label for="item_selector">Select Item</label>
                                         <select class="form-control" id="item_selector" name="selected_item">
@@ -994,13 +994,11 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                         <input type="text" class="form-control" id="summary_edit_description"
                                             name="description" required>
                                     </div>
-                                    <div class="form-group row mb-2">    
+                                    <div class="form-group mb-2">    
                                         <div class="col">
                                             <label for="summary_edit_quantity">Quantity</label>
                                             <input type="number" class="form-control" id="summary_edit_quantity"
                                                 name="quantity" required>
-                                        </div>
-                                        <div class="col">
                                         </div>
                                     </div>
                                     <div class="form-group <?php if ($event['event_type'] === 'Income') {echo 'row';} ?> mb-2">       
