@@ -484,11 +484,11 @@ $result = $conn->query($sql);
                     <table id="maintenanceTable" class="table">
                         <thead>
                             <tr> 
-                                <th>Title</th>
-                                <th>Total Amount</th>
-                                <th>Status</th>
-                                <th>Completed</th>
-                                <th>Actions</th>
+                                <th class="table-light">Title</th>
+                                <th class="table-light">Total Amount</th>
+                                <th class="table-light">Status</th>
+                                <th class="table-light">Completed</th>
+                                <th class="table-light">Actions</th>
                             </tr>
                         </thead>
                         <tbody>

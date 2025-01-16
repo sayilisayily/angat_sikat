@@ -373,10 +373,10 @@ $result = $conn->query($sql);
                     <table id="financialPlanTable" class="table" style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr>
-                                <th style="background-color:#D9DFC6;">Projected Income</th>
-                                <th style="text-align: center; background-color:#D9DFC6;">Proposed Date</th>
-                                <th style="text-align: center; background-color:#D9DFC6;">Amount</th>
-                                <th style="background-color:#D9DFC6;">Actions</th>
+                                <th class="table-success">Projected Income</th>
+                                <th style="text-align: center;" class="table-success">Proposed Date</th>
+                                <th style="text-align: center;" class="table-success">Amount</th>
+                                <th class="table-success">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -420,7 +420,7 @@ $result = $conn->query($sql);
 
                         <thead>
                             <tr>
-                                <th colspan="4" style="background-color:#AAB99A;">Projected Expenses</th>
+                                <th colspan="4" class="table-success">Projected Expenses</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -430,7 +430,7 @@ $result = $conn->query($sql);
 
                             $categories = ['Activities', 'Purchases', 'Maintenance and Other Expenses'];
                             foreach ($categories as $category) {
-                                echo "<tr><th colspan='4' style='background-color:#D9DFC6;'>$category</th></tr>";
+                                echo "<tr><th colspan='4' class='table-light'>$category</th></tr>";
 
                                 // Loop through expense records by category
                                 $has_expenses_for_category = false;
