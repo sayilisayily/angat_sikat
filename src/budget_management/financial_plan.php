@@ -362,90 +362,15 @@ $result = $conn->query($sql);
             </header>
             <!--  Header End -->
               
-            <style>
-                .tablecontainer {
-                    padding: 1.5rem; /* Adjust padding */
-                    background-color: #f8f9fa; /* Light background for contrast */
-                    border-radius: 8px; /* Rounded corners */
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-                    max-height: calc(300vh - 300px); /* Set max height to fill the screen minus some space */
-                }
-
-                .table-responsive {
-                    overflow-x: auto; /* Enable horizontal scrolling */
-                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-                    width: 100%; /* Ensure it takes full width */
-                    max-height: 400px; /* Set a max height for the table */
-                }
-
-                table {
-                    width: 100%; /* Full width for the table */
-                    border-collapse: collapse; /* Collapse borders */
-                }
-
-                th, td {
-                    text-align: left; /* Align text to the left */
-                    padding: 12px; /* Padding for table cells */
-                }
-
-                th {
-                    background-color: #007bff; /* Header background color */
-                    color: white; /* Header text color */
-                }
-
-                .btn {
-                    font-size: 12px; /* Button font size */
-                }
-
-                @media (max-width: 768px) {
-                    .tablecontainer {
-                        padding: 1rem; /* Reduce padding for smaller screens */
-                    }
-
-                    .table-responsive {
-                        transform: scale(1); /* No zoom for better visibility */
-                        display: block; /* Ensure it's a block-level element */
-                        overflow-x: auto; /* Enable horizontal scrolling */
-                    }
-
-                    table {
-                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
-                    }
-
-                    th, td {
-                        white-space: nowrap; /* Prevent text wrapping in table cells */
-                    }
-                }
-
-                /* Custom Scrollbar Styles */
-                .tablecontainer::-webkit-scrollbar,
-                .table-responsive::-webkit-scrollbar {
-                    width: 8px; /* Width of vertical scrollbar */
-                    height: 8px; /* Height of horizontal scrollbar */
-                }
-
-                .tablecontainer::-webkit-scrollbar-thumb,
-                .table-responsive::-webkit-scrollbar-thumb {
-                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
-                    border-radius: 4px; /* Round edges of the scrollbar thumb */
-                }
-
-                .tablecontainer::-webkit-scrollbar-thumb:hover,
-                .table-responsive::-webkit-scrollbar-thumb:hover {
-                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
-                }
-            </style>
-
-            <div class="tablecontainer mt-5">
+            <div class="tablecontainer mt-5" style="height: calc(100vh - 150px); overflow: hidden; padding: 1.5rem; background-color: #f8f9fa; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
                 <h2 class="mb-4">
                     <span class="text-warning fw-bold me-2">|</span> Financial Plan
-                    <button class="btn btn-primary ms-3" id="add-btn" data-bs-toggle="modal" data-bs-target="#addPlanModal"
-                        style="height: 40px; width: 200px; border-radius: 8px;">
+                    <button class="btn" style="height: 40px; width: 200px; border-radius: 8px; background-color: #ffb000; color: white; border: none; font-size: 12px;">
                         <i class="fa-solid fa-plus"></i> Add Plan
                     </button>
                 </h2>
-                <div class="table-responsive">
-                    <table id="financialPlanTable" class="table">
+                <div class="table-responsive" style="height: 100%; overflow: auto;">
+                    <table id="financialPlanTable" class="table" style="width: 100%; border-collapse: collapse;">
                         <thead>
                             <tr>
                                 <th style="background-color:#D9DFC6;">Projected Income</th>
