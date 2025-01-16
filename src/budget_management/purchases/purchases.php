@@ -397,9 +397,74 @@ $result = $conn->query($sql);
                 </nav>
             </header>
             <!--  Header End -->
+            
+            <style>
+                html, body {
+                    height: 100%; /* Ensure the body and html take full height */
+                    margin: 0; /* Remove default margin */
+                }
 
-            <div class="container mt-5">
-                <div class="tablecontainer" style="height: calc(100vh - 150px); overflow: hidden;">
+                .table-responsive {
+                    overflow-x: auto; /* Enable horizontal scrolling */
+                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+                    width: 100%; /* Ensure it takes full width */
+                    height: auto; /* Allow height to adjust */
+                }
+
+                table {
+                    width: 100%; /* Full width for the table */
+                    border-collapse: collapse; /* Collapse borders */
+                }
+
+                th, td {
+                    text-align: left; /* Align text to the left */
+                    padding: 12px; /* Padding for table cells */
+                }
+
+                th {
+                    background-color: #007bff; /* Header background color */
+                    color: white; /* Header text color */
+                }
+
+                .btn {
+                    font-size: 12px; /* Button font size */
+                }
+
+                @media (max-width: 768px) {
+                    .table-responsive {
+                        display: block; /* Ensure it's a block-level element */
+                        overflow-x: auto; /* Enable horizontal scrolling */
+                    }
+
+                    table {
+                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
+                    }
+
+                    th, td {
+                        white-space: nowrap; /* Prevent text wrapping in table cells */
+                    }
+                }
+
+                /* Custom Scrollbar Styles */
+                .table-responsive::-webkit-scrollbar {
+                    height: 8px; /* Height of horizontal scrollbar */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
+                    border-radius: 4px; /* Round edges of the scrollbar thumb */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+                }
+
+                .table-responsive::-webkit-scrollbar-track {
+                    background: transparent; /* Transparent track */
+                }
+            </style>
+
+            <div class="container mt-5 p-5">
                     <h2 class="mb-4 d-flex align-items-center justify-content-between">
                         <div>
                             <span class="text-warning fw-bold me-2">|</span> Purchases
@@ -417,11 +482,11 @@ $result = $conn->query($sql);
                         <table id="purchasesTable" class="table" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <th class="table-light">Title</th>
-                                    <th class="table-light">Total Amount</th>
-                                    <th class="table-light">Status</th>
-                                    <th class="table-light">Completed</th>
-                                    <th class="table-light">Actions</th>
+                                    <th class="table-warning">Title</th>
+                                    <th class="table-warning">Total Amount</th>
+                                    <th class="table-warning">Status</th>
+                                    <th class="table-warning">Completed</th>
+                                    <th class="table-warning">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -463,7 +528,6 @@ $result = $conn->query($sql);
                             </tbody>
                         </table>
                     </div>
-                </div>
             </div>
 
             <!-- Confirmation Modal -->

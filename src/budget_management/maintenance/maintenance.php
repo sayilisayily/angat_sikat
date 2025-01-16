@@ -469,7 +469,7 @@ $result = $conn->query($sql);
             <div class="container mt-5 p-5">
                 <h2 class="mb-4 d-flex align-items-center justify-content-between">
                     <div>    
-                        <span class="text-warning fw-bold me-2">|</span> Maintenance and Other Expenses
+                        <span class="text-warning fw-bold me-2">|</span> Maintenance and Operating Expenses
                         <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addModal"
                             style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
                             <i class="fa-solid fa-plus"></i> Add MOE
@@ -484,11 +484,11 @@ $result = $conn->query($sql);
                     <table id="maintenanceTable" class="table">
                         <thead>
                             <tr> 
-                                <th class="table-light">Title</th>
-                                <th class="table-light">Total Amount</th>
-                                <th class="table-light">Status</th>
-                                <th class="table-light">Completed</th>
-                                <th class="table-light">Actions</th>
+                                <th class="table-warning">Title</th>
+                                <th class="table-warning">Total Amount</th>
+                                <th class="table-warning">Status</th>
+                                <th class="table-warning">Completed</th>
+                                <th class="table-warning">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -519,7 +519,7 @@ $result = $conn->query($sql);
                                         </tr>";
                                 }
                             } else {
-                                echo "<tr><td colspan='5' class='text-center'>No maintenance or other expenses found</td></tr>";
+                                echo "<tr><td colspan='5' class='text-center'>No maintenance or operating expenses found</td></tr>";
                             }
                             ?>
                         </tbody>
@@ -561,7 +561,7 @@ $result = $conn->query($sql);
                 <div class="modal-content">
                 <form id="addForm">
                     <div class="modal-header">
-                    <h5 class="modal-title" id="addLabel">Add New Maintenance or Other Expense</h5>
+                    <h5 class="modal-title" id="addLabel">Add New Maintenance or Operating Expense</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <!-- Success and Error Message Alert -->
@@ -577,7 +577,7 @@ $result = $conn->query($sql);
                     <!-- Plan ID -->
                     <input type="hidden" id="plan_id" name="plan_id">
                     <div class="col">
-                            <label for="title">Maintenance or Other Expense Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                            <label for="title">Maintenance or Operating Expense Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                             <!-- Purchase title dropdown -->
                             <select class="form-control" id="title" name="title">
                                 <option value="">Select MOE Title</option>
@@ -620,7 +620,7 @@ $result = $conn->query($sql);
                     </div>
                     <!-- Success and Error Message Alert -->
                     <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                            Maintenance or Other Expense added successfully!
+                            Maintenance or Operating Expense added successfully!
                     </div>  
                     <div id="editErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
                         <ul id="editErrorList"></ul>
@@ -631,7 +631,7 @@ $result = $conn->query($sql);
 
                     <!-- Other form fields -->
                     <div class="form-group">
-                        <label for="editMaintenanceTitle">Maintenance or Other Expense Title</label>
+                        <label for="editMaintenanceTitle">Maintenance or Operating Expense Title</label>
                         <input type="text" class="form-control" id="editMaintenanceTitle" name="title" required>
                     </div>
                     </div>
@@ -650,19 +650,19 @@ $result = $conn->query($sql);
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="archiveModalLabel">Archive Maintenance or Other Expense</h5>
+                            <h5 class="modal-title" id="archiveModalLabel">Archive Maintenance or Operating Expense</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <!-- Success Message Alert -->
                         <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                                Maintenance or Other Expense archived successfully!
+                                Maintenance or Operating Expense archived successfully!
                         </div>  
                         <!-- Error Message Alert -->
                         <div id="archiveErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
                             <ul id="archiveErrorList"></ul>
                         </div>
                         <div class="modal-body">
-                            Are you sure you want to archive this Maintence or Other Expense?
+                            Are you sure you want to archive this Maintence or Operating Expense?
                             <input type="hidden" id="archiveMaintenanceId">
                         </div>
                         <div class="modal-footer">

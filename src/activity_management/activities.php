@@ -443,17 +443,17 @@ $result = $conn->query($sql);
                     <table id="eventsTable" class="table">
                         <thead>
                             <tr>
-                                <th rowspan="2" class="table-light">Title</th>
-                                <th rowspan="2" class="table-light">Venue</th>
-                                <th colspan="2" style="text-align: center;" class="table-light">Date</th>
-                                <th rowspan="2" class="table-light">Type</th>
-                                <th rowspan="2" class="table-light">Status</th>
-                                <th rowspan="2" class="table-light">Accomplished</th>
-                                <th rowspan="2" class="table-light">Actions</th>
+                                <th rowspan="2" class="table-warning">Title</th>
+                                <th rowspan="2" class="table-warning">Venue</th>
+                                <th colspan="2" style="text-align: center;" class="table-warning">Date</th>
+                                <th rowspan="2" class="table-warning">Type</th>
+                                <th rowspan="2" class="table-warning">Status</th>
+                                <th rowspan="2" class="table-warning">Accomplished</th>
+                                <th rowspan="2" class="table-warning">Actions</th>
                             </tr>
                             <tr>
-                                <th class="table-light">Start</th>
-                                <th class="table-light">End</th>
+                                <th class="table-warning">Start</th>
+                                <th class="table-warning">End</th>
                             </tr>
                         </thead>
                         <tbody>
