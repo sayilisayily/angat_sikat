@@ -410,68 +410,28 @@ $result = $conn->query($sql);
             </header>
             <!--  Header End -->
 
-
             <style>
                 .table-responsive {
+                    max-height: 400px;
+                    overflow-y: auto; /* Enable vertical scrolling */
                     overflow-x: auto; /* Enable horizontal scrolling */
-                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-                    width: 100%; /* Ensure it takes full width */
                 }
 
-                table {
-                    width: 100%; /* Full width for the table */
-                    border-collapse: collapse; /* Collapse borders */
-                }
-
-                th, td {
-                    text-align: left; /* Align text to the left */
-                    padding: 12px; /* Padding for table cells */
-                }
-
-                th {
-                    background-color: #007bff; /* Header background color */
-                    color: white; /* Header text color */
-                }
-
-                .btn {
-                    font-size: 12px; /* Button font size */
-                }
-
-                @media (max-width: 768px) {
-                    .table-responsive {
-                        display: block; /* Ensure it's a block-level element */
-                        overflow-x: auto; /* Enable horizontal scrolling */
-                    }
-
-                    table {
-                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
-                    }
-
-                    th, td {
-                        white-space: nowrap; /* Prevent text wrapping in table cells */
-                    }
-                }
-
-                /* Custom Scrollbar Styles */
                 .table-responsive::-webkit-scrollbar {
-                    height: 8px; /* Height of horizontal scrollbar */
-                }
-
-                .table-responsive::-webkit-scrollbar-thumb {
-                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
-                    border-radius: 4px; /* Round edges of the scrollbar thumb */
-                }
-
-                .table-responsive::-webkit-scrollbar-thumb:hover {
-                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
+                    width: 8px; /* Width of the scrollbar */
                 }
 
                 .table-responsive::-webkit-scrollbar-track {
-                    background: transparent; /* Transparent track */
+                    background: transparent; /* Background of the scrollbar track */
                 }
 
-                .badge {
-                    font-size: 12px; /* Adjust badge font size */
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.2); /* Color of the scrollbar thumb */
+                    border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.5); /* Darker thumb on hover */
                 }
             </style>
 
@@ -484,7 +444,7 @@ $result = $conn->query($sql);
                             <tr>
                                 <th rowspan="2">Title</th>
                                 <th rowspan="2">Venue</th>
-                                <th colspan="2" style="text-align: center;"> Date </th>
+                                <th colspan="2" style="text-align: center;">Date</th>
                                 <th rowspan="2">Type</th>
                                 <th rowspan="2">Status</th>
                                 <th rowspan="2">Accomplished</th>
@@ -517,10 +477,7 @@ $result = $conn->query($sql);
                                     }
                                     echo "{$row['event_status']}</span></td>
                                             <td>
-                                                <input type='checkbox' 
-                                                class='form-check-input' 
-                                                $checked 
-                                                $disabled>
+                                                <input type='checkbox' class='form-check-input' $checked $disabled>
                                             </td>
                                             <td>
                                                 <button class='btn btn-primary btn-sm recover-btn mb-3' 

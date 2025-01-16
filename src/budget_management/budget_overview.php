@@ -507,16 +507,23 @@
                     @media (max-width: 768px) {
                         .chart-title {
                             font-size: 1.2em; /* Smaller title for mobile */
+                            margin-left:0px;
                         }
 
                         .chart-wrapper {
                             margin: 10px 0; /* Reduce margin for mobile */
+                            margin-left: 0;
                         }
 
-                        /* Ensure the charts fit the screen width */
-                        #budgetStructure, #budgetStatus {
-                            max-width: 90%; /* Use more width on mobile */
-                            height: auto; /* Allow height to adjust */
+                        /* Styles for mobile devices only */
+                        @media (max-width: 768px) {
+                            #drawBudgetStructureChart, #drawBudgetStatusChart {
+                                max-width: 90%; /* Use more width on mobile */
+                                height: auto; /* Allow height to adjust */
+                                margin: 0 auto; /* Center the charts */
+                                display: block; /* Ensure block display for centering */
+                                padding: 0 10px; /* Optional padding for aesthetics */
+                            }
                         }
                     }
                 </style>
@@ -565,7 +572,6 @@
                             pieSliceText: 'label',
                             legend: { position: 'top' },
                             height: 400, // Fixed height for better visibility
-                            width: '100%' // Responsive width
                         };
 
                         var chart = new google.visualization.PieChart(document.getElementById('budgetStructure'));
@@ -595,7 +601,6 @@
                             pieSliceText: 'label',
                             legend: { position: 'top' },
                             height: 400, // Fixed height for better visibility
-                            width: '100%' // Responsive width
                         };
 
                         var chart = new google.visualization.PieChart(document.getElementById('budgetStatus'));

@@ -397,146 +397,72 @@ $result = $conn->query($sql);
                 </nav>
             </header>
             <!--  Header End -->
-              <!--  links update -->
-        
-            <style>
-                html, body {
-                    height: 100%; /* Ensure the body and html take full height */
-                    margin: 0; /* Remove default margin */
-                }
 
-                .tablecontainer {
-                    padding: 1.5rem; /* Adjust padding */
-                    background-color: #f8f9fa; /* Light background for contrast */
-                    border-radius: 8px; /* Rounded corners */
-                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-                    overflow-y: auto; /* Enable vertical scrolling */
-                    max-height: calc(100vh - 100px); /* Set max height to fill the screen minus some space */
-                }
+            <div class="container mt-5">
+                <div class="tablecontainer" style="height: calc(100vh - 150px); overflow: hidden;">
+                    <h2 class="mb-4 d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-warning fw-bold me-2">|</span> Purchases
+                            <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addPurchaseModal"
+                                style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
+                                <i class="fa-solid fa-plus"></i> Add Purchase
+                            </button>
+                        </div>
+                        <a href="purchases_archive.php" class="text-gray text-decoration-none fw-bold" 
+                            style="font-size: 14px;">
+                            View Archive
+                        </a>
+                    </h2>
+                    <div class="table-responsive" style="height: 100%; overflow: auto;">
+                        <table id="purchasesTable" class="table" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Total Amount</th>
+                                    <th>Status</th>
+                                    <th>Completed</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                        $checked = $row['completion_status'] ? 'checked' : '';
+                                        $disabled = ($row['purchase_status'] !== 'Approved') ? 'disabled' : '';
+                                        echo "<tr>
+                                                <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='purchase_details.php?purchase_id={$row['purchase_id']}'>{$row['title']}</a></td>
+                                                <td>{$row['total_amount']}</td>
+                                                <td>";
+                                        
+                                        // Display purchase status with appropriate badge
+                                        if ($row['purchase_status'] == 'Pending') {
+                                            echo "<span class='badge rounded-pill pending'>Pending</span>";
+                                        } elseif ($row['purchase_status'] == 'Approved') {
+                                            echo "<span class='badge rounded-pill approved'>Approved</span>";
+                                        } elseif ($row['purchase_status'] == 'Disapproved') {
+                                            echo "<span class='badge rounded-pill disapproved'>Disapproved</span>";
+                                        }
 
-                .table-responsive {
-                    overflow-x: auto; /* Enable horizontal scrolling */
-                    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-                    width: 100%; /* Ensure it takes full width */
-                    height: auto; /* Allow height to adjust */
-                }
-
-                table {
-                    width: 100%; /* Full width for the table */
-                    border-collapse: collapse; /* Collapse borders */
-                }
-
-                th, td {
-                    text-align: left; /* Align text to the left */
-                    padding: 12px; /* Padding for table cells */
-                }
-
-                th {
-                    background-color: #007bff; /* Header background color */
-                    color: white; /* Header text color */
-                }
-
-                .btn {
-                    font-size: 12px; /* Button font size */
-                }
-
-                @media (max-width: 768px) {
-                    .table-responsive {
-                        display: block; /* Ensure it's a block-level element */
-                        overflow-x: auto; /* Enable horizontal scrolling */
-                    }
-
-                    table {
-                        min-width: 600px; /* Set a minimum width for the table to enable scrolling */
-                    }
-
-                    th, td {
-                        white-space: nowrap; /* Prevent text wrapping in table cells */
-                    }
-                }
-
-                /* Custom Scrollbar Styles */
-                .table-responsive::-webkit-scrollbar {
-                    height: 8px; /* Height of horizontal scrollbar */
-                }
-
-                .table-responsive::-webkit-scrollbar-thumb {
-                    background: rgba(0, 0, 0, 0.3); /* Color of the scrollbar thumb */
-                    border-radius: 4px; /* Round edges of the scrollbar thumb */
-                }
-
-                .table-responsive::-webkit-scrollbar-thumb:hover {
-                    background: rgba(0, 0, 0, 0.5); /* Darker on hover */
-                }
-
-                .table-responsive::-webkit-scrollbar-track {
-                    background: transparent; /* Transparent track */
-                }
-            </style>
-
-            <div class="container mt-5 p-5">
-                <h2 class="mb-4 d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-warning fw-bold me-2">|</span> Purchases
-                        <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addPurchaseModal"
-                            style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
-                            <i class="fa-solid fa-plus"></i> Add Purchase
-                        </button>
-                    </div>
-                    <a href="purchases_archive.php" class="text-gray text-decoration-none fw-bold" 
-                        style="font-size: 14px;">
-                        View Archive
-                    </a>
-                </h2>
-                <div class="table-responsive" style="max-height: 400px;">
-                    <table id="purchasesTable" class="table">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Total Amount</th>
-                                <th>Status</th>
-                                <th>Completed</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if ($result->num_rows > 0) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $checked = $row['completion_status'] ? 'checked' : '';
-                                    $disabled = ($row['purchase_status'] !== 'Approved') ? 'disabled' : '';
-                                    echo "<tr>
-                                            <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='purchase_details.php?purchase_id={$row['purchase_id']}'>{$row['title']}</a></td>
-                                            <td>{$row['total_amount']}</td>
-                                            <td>";
-                                    
-                                    // Display purchase status with appropriate badge
-                                    if ($row['purchase_status'] == 'Pending') {
-                                        echo "<span class='badge rounded-pill pending'>Pending</span>";
-                                    } elseif ($row['purchase_status'] == 'Approved') {
-                                        echo "<span class='badge rounded-pill approved'>Approved</span>";
-                                    } elseif ($row['purchase_status'] == 'Disapproved') {
-                                        echo "<span class='badge rounded-pill disapproved'>Disapproved</span>";
+                                        echo "</td>
+                                            <td>
+                                                <input type='checkbox' class='form-check-input' onclick='showConfirmationModal({$row['purchase_id']}, this.checked)' $checked $disabled>
+                                            </td>
+                                            <td>
+                                                <button class='btn btn-primary btn-sm edit-btn mb-3' data-bs-toggle='modal' data-bs-target='#editPurchaseModal' data-id='{$row['purchase_id']}'>
+                                                    <i class='fa-solid fa-pen'></i> Edit
+                                                </button>
+                                                <button class='btn btn-danger btn-sm archive-btn mb-3' data-id='{$row['purchase_id']}'><i class='fa-solid fa-box-archive'></i> Archive</button>
+                                            </td>
+                                            </tr>";
                                     }
-
-                                    echo "</td>
-                                        <td>
-                                            <input type='checkbox' class='form-check-input' onclick='showConfirmationModal({$row['purchase_id']}, this.checked)' $checked $disabled>
-                                        </td>
-                                        <td>
-                                            <button class='btn btn-primary btn-sm edit-btn mb-3' data-bs-toggle='modal' data-bs-target='#editPurchaseModal' data-id='{$row['purchase_id']}'>
-                                                <i class='fa-solid fa-pen'></i> Edit
-                                            </button>
-                                            <button class='btn btn-danger btn-sm archive-btn mb-3' data-id='{$row['purchase_id']}'><i class='fa-solid fa-box-archive'></i> Archive</button>
-                                        </td>
-                                        </tr>";
+                                } else {
+                                    echo "<tr><td colspan='5' class='text-center'>No purchases found</td></tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='5' class='text-center'>No purchases found</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
