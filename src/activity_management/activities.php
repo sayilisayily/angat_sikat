@@ -628,9 +628,26 @@ $result = $conn->query($sql);
                                         </select>
                                     </div>
                                     <div class="col">
-                                        <label for="venue">Venue <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
-                                        <input type="text" class="form-control" id="venue" name="venue">
-                                    </div>
+                                    <label for="venue">Venue <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <select class="form-control" id="venue" name="venue" required>
+                                        <option value="" disabled selected>Select a venue</option>
+                                        <?php
+                                        // Fetch venues from the database
+                                        $query = "SELECT venue_name FROM venues";
+                                        $result = mysqli_query($conn, $query);
+
+                                        // Populate the options dynamically
+                                        if ($result && mysqli_num_rows($result) > 0) {
+                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                echo '<option value="' . $row['venue_name'] . '">' . $row['venue_name'] . '</option>';
+                                            }
+                                        } else {
+                                            echo '<option value="" disabled>No venues available</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+
                                 </div>
                                 <div class="form-group row mb-2">
                                     <div class="col">
@@ -692,7 +709,23 @@ $result = $conn->query($sql);
                                     </div>
                                     <div class="col">
                                         <label for="editEventVenue">Event Venue</label>
-                                        <input type="text" class="form-control" id="editEventVenue" name="event_venue" required>
+                                        <select class="form-control" id="editEventVenue" name="event_venue" required>
+                                            <option value="" disabled selected>Select a venue</option>
+                                            <?php
+                                            // Fetch venues from the database
+                                            $query = "SELECT venue_name FROM venues";
+                                            $result = mysqli_query($conn, $query);
+
+                                            // Populate the options dynamically
+                                            if ($result && mysqli_num_rows($result) > 0) {
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    echo '<option value="' . $row['venue_name'] . '">' . $row['venue_name'] . '</option>';
+                                                }
+                                            } else {
+                                                echo '<option value="" disabled>No venues available</option>';
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row mb-2">
