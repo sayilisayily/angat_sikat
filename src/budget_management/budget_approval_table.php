@@ -396,11 +396,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
             <!--  Header End -->
 
             <style>
-                html, body {
-                    height: 100%; /* Ensure the body and html take full height */
-                    margin: 0; /* Remove default margin */
-                }
-
                 .table-responsive {
                     overflow-x: auto; /* Enable horizontal scrolling */
                     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
@@ -445,6 +440,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                 /* Custom Scrollbar Styles */
                 .table-responsive::-webkit-scrollbar {
                     height: 8px; /* Height of horizontal scrollbar */
+                    width: 8px; /* Height of vertical scrollbar */
                 }
 
                 .table-responsive::-webkit-scrollbar-thumb {
