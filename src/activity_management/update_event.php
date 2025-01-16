@@ -1,6 +1,7 @@
 <?php
 // Include database connection
 include('connection.php');
+include '../session_check.php';
 
 // Initialize an array to hold validation errors
 $errors = [];
@@ -13,9 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $title = mysqli_real_escape_string($conn, $_POST['title']); // Correctly set $title here
         $event_id = mysqli_real_escape_string($conn, $_POST['event_id']); // Set $event_id for use
-
         // Check for duplicate event title
-        $query = "SELECT * FROM events WHERE title = '$title' AND event_id != '$event_id'";
+        $query = "SELECT * FROM events WHERE title = '$title' AND event_id != '$event_id' AND organization_id = $organization_id";
         $result = mysqli_query($conn, $query);
 
         if (mysqli_num_rows($result) > 0) {
@@ -41,13 +41,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $end_date = mysqli_real_escape_string($conn, $_POST['event_end_date']);
     }
 
-    if ((strtotime($_POST['event_start_date'])) > (strtotime($_POST['event_end_date'])))
-    {
+    if ((strtotime($_POST['event_start_date'])) > (strtotime($_POST['event_end_date']))) {
         $errors['date'] = 'Invalid event start and end date.';
     }
 
     $type = mysqli_real_escape_string($conn, $_POST['event_type']);
-    $accomplishment_status = (int)$_POST['accomplishment_status'];
+
+    // Check for duplicate event start date and venue where status = Approved
+    $check_query = "SELECT * FROM events 
+                    WHERE event_start_date = '$start_date' 
+                      AND event_venue = '$venue' 
+                      AND event_status = 'Approved'
+                      AND event_id != '$event_id'";
+    $check_result = mysqli_query($conn, $check_query);
+
+    if (mysqli_num_rows($check_result) > 0) {
+        $errors['conflict'] = 'An event with the same start date and venue already exists and is approved.';
+    }
 
     // If there are validation errors, return them
     if (!empty($errors)) {
@@ -60,8 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     event_venue = '$venue', 
                     event_start_date = '$start_date', 
                     event_end_date = '$end_date', 
-                    event_type = '$type', 
-                    accomplishment_status = $accomplishment_status 
+                    event_type = '$type'
                   WHERE event_id = '$event_id'";
 
         if (mysqli_query($conn, $query)) {
@@ -72,8 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data['errors'] = ['database' => 'Failed to update event in the database.'];
         }
     }
-
-    
 }
 
 echo json_encode($data);
