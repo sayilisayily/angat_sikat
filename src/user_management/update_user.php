@@ -37,9 +37,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bind_param("ssi", $username, $email, $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
+    
 
     if ($result->num_rows > 0) {
         $errors[] = "Username or email is already taken.";
+    }
+
+        // Check if President or Treasurer already exists in the organization
+    if ($position === 'President' || $position === 'Treasurer') {
+        $query = "SELECT * FROM users WHERE position = '$position' AND organization_id = '$organization'";
+        $result = mysqli_query($conn, $query);
+        if (mysqli_num_rows($result) > 0) {
+            $errors[] = "There is already a $position for this organization.";
+        }
     }
 
     // If no errors, proceed with update

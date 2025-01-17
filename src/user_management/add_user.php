@@ -48,6 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = "Username or email is already taken.";
     }
 
+    // Check if President or Treasurer already exists in the organization
+    if ($position === 'President' || $position === 'Treasurer') {
+        $query = "SELECT * FROM users WHERE position = '$position' AND organization_id = '$organization'";
+        $result = mysqli_query($conn, $query);
+        if (mysqli_num_rows($result) > 0) {
+            $errors[] = "There is already a $position for this organization.";
+        }
+    }
+
     // If no errors, proceed with insertion
     if (!empty($errors)) {
         $data['success'] = false;
