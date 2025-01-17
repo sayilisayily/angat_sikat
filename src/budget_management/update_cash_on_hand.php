@@ -1,6 +1,7 @@
 <?php
 // Include database connection
 include('connection.php');
+include '../session_check.php';
 
 // Initialize an array to hold validation errors
 $errors = [];
@@ -21,6 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors['cash_on_hand'] = 'Please enter an amount to add or subtract.';
     }
 
+    // Validate file upload (reference)
+    if (isset($_FILES['reference']) && $_FILES['reference']['error'] === UPLOAD_ERR_OK) {
+        $uploaded_file_path = 'uploads/references' . basename($_FILES['reference']['name']);
+        move_uploaded_file($_FILES['reference']['tmp_name'], $uploaded_file_path);
+    } else {
+        $errors['reference'] = 'File upload failed or not provided.';
+    }
+
     // If there are validation errors, return early
     if (!empty($errors)) {
         $data['success'] = false;
@@ -31,6 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Sanitize and assign variables
     $organization_id = (int)$_POST['organization_id'];
+    $reference = $uploaded_file_path; // File path for reference
+    $created_by = $user_id;
 
     // Fetch current cash_on_hand, cash_on_bank, and balance from the database
     $fetch_query = "SELECT cash_on_hand, cash_on_bank, balance FROM organizations WHERE organization_id = ?";
@@ -64,12 +75,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $update_stmt->bind_param('di', $new_cash_on_hand, $organization_id);
 
                 if ($update_stmt->execute()) {
-                    $data['success'] = true;
-                    $data['message'] = 'Cash on Hand updated successfully!';
+                    // Log the transaction in cash_on_hand_history table
+                    $history_query = "INSERT INTO cash_on_hand_history (organization_id, amount, reference, updated_at, created_by) VALUES (?, ?, ?, NOW(), ?)";
+                    $history_stmt = $conn->prepare($history_query);
+
+                    if ($history_stmt) {
+                        $amount = $add_cash_on_hand - $subtract_cash_on_hand; // Net change in cash_on_hand
+                        $history_stmt->bind_param('idss', $organization_id, $amount, $reference, $created_by);
+
+                        if ($history_stmt->execute()) {
+                            $data['success'] = true;
+                            $data['message'] = 'Cash on Hand updated successfully, and transaction logged!';
+                        } else {
+                            $data['success'] = false;
+                            $data['errors'] = ['database' => 'Failed to log transaction in history table.'];
+                        }
+
+                        $history_stmt->close();
+                    } else {
+                        $data['success'] = false;
+                        $data['errors'] = ['database' => 'Failed to prepare the insert statement for history table.'];
+                    }
                 } else {
                     $data['success'] = false;
                     $data['errors'] = ['database' => 'Failed to update Cash on Hand in the database.'];
                 }
+
                 $update_stmt->close();
             } else {
                 $data['success'] = false;

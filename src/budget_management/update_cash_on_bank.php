@@ -1,6 +1,7 @@
 <?php
 // Include database connection
 include('connection.php');
+include '../session_check.php'; // Assuming you are using session for `created_by`
 
 // Initialize an array to hold validation errors
 $errors = [];
@@ -20,6 +21,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Ensure at least one field (add or subtract) is provided
     if ($add_cash_on_bank === 0 && $subtract_cash_on_bank === 0) {
         $errors['cash_on_bank'] = 'Please enter an amount to add or subtract.';
+    }
+
+    // Validate file upload for reference
+    $reference = $_FILES['reference'] ?? null;
+    if ($reference['error'] !== UPLOAD_ERR_OK) {
+        $errors['reference'] = 'Failed to upload the reference file.';
+    } else {
+        $allowed_extensions = ['pdf', 'jpg', 'png', 'docx'];
+        $file_extension = pathinfo($reference['name'], PATHINFO_EXTENSION);
+
+        if (!in_array(strtolower($file_extension), $allowed_extensions)) {
+            $errors['reference'] = 'Only PDF, JPG, PNG, and DOCX files are allowed.';
+        }
     }
 
     // If there are errors, return early
@@ -57,6 +71,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data['success'] = false;
             $data['errors'] = $errors;
         } else {
+            // Handle file upload for reference
+            $reference_filename = uniqid('ref_') . '.' . $file_extension;
+            $upload_dir = 'uploads/references/';
+
+            if (!move_uploaded_file($reference['tmp_name'], $upload_dir . $reference_filename)) {
+                $data['success'] = false;
+                $data['errors'] = ['file_upload' => 'Failed to save the reference file.'];
+                echo json_encode($data);
+                exit;
+            }
+
             // Proceed with the update if validations pass
             $update_query = "UPDATE organizations SET cash_on_bank = ? WHERE organization_id = ?";
             $update_stmt = $conn->prepare($update_query);
@@ -65,8 +90,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $update_stmt->bind_param('di', $new_cash_on_bank, $organization_id);
 
                 if ($update_stmt->execute()) {
-                    $data['success'] = true;
-                    $data['message'] = 'Cash on Bank updated successfully!';
+                    // Insert into cash_on_bank_history table
+                    $insert_history_query = "
+                        INSERT INTO cash_on_bank_history (organization_id, amount, reference, updated_at, created_by) 
+                        VALUES (?, ?, ?, NOW(), ?)";
+                    $insert_history_stmt = $conn->prepare($insert_history_query);
+
+                    if ($insert_history_stmt) {
+                        $created_by = $user_id; // Assuming the user ID is stored in the session
+                        $amount = $add_cash_on_bank - $subtract_cash_on_bank; // Net change in cash on bank
+                        $insert_history_stmt->bind_param('idss', $organization_id, $amount, $reference_filename, $created_by);
+
+                        if ($insert_history_stmt->execute()) {
+                            $data['success'] = true;
+                            $data['message'] = 'Cash on Bank updated successfully and history recorded!';
+                        } else {
+                            $data['success'] = false;
+                            $data['errors'] = ['history' => 'Failed to insert history record.'];
+                        }
+
+                        $insert_history_stmt->close();
+                    } else {
+                        $data['success'] = false;
+                        $data['errors'] = ['history' => 'Failed to prepare the history insert statement.'];
+                    }
                 } else {
                     $data['success'] = false;
                     $data['errors'] = ['database' => 'Failed to update Cash on Bank in the database.'];
