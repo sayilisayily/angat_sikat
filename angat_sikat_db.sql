@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 16, 2025 at 06:14 PM
+-- Generation Time: Jan 17, 2025 at 01:07 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -83,6 +83,21 @@ INSERT INTO `balance_history` (`history_id`, `organization_id`, `balance`, `upda
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `beginning_balance_history`
+--
+
+CREATE TABLE `beginning_balance_history` (
+  `id` int(11) NOT NULL,
+  `organization_id` int(11) NOT NULL,
+  `reference` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_by` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `budget_allocation`
 --
 
@@ -145,6 +160,36 @@ INSERT INTO `budget_approvals` (`approval_id`, `title`, `category`, `attachment`
 (15, 'Merchandise Sale', 'Activities', 'example_014.pdf', 'Approved', 3, '2025-01-15 10:02:12', 0),
 (16, 'Accreditation', 'Activities', 'Budget_Request_Podcast_January 14, 2025.pdf', 'Approved', 1, '2025-01-15 10:43:36', 0),
 (17, 'TechSpark', 'Activities', 'Budget_Request_TechSpark_January 15, 2025.pdf', 'Approved', 1, '2025-01-15 11:09:52', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cash_on_bank_history`
+--
+
+CREATE TABLE `cash_on_bank_history` (
+  `id` int(11) NOT NULL,
+  `organization_id` int(11) NOT NULL,
+  `reference` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_by` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cash_on_hand_history`
+--
+
+CREATE TABLE `cash_on_hand_history` (
+  `id` int(11) NOT NULL,
+  `organization_id` int(11) NOT NULL,
+  `reference` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `created_by` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -299,6 +344,13 @@ CREATE TABLE `event_summary_items` (
   `date` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `event_summary_items`
+--
+
+INSERT INTO `event_summary_items` (`summary_item_id`, `event_id`, `description`, `quantity`, `unit`, `amount`, `profit`, `total_amount`, `total_profit`, `reference`, `date`) VALUES
+(29, 11, 'food', 10, 0, 60.00, 0.00, 600.00, 0.00, 'basic-basic-receipt-template.pdf', '2025-01-18');
+
 -- --------------------------------------------------------
 
 --
@@ -393,7 +445,6 @@ INSERT INTO `financial_plan` (`plan_id`, `title`, `category`, `organization_id`,
 (15, 'Merchandise Sale', '', 3, 'Income', '2025-01-16', 5000.00),
 (16, 'Accreditation', 'Activities', 1, 'Expense', '2025-01-17', 5000.00),
 (17, 'TechSpark', 'Activities', 1, 'Expense', '2025-01-17', 2000.00),
-(18, 'Test Event', 'Activities', 3, 'Expense', '2025-01-18', 10000.00),
 (19, 'Transportation', 'Maintenance and Other Expenses', 1, 'Expense', '0000-00-00', 1000.00);
 
 -- --------------------------------------------------------
@@ -852,6 +903,14 @@ ALTER TABLE `balance_history`
   ADD KEY `organization_id` (`organization_id`);
 
 --
+-- Indexes for table `beginning_balance_history`
+--
+ALTER TABLE `beginning_balance_history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `organization_id` (`organization_id`),
+  ADD KEY `created_by` (`created_by`);
+
+--
 -- Indexes for table `budget_allocation`
 --
 ALTER TABLE `budget_allocation`
@@ -864,6 +923,22 @@ ALTER TABLE `budget_allocation`
 ALTER TABLE `budget_approvals`
   ADD PRIMARY KEY (`approval_id`),
   ADD KEY `fk_organization` (`organization_id`);
+
+--
+-- Indexes for table `cash_on_bank_history`
+--
+ALTER TABLE `cash_on_bank_history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `organization_id` (`organization_id`),
+  ADD KEY `created_by` (`created_by`);
+
+--
+-- Indexes for table `cash_on_hand_history`
+--
+ALTER TABLE `cash_on_hand_history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `organization_id` (`organization_id`),
+  ADD KEY `created_by` (`created_by`);
 
 --
 -- Indexes for table `categories`
@@ -1062,6 +1137,12 @@ ALTER TABLE `balance_history`
   MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
+-- AUTO_INCREMENT for table `beginning_balance_history`
+--
+ALTER TABLE `beginning_balance_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `budget_allocation`
 --
 ALTER TABLE `budget_allocation`
@@ -1072,6 +1153,18 @@ ALTER TABLE `budget_allocation`
 --
 ALTER TABLE `budget_approvals`
   MODIFY `approval_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- AUTO_INCREMENT for table `cash_on_bank_history`
+--
+ALTER TABLE `cash_on_bank_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cash_on_hand_history`
+--
+ALTER TABLE `cash_on_hand_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -1101,7 +1194,7 @@ ALTER TABLE `event_items`
 -- AUTO_INCREMENT for table `event_summary_items`
 --
 ALTER TABLE `event_summary_items`
-  MODIFY `summary_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `summary_item_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `expenses`
@@ -1240,6 +1333,13 @@ ALTER TABLE `balance_history`
   ADD CONSTRAINT `balance_history_ibfk_1` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`organization_id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `beginning_balance_history`
+--
+ALTER TABLE `beginning_balance_history`
+  ADD CONSTRAINT `beginning_balance_history_ibfk_1` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`organization_id`),
+  ADD CONSTRAINT `beginning_balance_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`user_id`);
+
+--
 -- Constraints for table `budget_allocation`
 --
 ALTER TABLE `budget_allocation`
@@ -1250,6 +1350,20 @@ ALTER TABLE `budget_allocation`
 --
 ALTER TABLE `budget_approvals`
   ADD CONSTRAINT `fk_organization` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`organization_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `cash_on_bank_history`
+--
+ALTER TABLE `cash_on_bank_history`
+  ADD CONSTRAINT `cash_on_bank_history_ibfk_1` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`organization_id`),
+  ADD CONSTRAINT `cash_on_bank_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `cash_on_hand_history`
+--
+ALTER TABLE `cash_on_hand_history`
+  ADD CONSTRAINT `cash_on_hand_history_ibfk_1` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`organization_id`),
+  ADD CONSTRAINT `cash_on_hand_history_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`user_id`);
 
 --
 -- Constraints for table `events`
