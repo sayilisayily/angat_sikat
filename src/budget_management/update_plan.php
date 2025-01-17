@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Check for duplicate titles (excluding current plan)
-    $duplicate_query = "SELECT * FROM financial_plan WHERE title = '$title' AND plan_id != '$plan_id'";
+    $duplicate_query = "SELECT * FROM financial_plan WHERE title = '$title' AND plan_id != '$plan_id' AND organization_id = $organization_id";
     $duplicate_result = mysqli_query($conn, $duplicate_query);
     if ($duplicate_result && mysqli_num_rows($duplicate_result) > 0) {
         $errors[] = 'A plan with this title already exists.';
