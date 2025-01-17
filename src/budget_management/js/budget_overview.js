@@ -118,11 +118,14 @@ $(document).ready(function () {
   // Submit Beginning Balance Form
   $("#editBeginningBalanceForm").on("submit", function (e) {
     e.preventDefault();
+    let formData = new FormData(this);
 
     $.ajax({
       url: "update_beginning_balance.php", // PHP script to update the balance
       type: "POST",
-      data: $(this).serialize(),
+      data: formData, // Use formData object
+      contentType: false, // Important for file upload
+      processData: false, // Important for file upload
       success: function (response) {
         try {
           // Parse the JSON response (ensure it's valid JSON)
@@ -167,11 +170,14 @@ $(document).ready(function () {
   // Submit Cash on Hand form
   $("#editCashOnBankForm").on("submit", function (e) {
     e.preventDefault();
+    let formData = new FormData(this);
 
     $.ajax({
       url: "update_cash_on_bank.php",
       type: "POST",
-      data: (form_data = $(this).serialize()),
+      data: formData, // Use formData object
+      contentType: false, // Important for file upload
+      processData: false, // Important for file upload
       success: function (response) {
         try {
           // Parse the JSON response (ensure it's valid JSON)
@@ -217,11 +223,14 @@ $(document).ready(function () {
 // Submit Cash on Hand form
 $("#editCashOnHandForm").on("submit", function (e) {
   e.preventDefault();
+  let formData = new FormData(this);
 
   $.ajax({
     url: "update_cash_on_hand.php",
     type: "POST",
-    data: (form_data = $(this).serialize()),
+    data: formData, // Use formData object
+    contentType: false, // Important for file upload
+    processData: false, // Important for file upload
     success: function (response) {
       try {
         // Parse the JSON response (ensure it's valid JSON)

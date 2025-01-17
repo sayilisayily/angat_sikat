@@ -711,9 +711,9 @@
                                 <ul id="errorList1"></ul>
                             </div>
                         <div class="modal-body">
-                            <form id="editBeginningBalanceForm">
+                            <form id="editBeginningBalanceForm"  enctype="multipart/form-data">
                                 <!-- Current Beginning Balance (Readonly) -->
-                                <div class="mb-3">
+                                <div class="form-group mb-3">
                                     <label for="currentBeginningBalance" class="form-label">Beginning Balance</label>
                                     <input type="number" step="0.01" class="form-control" id="currentBeginningBalance" 
                                         name="current_beginning_balance" value="<?php echo $beginning_balance; ?>" readonly>
@@ -733,6 +733,10 @@
                                             <input type="number" step="0.01" class="form-control" id="subtractAmount" name="subtract_amount" placeholder="Subtract Amount">
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                            <label for="beginning_balance_reference" class="form-label">Reference</label>
+                                            <input type="file" class="form-control" id="beginning_balance_reference" name="reference" required>
                                 </div>
 
                                 <!-- Hidden Organization ID -->
@@ -764,7 +768,7 @@
                                 <ul id="errorList2"></ul> <!-- List for showing validation errors -->
                             </div>
                         <div class="modal-body">
-                            <form id="editCashOnBankForm">
+                            <form id="editCashOnBankForm" enctype="multipart/form-data">
                                 <!-- Current Cash on Bank (Readonly) -->
                                 <div class="mb-3">
                                     <label for="currentCashOnBank" class="form-label">Current Cash on Bank</label>
@@ -784,6 +788,11 @@
                                             <input type="number" step="0.01" class="form-control" id="subtractCashOnBank" name="subtract_cash_on_bank" placeholder="Subtract Amount">
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                            <label for="cash_on_bank_reference" class="form-label">Reference</label>
+                                            <input type="file" class="form-control" id="cash_on_bank_reference" name="reference" required>
                                 </div>
                                 <input type="hidden" name="organization_id" value="<?php echo $organization_id; ?>">
                             </form>
@@ -814,7 +823,7 @@
                                 <ul id="errorList3"></ul> <!-- List for showing validation errors -->
                             </div>
                         <div class="modal-body">
-                            <form id="editCashOnHandForm">
+                            <form id="editCashOnHandForm" enctype="multipart/form-data">
                                 <!-- Current Cash on Hand (Readonly) -->
                                 <div class="mb-3">
                                     <label for="currentCashOnHand" class="form-label">Current Cash on Hand</label>
@@ -834,6 +843,10 @@
                                             <input type="number" step="0.01" class="form-control" id="subtractCashOnHand" name="subtract_cash_on_hand" placeholder="Subtract Amount">
                                         </div>
                                     </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                            <label for="cash_on_hand_reference" class="form-label">Reference</label>
+                                            <input type="file" class="form-control" id="cash_on_hand_reference" name="reference" required>
                                 </div>
                                 <input type="hidden" name="organization_id" value="<?php echo $organization_id; ?>">
                             </form>
