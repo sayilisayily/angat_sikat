@@ -327,6 +327,8 @@ $html .= '</table>';
 // Output the table to the PDF using writeHTML
 $pdf->writeHTML($html, true, false, true, false, '');
 
+$pdf->SetMargins(25.4, 25.4, 25.4); 
+
 // X. IMPLEMENTING GUIDELINES
 $pdf->Ln(10); // Add space before the section
 $pdf->SetFont($arialBold, '', 11);
