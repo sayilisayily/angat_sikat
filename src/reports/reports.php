@@ -586,7 +586,7 @@
                                         </div>
                                         <?php
                                         // Fetch organization names
-                                        $org_query = "SELECT organization_name, organization_id FROM organizations";
+                                        $org_query = "SELECT organization_name, organization_id FROM organizations WHERE organization_id != $organization_id";
                                         $org_result = mysqli_query($conn, $org_query);
 
                                         if ($org_result && mysqli_num_rows($org_result) > 0) {
