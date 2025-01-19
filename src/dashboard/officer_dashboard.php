@@ -745,7 +745,7 @@ include '../organization_query.php';
                     </div>
 
                     <!-- Organization Info Box -->
-                    <div class="organization-card p-4 rounded shadow-sm bg-white border mb-4">
+                    <div class="organization-card p-4 rounded shadow-sm bg-white border mb-4 mx-2">
                         <div class="d-flex flex-column flex-md-row align-items-start">
                             <img class="organization-logo me-3 mb-3 mb-md-0"
                                 src="<?= !empty($org_logo) ? '../organization_management/uploads/' . $org_logo : '../organization_management/uploads/default_logo.png' ?>"
@@ -1446,6 +1446,7 @@ include '../organization_query.php';
                                     background-color: #e0a800;
                                 }
                             </style>
+                    
 
                             <!-- Calendar Box -->
                             <div class="col-md-4">
@@ -1520,9 +1521,62 @@ include '../organization_query.php';
                                     </div>
 
                                     <!-- Days Container -->
-                                    <div id="days" class="days"></div>
+                                    <div id="days" class="days transparent-days"></div>
                                 </div>
                             </div>
+
+
+<!-- JavaScript -->
+<script>
+    let currentDate = new Date();
+
+    function renderCalendar() {
+        const month = currentDate.getMonth();
+        const year = currentDate.getFullYear();
+
+        // Update displayed month and year in the dropdown buttons
+        document.getElementById('selectedMonth').textContent = currentDate.toLocaleString('default', { month: 'long' });
+        document.getElementById('selectedYear').textContent = year;
+
+        // Clear previous days
+        const daysContainer = document.getElementById('days');
+        daysContainer.innerHTML = '';
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const lastDay = new Date(year, month + 1, 0).getDate();
+
+        // Blank days before the first day of the month
+        for (let i = 0; i < firstDay; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.className = 'day empty';
+            daysContainer.appendChild(emptyDay);
+        }
+
+        // Days of the month
+        for (let i = 1; i <= lastDay; i++) {
+            const day = document.createElement('div');
+            day.className = 'day';
+            day.textContent = i;
+            day.addEventListener('click', () => selectDay(i));
+            daysContainer.appendChild(day);
+        }
+    }
+
+    function selectMonth(event, month) {
+        event.preventDefault(); // Prevents the page from scrolling to the top
+        currentDate.setMonth(month);
+        renderCalendar();
+    }
+
+    function selectYear(event, year) {
+        event.preventDefault(); // Prevents the page from scrolling to the top
+        currentDate.setFullYear(year);
+        renderCalendar();
+    }
+
+    // Initial render
+    renderCalendar();
+</script>
 
                             <!-- CSS for Scrollable Dropdown -->
                             <style>
