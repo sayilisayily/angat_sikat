@@ -407,162 +407,90 @@ include '../organization_query.php';
             <!--  Header End -->
                        
             <div class="container mt-4">
-                <h2>Activities</h2>
-                <div id="calendar"></div>
-            </div>
+    <h2>Activities</h2>
+    <div class="calendar-container">
+        <div id="calendar"></div>
+    </div>
+</div>
 
-            <!-- FullCalendar JS -->
-            <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<!-- FullCalendar JS -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 
-            <script>
-                $(document).ready(function () {
-                    display_events();
-                });
+<style>
+    /* Set a container for the calendar with a background image */
+    .calendar-container {
+        position: relative;
+        background-image: url('default_logo.png'); /* Replace 'your-image-path.jpg' with your image URL */
+        background-size: calc(100% - 5px) auto; /* Adjust height dynamically by reducing 5px */
+        background-position: center;
+        border-radius: 10px; /* Optional: Add rounded corners */
+        overflow: hidden; /* Ensures the calendar stays within the container bounds */
+        padding: 10px; /* Add padding to space out the calendar content */
+    }
 
-                function display_events() {
-                var events = new Array();
-                $.ajax({
-                    url: 'display_event.php',
-                    dataType: 'json',
-                    success: function (response) {
-                        var result = response.data;
-                        $.each(result, function (i, item) {
-                            events.push({
-                                event_id: result[i].event_id,
-                                title: result[i].title,
-                                start: result[i].start,
-                                end: result[i].end,
-                                color: result[i].color
-                            });
-                        });
+    /* Set the calendar's transparency */
+    #calendar {
+        background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white background */
+        color: #000; /* Ensures text remains visible */
+        border-radius: 10px; /* Matches container corners */
+    }
 
-                        // Calendar
-                        var calendar = $('#calendar').fullCalendar({
-                            header: {
-                                left: 'prev,next today', // Add navigation buttons
-                                center: 'title',
-                                right: 'month,agendaWeek,agendaDay' // Toggle buttons for month, week, and day views
-                            },
-                            initialView: 'month',
-                            timeZone: 'local',
-                            disableDragging: true,
-                            selectable: true,
-                            selectHelper: true,
-                            select: function (start, end) {
-                                $('#event_start_date').val(moment(start).format('YYYY-MM-DD'));
-                                $('#event_end_date').val(moment(end).format('YYYY-MM-DD'));
-                            },
-                            events: events
-                        }); // End of fullCalendar block
-                    }, // End of success block
-                    error: function (xhr, status) {
-                        alert("An error occurred while loading events.");
-                    }
-                }); // End of ajax block
-            }
+    /* Optional: Style FullCalendar header to stand out */
+    .fc-header-toolbar {
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 10px;
+    }
+</style>
 
 
-                                
-                const notificationBtn = document.getElementById("notificationBtn");
-                const notificationDropdown = document.getElementById("notificationDropdown");
-                const notificationList = document.getElementById("notificationList");
-                const notificationCount = document.getElementById("notificationCount");
-                const noNotifications = document.getElementById("noNotifications");
+<script>
+    $(document).ready(function () {
+        display_events();
+    });
 
-                // Toggle Dropdown Visibility
-                notificationBtn.addEventListener("click", () => {
-                const isVisible = notificationDropdown.style.display === "block";
-                notificationDropdown.style.display = isVisible ? "none" : "block";
-                });
-
-                // Load Notifications Dynamically
-                function loadNotifications() {
-                fetch("../get_notifications.php")
-                    .then((response) => response.json())
-                    .then((data) => {
-                    notificationList.innerHTML = ""; // Clear existing notifications
-                    if (data.length > 0) {
-                        data.forEach((notification) => {
-                        const notificationItem = document.createElement("div");
-                        notificationItem.classList.add("notification-item");
-                        notificationItem.style.padding = "10px";
-                        notificationItem.style.borderBottom = "1px solid #ccc";
-                        notificationItem.textContent = notification.message;
-
-                        // Add data-id attribute for the notification ID
-                        notificationItem.dataset.id = notification.id;
-
-                        // Attach click event to mark as read
-                        notificationItem.addEventListener("click", () => {
-                            markAsRead(notification.id);
-                            notificationItem.style.opacity = 0.5; // Visual indicator (optional)
-                        });
-
-                        notificationList.appendChild(notificationItem);
-                        });
-
-                        notificationCount.textContent = data.length;
-                        notificationCount.style.display = "inline-block";
-                        noNotifications.style.display = "none";
-                    } else {
-                        noNotifications.style.display = "block";
-                        notificationCount.style.display = "none";
-                    }
-                    })
-                    .catch((error) => {
-                    console.error("Error loading notifications:", error);
+    function display_events() {
+        var events = new Array();
+        $.ajax({
+            url: 'display_event.php',
+            dataType: 'json',
+            success: function (response) {
+                var result = response.data;
+                $.each(result, function (i, item) {
+                    events.push({
+                        event_id: result[i].event_id,
+                        title: result[i].title,
+                        start: result[i].start,
+                        end: result[i].end,
+                        color: result[i].color
                     });
-                }
-
-                function updateNotificationCount() {
-                const currentCount = parseInt(notificationCount.textContent, 10) || 0;
-                if (currentCount > 0) {
-                    notificationCount.textContent = currentCount - 1;
-                    if (currentCount - 1 === 0) {
-                    notificationCount.style.display = "none";
-                    noNotifications.style.display = "block";
-                    }
-                }
-                }
-
-                // Initial Load
-                loadNotifications();
-
-                // Optionally, refresh notifications periodically (e.g., every 30 seconds)
-                setInterval(loadNotifications, 30000);
-
-                // Close dropdown if clicked outside
-                document.addEventListener("click", (e) => {
-                if (
-                    !notificationBtn.contains(e.target) &&
-                    !notificationDropdown.contains(e.target)
-                ) {
-                    notificationDropdown.style.display = "none";
-                }
                 });
 
-                // Function to mark a notification as read
-                async function markAsRead(notificationId) {
-                try {
-                    await fetch("../notification_read.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
+                // Calendar
+                var calendar = $('#calendar').fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
                     },
-                    body: JSON.stringify({ id: notificationId }),
-                    });
-
-                    // Optional: update notification count after marking as read
-                    updateNotificationCount();
-                } catch (error) {
-                    console.error("Error marking notification as read:", error);
-                }
-                }
-
-
-            </script>
-        </div>
-    </div>        
+                    initialView: 'month',
+                    timeZone: 'local',
+                    disableDragging: true,
+                    selectable: true,
+                    selectHelper: true,
+                    select: function (start, end) {
+                        $('#event_start_date').val(moment(start).format('YYYY-MM-DD'));
+                        $('#event_end_date').val(moment(end).format('YYYY-MM-DD'));
+                    },
+                    events: events
+                });
+            },
+            error: function (xhr, status) {
+                alert("An error occurred while loading events.");
+            }
+        });
+    }
+</script>
+   
 </body>
 
 </html>

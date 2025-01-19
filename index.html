@@ -1,229 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Angat Sikat Web App</title>
-    <link
-      rel="shortcut icon"
-      type="image/png"
-      href="src/assets/images/logos/neon_sikat.png"
-    />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        height: 100vh;
-        position: relative;
-        color: #ffffff;
-      }
 
-      body::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: url("src/user/CCAT-Campus-Scaled.jpg");
-        background-size: cover;
-        background-position: center;
-        filter: blur(8px);
-        z-index: 1;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Angat Sikat Web App</title>
+  <link rel="shortcut icon" type="image/png" href="src/assets/images/logos/neon_sikat.png" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100vh;
+      position: relative;
+      color: #ffffff;
+    }
 
-      .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.6);
-        z-index: 2;
-      }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("src/user/CCAT-Campus-Scaled.jpg");
+      background-size: cover;
+      background-position: center;
+      filter: blur(8px);
+      z-index: 1;
+    }
 
-      header {
-        display: flex;
-        justify-content: space-between;
-        /* Space between logos */
-        align-items: center;
-        padding: 20px;
-        position: relative;
-        z-index: 3;
-      }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 2;
+    }
 
-      .logo {
-        height: 100px;
-        /* Adjust height for left and right logos */
-        width: auto;
-      }
+    header {
+      display: flex;
+      justify-content: flex-end;
+      /* Align items to the right */
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      z-index: 3;
+    }
 
-      .container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        position: relative;
-        z-index: 3;
-        text-align: center;
-        padding: 0 20px;
-        margin: 0;
-        /* Remove margin to center container */
-        position: absolute;
-        /* Use absolute positioning */
-        top: 50%;
-        /* Center vertically */
-        left: 50%;
-        /* Center horizontally */
-        transform: translate(-50%, -50%);
-        /* Adjust for centering */
-      }
+    .logo {
+      height: 100px;
+      width: auto;
+    }
 
-      h1 {
-        font-size: 48px;
-        margin: 0;
-        animation: fadeIn 1s ease-in-out, typing 5s steps(30, end) infinite;
-        white-space: nowrap;
-        overflow: hidden;
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      padding: 0 20px;
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .text1 {
+      font-size: 48px;
+      margin: 0;
+      color: #ffffff;
+      display: inline-block;
+      height: 56px;
+      overflow: hidden;
+      width: 0;
+      font-weight: bold;
+      animation: typing 5s steps(30, end) 2s infinite;
+    }
+
+    @keyframes typing {
+      from {
         width: 0;
       }
 
-      h1 span:nth-child(1) {
-        color: #606060;
+      to {
+        width: 100%;
+      }
+    }
+
+    h1 {
+      font-size: 48px;
+      margin: 0;
+      animation: fadeIn 1s ease-in-out, typing 5s steps(30, end) infinite;
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0;
+    }
+
+    p {
+      font-size: 20px;
+      margin: 20px 0;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .get-started {
+      padding: 15px 30px;
+      font-size: 18px;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #00bfff;
+      animation: fadeIn 2s ease-in-out, pulse 1.5s infinite;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .get-started:hover {
+      background-color: #0095e0;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
       }
 
-      h1 span:nth-child(2) {
-        color: #00bfff;
-        /* Neon blue */
+      to {
+        opacity: 1;
       }
+    }
 
-      h1 span:nth-child(3) {
-        color: #ffffff;
+    /* Footer Styles */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      color: #ffffff;
+      padding: 10px;
+      /* Reduced padding */
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      z-index: 4;
+      flex-wrap: wrap;
+      /* Allow wrapping on small screens */
+    }
+
+    footer img {
+      height: 40px;
+      /* Adjust logo size for the footer */
+      width: auto;
+      margin-right: 10px;
+      /* Add space between logo and text */
+    }
+
+    .copyright {
+      flex: 1;
+      /* Allow copyright text to take available space */
+      text-align: center;
+      /* Center the copyright text */
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 36px;
       }
 
       p {
-        font-size: 20px;
-        margin: 20px 0;
-        animation: fadeIn 1.5s ease-in-out;
+        font-size: 18px;
       }
 
       .get-started {
-        padding: 15px 30px;
-        font-size: 18px;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        background-color: #00bfff;
-        /* Blue */
-        animation: fadeIn 2s ease-in-out, pulse 1.5s infinite;
-        transition: background-color 0.3s ease;
-        margin-top: 20px;
+        padding: 10px 20px;
       }
+    }
+  </style>
+</head>
 
-      .get-started:hover {
-        background-color: #0095e0;
-        /* Darker blue on hover */
-      }
+<body>
+  <div class="overlay"></div>
+  <header>
+    <img src="src/user/cvsu_logo.png" alt="Right Logo" class="logo" />
+  </header>
 
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
+  <div class="container">
+    <h1>
+      <span style="color: #ffffff">Tatak</span>
+      <span style="color: #00bfff">CCAT</span>
+      <br />
+    </h1>
 
-        to {
-          opacity: 1;
-        }
-      }
+    <span class="text1" style="color: #ffffff"><span style="color: #00bfff;">Angat</span> sa lahat</span>
+    <p>
+      Empowering Campus Organizations Seamlessly Budget Management System
+    </p>
+    <a href="src/user/login.html" class="get-started" onclick="redirectToLogin()">Get Started</a>
+  </div>
 
-      @keyframes typing {
-        0% {
-          width: 0;
-        }
-
-        70% {
-          width: 100%;
-        }
-
-        90% {
-          width: 100%;
-        }
-
-        100% {
-          width: 0;
-        }
-      }
-
-      @keyframes pulse {
-        0% {
-          transform: scale(1);
-        }
-
-        50% {
-          transform: scale(1.05);
-        }
-
-        100% {
-          transform: scale(1);
-        }
-      }
-
-      @media (max-width: 768px) {
-        h1 {
-          font-size: 36px;
-        }
-
-        p {
-          font-size: 18px;
-        }
-
-        .get-started {
-          padding: 10px 20px;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <div class="overlay"></div>
-    <header>
-      <img
-        src="src/assets/images/logos/neon_sikat.png"
-        alt="Left Logo"
-        class="logo"
-      />
-      <img src="src/user/cvsu_logo.png" alt="Right Logo" class="logo" />
-    </header>
-
-    <div class="container">
-      <h1>
-        <span style="color: #ffffff">Angat</span>
-        <span style="color: #00bfff">Sikat</span>
-        <br />
-        <span style="color: #ffffff">Web App</span>
-      </h1>
-      <p>
-        Empowering campus organizations with seamless budget management—track,
-        plan, and thrive together.
-      </p>
-      <a
-        href="src/user/login.html"
-        class="get-started"
-        onclick="redirectToLogin()"
-        >Get Started</a
-      >
+  <footer>
+    <img src="src/assets/images/logos/sikat.png" alt="Left Logo" class="logo" style="height: 30px;" />
+    <div class="copyright">
+      Copyright © 2025 Angat Sikat. All rights reserved.
     </div>
+  </footer>
 
-    <script>
-      function redirectToLogin() {
-        document.body.style.opacity = "0"; // Fade out effect
-        setTimeout(() => {
-          window.location.href = "src/user/login.html"; // Redirect after fading out
-        }, 500); // Match the timeout with the CSS transition duration
-      }
-    </script>
-  </body>
+  <script>
+    function redirectToLogin() {
+      document.body.style.opacity = "0"; // Fade out effect
+      setTimeout(() => {
+        window.location.href = "src/user/login.html"; // Redirect after fading out
+      }, 500); // Match the timeout with the CSS transition duration
+    }
+  </script>
+</body>
+
 </html>
