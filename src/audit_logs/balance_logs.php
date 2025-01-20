@@ -422,7 +422,7 @@ include '../user_query.php';
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/admin_budget_approvals.js"></script>
+    <script src="js/balance_logs.js"></script>
 </body>
 
 </html>
