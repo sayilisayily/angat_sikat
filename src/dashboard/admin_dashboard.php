@@ -788,8 +788,8 @@ include '../organization_query.php';
                                     <h1 class="fw-bold text-white">Users</h1>
                                 </div>
                                 <div>
-                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
-                                        <?= htmlspecialchars($org_members) ?> <!-- Sample Backend -->
+                                    <h1 class="fw-semibold h6" style="font-size: 1.30rem; margin-left: 83px; color: #fff;">
+                                        40 <!-- Sample Backend -->
                                     </h1>
                                 </div>
                             </a>
@@ -803,8 +803,8 @@ include '../organization_query.php';
                                     <h1 class="fw-bold text-white">Advisers</h1>
                                 </div>
                                 <div>
-                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
-                                        <?= htmlspecialchars($org_members) ?> <!-- Sample Backend -->
+                                    <h1 class="fw-semibold h6" style="font-size: 1.30rem; margin-left: 83px; color: #fff;">
+                                        40 <!-- Sample Backend -->
                                     </h1>
                                 </div>
                             </a>
@@ -818,8 +818,8 @@ include '../organization_query.php';
                                     <h1 class="fw-bold text-white">Organization</h1>
                                 </div>
                                 <div>
-                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
-                                        <?= htmlspecialchars($org_members) ?> <!--Sample Backend -->
+                                    <h1 class="fw-semibold h6" style="font-size: 1.30rem; margin-left: 83px; color: #fff;">
+                                        20 <!--Sample Backend -->
                                     </h1>
                                 </div>
                             </a>
