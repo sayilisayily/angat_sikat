@@ -763,7 +763,7 @@ include '../organization_query.php';
                     <!-- CSS for styling -->
                     <style>
                         .card {
-                            height: 150px; /* Set equal height for the cards */
+                            height: 135px; /* Set equal height for the cards */
                             text-decoration: none; /* Remove underline from links */
                             margin-bottom:0px;
                         }
@@ -789,9 +789,6 @@ include '../organization_query.php';
                                 </div>
                                 <div>
                                     <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
-                                        No. of Users
-                                    </h1>
-                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
                                         <?= htmlspecialchars($org_members) ?> <!-- Sample Backend -->
                                     </h1>
                                 </div>
@@ -807,9 +804,6 @@ include '../organization_query.php';
                                 </div>
                                 <div>
                                     <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
-                                        No. of Advisers
-                                    </h1>
-                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
                                         <?= htmlspecialchars($org_members) ?> <!-- Sample Backend -->
                                     </h1>
                                 </div>
@@ -824,9 +818,6 @@ include '../organization_query.php';
                                     <h1 class="fw-bold text-white">Organization</h1>
                                 </div>
                                 <div>
-                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
-                                        No. of Organizations
-                                    </h1>
                                     <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
                                         <?= htmlspecialchars($org_members) ?> <!--Sample Backend -->
                                     </h1>
@@ -857,7 +848,7 @@ include '../organization_query.php';
                     ?>
                     <!--Upcoming Events-->
                     <div>
-                        <h3 class="title h5 fw-bold mb-4 mt-5">
+                        <h3 class="title h5 fw-bold mb-4 mt-4">
                             <span class="text-warning fw-bold me-2">|</span>Upcoming Events
                         </h3>
                         <div class="mx-auto">
