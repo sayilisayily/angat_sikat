@@ -788,7 +788,7 @@ include '../organization_query.php';
                                     <h1 class="fw-bold text-white">Users</h1>
                                 </div>
                                 <div>
-                                    <h1 class="fw-semibold h6" style="font-size: 1.95rem; margin-left: 83px; color: #fff;">
+                                    <h1 class="fw-semibold h6" style="font-size: 1.95rem; margin-left: 200px; color: #fff;">
                                         40 <!-- Sample Backend -->
                                     </h1>
                                 </div>
@@ -803,7 +803,7 @@ include '../organization_query.php';
                                     <h1 class="fw-bold text-white">Advisers</h1>
                                 </div>
                                 <div>
-                                    <h1 class="fw-semibold h6" style="font-size: 1.95rem; margin-left: 83px; color: #fff;">
+                                    <h1 class="fw-semibold h6" style="font-size: 1.95rem; margin-left: 200px; color: #fff;">
                                         40 <!-- Sample Backend -->
                                     </h1>
                                 </div>
@@ -818,7 +818,7 @@ include '../organization_query.php';
                                     <h1 class="fw-bold text-white">Organization</h1>
                                 </div>
                                 <div>
-                                    <h1 class="fw-semibold h6" style="font-size: 1.95rem; margin-left: 83px; color: #fff;">
+                                    <h1 class="fw-semibold h6" style="font-size: 1.95rem; margin-left: 200px; color: #fff;">
                                         20 <!--Sample Backend -->
                                     </h1>
                                 </div>
