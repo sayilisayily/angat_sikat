@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 20, 2025 at 07:01 PM
+-- Generation Time: Jan 20, 2025 at 08:14 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -66,27 +66,27 @@ CREATE TABLE `balance_history` (
 --
 
 INSERT INTO `balance_history` (`history_id`, `organization_id`, `balance`, `updated_at`, `created_by`) VALUES
-(5, 3, 24600.00, '2025-01-13 09:16:45', 0),
-(6, 1, 104000.00, '2025-01-13 11:25:17', 0),
-(7, 1, 79000.00, '2025-01-13 11:25:49', 0),
-(8, 1, 77750.00, '2025-01-14 03:02:09', 0),
-(9, 7, 499700.00, '2025-01-14 06:22:27', 0),
-(10, 7, 499800.00, '2025-01-14 06:25:05', 0),
-(11, 1, 79750.00, '2025-01-14 07:54:02', 0),
-(12, 1, 79000.00, '2025-01-14 07:54:39', 0),
-(13, 1, 73000.00, '2025-01-14 08:32:24', 0),
-(14, 3, 19400.00, '2025-01-15 10:00:42', 0),
-(15, 3, 29400.00, '2025-01-15 10:03:52', 0),
-(16, 1, 34000.00, '2025-01-15 10:48:07', 0),
-(17, 1, 31900.00, '2025-01-15 11:14:12', 0),
-(19, 1, 204750.00, '2025-01-16 13:47:36', 0),
+(5, 3, 24600.00, '2025-01-13 09:16:45', 11),
+(6, 1, 104000.00, '2025-01-13 11:25:17', 9),
+(7, 1, 79000.00, '2025-01-13 11:25:49', 9),
+(8, 1, 77750.00, '2025-01-14 03:02:09', 10),
+(9, 7, 499700.00, '2025-01-14 06:22:27', 12),
+(10, 7, 499800.00, '2025-01-14 06:25:05', 12),
+(11, 1, 79750.00, '2025-01-14 07:54:02', 10),
+(12, 1, 79000.00, '2025-01-14 07:54:39', 10),
+(13, 1, 73000.00, '2025-01-14 08:32:24', 9),
+(14, 3, 19400.00, '2025-01-15 10:00:42', 11),
+(15, 3, 29400.00, '2025-01-15 10:03:52', 11),
+(16, 1, 34000.00, '2025-01-15 10:48:07', 9),
+(17, 1, 31900.00, '2025-01-15 11:14:12', 10),
+(19, 1, 204750.00, '2025-01-16 13:47:36', 10),
 (20, 1, 15000.00, '2025-01-17 16:38:17', 9),
-(21, 1, 13250.00, '2025-01-17 17:46:08', 0),
-(22, 1, 23250.00, '2025-01-17 18:00:20', 0),
+(21, 1, 13250.00, '2025-01-17 17:46:08', 10),
+(22, 1, 23250.00, '2025-01-17 18:00:20', 9),
 (23, 1, 31500.00, '2025-01-20 05:41:08', 9),
 (24, 1, 104750.00, '2025-01-20 05:49:44', 9),
 (25, 1, 153000.00, '2025-01-20 05:58:42', 9),
-(26, 1, 151900.00, '2025-01-20 06:25:33', 0),
+(26, 1, 151900.00, '2025-01-20 06:25:33', 10),
 (27, 1, 99050.00, '2025-01-20 16:57:57', 9),
 (28, 1, 106200.00, '2025-01-20 17:00:05', 9),
 (29, 1, 93350.00, '2025-01-20 17:01:26', 9),
@@ -162,30 +162,22 @@ INSERT INTO `budget_allocation` (`allocation_id`, `organization_id`, `category`,
 
 CREATE TABLE `budget_approvals` (
   `approval_id` int(11) NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `category` varchar(255) NOT NULL,
-  `attachment` varchar(255) DEFAULT NULL,
-  `status` enum('Pending','Approved','Disapproved') DEFAULT 'Pending',
   `organization_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `category` enum('Activities','Purchases','Maintenance') NOT NULL,
+  `attachment` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `archived` tinyint(1) DEFAULT 0,
-  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `created_by` int(11) NOT NULL
+  `created_by` int(11) NOT NULL,
+  `status` enum('Pending','Approved','Disapproved') DEFAULT 'Pending',
+  `archived` tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `budget_approvals`
 --
 
-INSERT INTO `budget_approvals` (`approval_id`, `title`, `category`, `attachment`, `status`, `organization_id`, `created_at`, `archived`, `updated_at`, `created_by`) VALUES
-(5, 'Oplan Alisin ang mga Bading', 'Activities', 'Budget_Request_CyberCon 2025_1736416068.pdf', 'Approved', 3, '2025-01-13 09:13:10', 1, '2025-01-21 01:54:34', 0),
-(8, 'Engineering Day', 'Activities', 'Budget_Request_AI Seminar_1736685544.pdf', 'Approved', 7, '2025-01-14 06:15:33', 0, '2025-01-21 01:54:34', 0),
-(9, 'Merch', 'Activities', 'example_014.pdf', 'Approved', 7, '2025-01-14 06:23:41', 0, '2025-01-21 01:54:34', 0),
-(14, 'FEO Day', 'Activities', 'Budget_Request_Podcast_January 14, 2025.pdf', 'Approved', 3, '2025-01-15 09:55:55', 0, '2025-01-21 01:54:34', 0),
-(15, 'Merchandise Sale', 'Activities', 'example_014.pdf', 'Approved', 3, '2025-01-15 10:02:12', 0, '2025-01-21 01:54:34', 0),
-(18, 'CyberCon 2025', 'Activities', 'Budget_Request_CyberCon 2025_January 17, 2025.pdf', 'Approved', 1, '2025-01-17 17:41:02', 0, '2025-01-21 01:54:34', 0),
-(19, 'Merchandise Sale', 'Activities', 'Project_Proposal_Merchandise Sale.pdf', 'Approved', 1, '2025-01-17 17:58:22', 0, '2025-01-21 01:54:34', 0),
-(20, 'TechFusion', 'Activities', 'main_savings-passbook-template.pdf', 'Approved', 1, '2025-01-20 06:12:59', 0, '2025-01-21 01:54:34', 0);
+INSERT INTO `budget_approvals` (`approval_id`, `organization_id`, `title`, `category`, `attachment`, `created_at`, `created_by`, `status`, `archived`) VALUES
+(1, 1, 'TechFusion', 'Activities', 'Budget_Request_TechFusion_January 20, 2025.pdf', '2025-01-20 18:56:59', 10, 'Pending', 0);
 
 -- --------------------------------------------------------
 
@@ -438,11 +430,11 @@ CREATE TABLE `expense_history` (
 --
 
 INSERT INTO `expense_history` (`history_id`, `organization_id`, `expense`, `updated_at`, `created_by`) VALUES
-(3, 3, 400.00, '2025-01-13 09:16:45', 0),
-(6, 7, 300.00, '2025-01-14 06:22:27', 0),
-(9, 3, 5200.00, '2025-01-15 10:00:42', 0),
-(12, 1, 1750.00, '2025-01-17 17:46:08', 0),
-(13, 1, 1100.00, '2025-01-20 06:25:33', 0);
+(3, 3, 400.00, '2025-01-20 19:04:23', 11),
+(6, 7, 300.00, '2025-01-20 19:04:45', 12),
+(9, 3, 5200.00, '2025-01-20 19:05:10', 11),
+(12, 1, 1750.00, '2025-01-20 19:05:28', 9),
+(13, 1, 1100.00, '2025-01-20 19:05:38', 10);
 
 -- --------------------------------------------------------
 
@@ -520,10 +512,10 @@ CREATE TABLE `income_history` (
 --
 
 INSERT INTO `income_history` (`history_id`, `organization_id`, `income`, `updated_at`, `created_by`) VALUES
-(4, 7, 100.00, '2025-01-14 06:25:05', 0),
-(6, 3, 10000.00, '2025-01-15 10:03:52', 0),
+(4, 7, 100.00, '2025-01-20 19:14:01', 12),
+(6, 3, 10000.00, '2025-01-20 19:13:50', 11),
 (7, 1, 15000.00, '2025-01-17 16:38:17', 9),
-(8, 1, 10000.00, '2025-01-17 18:00:20', 0),
+(8, 1, 10000.00, '2025-01-20 19:14:11', 9),
 (9, 1, 35000.00, '2025-01-20 05:41:08', 9),
 (10, 1, 110000.00, '2025-01-20 05:49:44', 9),
 (11, 1, 160000.00, '2025-01-20 05:58:42', 9),
@@ -647,7 +639,7 @@ INSERT INTO `notifications` (`id`, `recipient_id`, `organization_id`, `message`,
 (89, 9, 1, 'Your budget request for \'TechSpark\' has been approved.', 1, '2025-01-15 19:10:28'),
 (90, 10, 1, 'Your budget request for \'TechSpark\' has been approved.', 0, '2025-01-15 19:10:28'),
 (92, 9, 1, 'The total amount for the event \'TechSpark\' has exceeded the allocated budget.', 1, '2025-01-15 19:12:30'),
-(93, 10, 1, 'The total amount for the event \'TechSpark\' has exceeded the allocated budget.', 0, '2025-01-15 19:12:30'),
+(93, 10, 1, 'The total amount for the event \'TechSpark\' has exceeded the allocated budget.', 1, '2025-01-15 19:12:30'),
 (94, 3, 0, 'A new budget approval request for \'CyberCon 2025\' has been submitted.', 0, '2025-01-18 01:41:02'),
 (95, 9, 1, 'Your budget request for \'CyberCon 2025\' has been approved.', 0, '2025-01-18 01:42:47'),
 (96, 10, 1, 'Your budget request for \'CyberCon 2025\' has been approved.', 0, '2025-01-18 01:42:47'),
@@ -658,9 +650,10 @@ INSERT INTO `notifications` (`id`, `recipient_id`, `organization_id`, `message`,
 (102, 9, 1, 'Your budget request for \'TechFusion\' has been approved.', 0, '2025-01-20 14:21:29'),
 (103, 10, 1, 'Your budget request for \'TechFusion\' has been approved.', 0, '2025-01-20 14:21:29'),
 (105, 9, 1, 'The total amount for the event \'TechFusion\' has exceeded the allocated budget.', 0, '2025-01-20 14:23:49'),
-(106, 10, 1, 'The total amount for the event \'TechFusion\' has exceeded the allocated budget.', 0, '2025-01-20 14:23:49'),
+(106, 10, 1, 'The total amount for the event \'TechFusion\' has exceeded the allocated budget.', 1, '2025-01-20 14:23:49'),
 (108, 9, 1, 'The total amount for the event \'TechFusion\' has exceeded the allocated budget.', 0, '2025-01-20 14:23:49'),
-(109, 10, 1, 'The total amount for the event \'TechFusion\' has exceeded the allocated budget.', 0, '2025-01-20 14:23:49');
+(109, 10, 1, 'The total amount for the event \'TechFusion\' has exceeded the allocated budget.', 1, '2025-01-20 14:23:49'),
+(110, 3, 0, 'A new budget approval request for \'TechFusion\' has been submitted.', 0, '2025-01-21 02:30:10');
 
 -- --------------------------------------------------------
 
@@ -938,7 +931,8 @@ ALTER TABLE `budget_allocation`
 --
 ALTER TABLE `budget_approvals`
   ADD PRIMARY KEY (`approval_id`),
-  ADD KEY `fk_organization` (`organization_id`);
+  ADD KEY `organization_id` (`organization_id`),
+  ADD KEY `created_by` (`created_by`);
 
 --
 -- Indexes for table `cash_on_bank_history`
@@ -1169,7 +1163,7 @@ ALTER TABLE `budget_allocation`
 -- AUTO_INCREMENT for table `budget_approvals`
 --
 ALTER TABLE `budget_approvals`
-  MODIFY `approval_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `approval_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cash_on_bank_history`
@@ -1271,7 +1265,7 @@ ALTER TABLE `maintenance_summary_items`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=110;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=111;
 
 --
 -- AUTO_INCREMENT for table `organizations`
@@ -1366,7 +1360,8 @@ ALTER TABLE `budget_allocation`
 -- Constraints for table `budget_approvals`
 --
 ALTER TABLE `budget_approvals`
-  ADD CONSTRAINT `fk_organization` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`organization_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `budget_approvals_ibfk_1` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`organization_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `budget_approvals_ibfk_2` FOREIGN KEY (`created_by`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `cash_on_bank_history`

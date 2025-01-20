@@ -122,15 +122,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Insert a record into the income_history table
-        $incomeHistoryQuery = "INSERT INTO income_history (organization_id, income, updated_at) 
-                               VALUES (?, ?, NOW())";
+        $incomeHistoryQuery = "INSERT INTO income_history (organization_id, income, updated_at, created_at) 
+                               VALUES (?, ?, NOW(), ?)";
         $incomeHistoryStmt = $conn->prepare($incomeHistoryQuery);
 
         if (!$incomeHistoryStmt) {
             throw new Exception("Prepare error for income history: " . $conn->error);
         }
 
-        $incomeHistoryStmt->bind_param('id', $organization_id, $revenue);
+        $incomeHistoryStmt->bind_param('idi', $organization_id, $revenue, $user_id);
 
         if (!$incomeHistoryStmt->execute()) {
             throw new Exception("Execution error for income history: " . $incomeHistoryStmt->error);
@@ -159,15 +159,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $balanceStmt->close();
 
         // Insert a record into the balance_history table
-        $historyQuery = "INSERT INTO balance_history (organization_id, balance, updated_at) 
-                         VALUES (?, ?, NOW())";
+        $historyQuery = "INSERT INTO balance_history (organization_id, balance, updated_at, created_by) 
+                         VALUES (?, ?, NOW(), ?)";
         $historyStmt = $conn->prepare($historyQuery);
 
         if (!$historyStmt) {
             throw new Exception("Prepare error for balance history: " . $conn->error);
         }
 
-        $historyStmt->bind_param('id', $organization_id, $updatedBalance);
+        $historyStmt->bind_param('idi', $organization_id, $updatedBalance, $user_id);
 
         if (!$historyStmt->execute()) {
             throw new Exception("Execution error for balance history: " . $historyStmt->error);
