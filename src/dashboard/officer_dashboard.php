@@ -844,6 +844,7 @@ include '../organization_query.php';
                     </style>
 
                     <!-- End of Organization Info Box -->
+                     
                     <!-- Financial Summary Cards Row -->
                     <div class="row justify-content-center mx-1">
                         <?php

@@ -112,7 +112,7 @@ include '../user_query.php';
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a class="text-nowrap logo-img">
-                        <img src="../assets/images/logos/neon_sikat.png" alt="Angat Sikat Logo" class="logo contain"
+                        <img src="../assets/images/logos/angatsikat.png" alt="Angat Sikat Logo" class="logo contain"
                             style="width: 60px; height: auto;" />
                     </a>
                     <span class="logo-text">ANGATSIKAT</span>
@@ -138,6 +138,119 @@ include '../user_query.php';
                         </li>
 
                         <li class="sidebar-item">
+                            <a class="sidebar-link" href="../activity_management/admin_calendar.php" aria-expanded="false"
+                                data-tooltip="Manage Events">
+                                <i class="bx bx-calendar" style="color: #fff; font-size: 35px;"></i>
+                                <span class="hide-menu">Calendar</span>
+                            </a>
+                        </li>
+
+                        <style>
+                            .submenu {
+                                display: none;
+                                padding-left: 20px;
+                                background-color: #00542F;
+                            }
+
+                            .submenu a {
+                                display: block;
+                                padding: 5px 10px;
+                                text-decoration: none;
+                                color: #fff;
+                                background-color: #00542F;
+                            }
+
+                            .submenu a:hover {
+                                background-color: #FFB000;
+                            }
+
+                            .sidebar-link {
+                                position: relative;
+                                cursor: pointer;
+                                /* Ensure pointer cursor for better UX */
+                            }
+
+                            .sidebar-link:hover {
+                                background-color: #FFB000;
+                                /* Hover color */
+                            }
+
+                            .sidebar-link.active {
+                                background-color: #FFB000;
+                                /* Active color */
+                            }
+
+                            .scroll-sidebar {
+                                overflow: auto;
+                                /* Enable scrolling */
+                            }
+
+                            /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+                            .scroll-sidebar::-webkit-scrollbar {
+                                display: none;
+                                /* Hide scrollbar */
+                            }
+
+                            /* Hide scrollbar for IE, Edge, and Firefox */
+                            .scroll-sidebar {
+                                -ms-overflow-style: none;
+                                /* IE and Edge */
+                                scrollbar-width: none;
+                                /* Firefox */
+                            }
+                        </style>
+
+                        <script>
+                            document.querySelectorAll('.sidebar-link').forEach(link => {
+                                link.addEventListener('click', function () {
+                                    // Remove 'active' class from all links
+                                    document.querySelectorAll('.sidebar-link').forEach(item => {
+                                        item.classList.remove('active');
+                                    });
+
+                                    // Add 'active' class to the clicked link
+                                    this.classList.add('active');
+                                });
+                            });
+
+                            function toggleSubmenu(event) {
+                                event.preventDefault();
+                                const submenus = document.querySelectorAll('.submenu');
+                                const currentSubmenu = event.currentTarget.nextElementSibling;
+
+                                // Close all submenus
+                                submenus.forEach(submenu => {
+                                    if (submenu !== currentSubmenu) {
+                                        submenu.style.display = "none";
+                                    }
+                                });
+
+                                // Toggle the current submenu
+                                currentSubmenu.style.display = (currentSubmenu.style.display === "block") ? "none" : "block";
+                            }
+
+                            function closeSubmenus() {
+                                const submenus = document.querySelectorAll('.submenu');
+                                submenus.forEach(submenu => {
+                                    submenu.style.display = "none"; // Close all submenus
+                                });
+                            }
+                        </script>
+                        </style>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" aria-expanded="false" data-tooltip="Budget"
+                                onclick="toggleSubmenu(event)">
+                                <i class="bx bx-file-find" style="color: #fff; font-size: 35px;"></i>
+                                <span class="hide-menu">Audit Logs</span>
+                            </a>
+                            <div class="submenu">
+                                <a href="../audit_logs/account_logs.php">Account Logs</a>
+                                <a href="../audit_logs/balance_logs.php">Balance Logs</a>
+                            </div>
+                        </li>
+
+                        <li class="sidebar-item">
                             <a class="sidebar-link" href="../user_management/users.php" aria-expanded="false"
                                 data-tooltip="Users">
                                 <i class="bx bx-user" style="color: #fff; font-size: 35px;"></i>
@@ -145,8 +258,8 @@ include '../user_query.php';
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="../organization_management/organizations.php" aria-expanded="false"
-                                data-tooltip="Organizations">
+                            <a class="sidebar-link" href="../organization_management/organizations.php"
+                                aria-expanded="false" data-tooltip="Organizations">
                                 <i class="bx bx-group" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Organizations</span>
                             </a>
@@ -161,8 +274,8 @@ include '../user_query.php';
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="../budget_management/admin_budget_approval_table.php" aria-expanded="false"
-                                data-tooltip="Events">
+                            <a class="sidebar-link" href="../budget_management/admin_budget_approval_table.php"
+                                aria-expanded="false" data-tooltip="Events">
                                 <i class="bx bx-book-content" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Approval</span>
                             </a>
