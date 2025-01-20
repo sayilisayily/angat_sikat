@@ -291,6 +291,8 @@ include '../user_query.php';
                         <th>Title</th>
                         <th>Category</th>
                         <th>Attachment</th>
+                        <th>Date Submitted</th>
+                        <th>Created By</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -299,9 +301,10 @@ include '../user_query.php';
                     <?php
                     // Fetch budget approvals with organization names from the database
                     $query = "
-                        SELECT b.*, o.organization_name 
+                        SELECT b.*, o.organization_name, u.first_name, u.last_name
                         FROM budget_approvals b 
-                        JOIN organizations o ON b.organization_id = o.organization_id";
+                        JOIN organizations o ON b.organization_id = o.organization_id
+                        JOIN users u ON b.created_by = u.user_id";
                     $result = mysqli_query($conn, $query);
 
                     while ($row = mysqli_fetch_assoc($result)) {
@@ -310,6 +313,8 @@ include '../user_query.php';
                         $category = $row['category'];
                         $attachment = $row['attachment'];
                         $status = $row['status'];
+                        $created_at =  date('Y-m-d H:i:s', strtotime($row['created_at']));
+                        $created_by = $row['first_name'] . ' ' . $row['last_name'];
                         $id = $row['approval_id']; // Assuming there's an ID field in your budget_approvals table
                         ?>
                         <tr>
@@ -329,6 +334,12 @@ include '../user_query.php';
                                 </a>
                             </td>
                             <td>
+                                <?php echo htmlspecialchars($created_at); ?>
+                            </td>
+                            <td>
+                                <?php echo htmlspecialchars($created_by); ?>
+                            </td>
+                            <td>
                                 <?php 
                                 if ($row['status'] == 'Pending') {
                                     echo " <span class='badge rounded-pill pending'> ";
@@ -341,6 +352,7 @@ include '../user_query.php';
                                 ?>
                                 </span>
                             </td>
+                           
                             <td>
                                 <button type="button" class="btn btn-sm btn-success mb-3" 
                                         data-bs-toggle="modal" 

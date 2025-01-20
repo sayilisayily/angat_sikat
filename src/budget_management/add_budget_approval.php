@@ -21,6 +21,8 @@ if (empty($_POST['title'])) {
     }
 }
 
+$created_by = $user_id;
+
 if (!empty($errors)) {
     $data['success'] = false;
     $data['errors'] = $errors;
@@ -74,8 +76,8 @@ if (!empty($errors)) {
             $errors['category'] = 'Event title not found in any category.';
         } else if (empty($errors)) {
             // Insert into budget_approvals table
-            $insert_query = "INSERT INTO budget_approvals (title, category, attachment, status, organization_id) 
-                             VALUES ('$title', '$category', '$attachment', '$status', $organization_id)";
+            $insert_query = "INSERT INTO budget_approvals (title, category, attachment, status, created_by, organization_id) 
+                             VALUES ('$title', '$category', '$attachment', '$status', $created_by, $organization_id)";
 
             if (mysqli_query($conn, $insert_query)) {
                 $admin_query = "SELECT user_id FROM users WHERE role = 'admin'";

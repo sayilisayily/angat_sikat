@@ -1,5 +1,6 @@
 <?php
 include 'connection.php';
+include '../session_check.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $approval_id = $_POST['approval_id'];
@@ -38,21 +39,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    $created_by = $user_id;
+
     // Update query
     if (!empty($uploaded_file)) {
-        $query = "UPDATE budget_approvals SET title = ?, attachment = ? WHERE approval_id = ?";
+        $query = "UPDATE budget_approvals SET title = ?, attachment = ?, created_at=NOW(), created_by=? WHERE approval_id = ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("ssi", $title, $uploaded_file, $approval_id);
+        $stmt->bind_param("ssii", $title, $uploaded_file, $created_by, $approval_id);
     } else {
         // If no new file is uploaded, update only the title
-        $query = "UPDATE budget_approvals SET title = ? WHERE approval_id = ?";
+        $query = "UPDATE budget_approvals SET title = ?, created_at=NOW(), created_by=? WHERE approval_id = ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param("si", $title, $approval_id);
+        $stmt->bind_param("sdii", $title, $created_by, $approval_id);
     }
 
     if ($stmt->execute()) {
         // Send notification to the admin about the update
-        $notification_message = "Budget approval request for '$title' has been updated.";
+        $notification_message = "The budget approval request for '$title' has been updated.";
 
         // Query to get all admin users
         $admin_query = "SELECT user_id FROM users WHERE role = 'admin'";
