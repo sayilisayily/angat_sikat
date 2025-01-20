@@ -289,6 +289,7 @@ include '../user_query.php';
                     <tr>
                         <th>Organization</th>
                         <th>Balance</th>
+                        <th>Reference</th>
                         <th>Updated At</th>
                         <th>Created By</th>
                     </tr>
@@ -297,7 +298,7 @@ include '../user_query.php';
                     <?php
                     // Fetch beginning balance history from the database
                     $query = "
-                        SELECT h.amount, h.updated_at, u.first_name, u.last_name, o.organization_name
+                        SELECT h.amount, h.updated_at, h.reference, u.first_name, u.last_name, o.organization_name
                         FROM beginning_balance_history h
                         JOIN organizations o ON h.organization_id = o.organization_id
                         JOIN users u ON h.created_by = u.user_id
@@ -307,6 +308,7 @@ include '../user_query.php';
                     while ($row = mysqli_fetch_assoc($result)) {
                         $organization = $row['organization_name'];  // Organization name
                         $beginning_balance = number_format($row['amount'], 2);  // Format balance as currency
+                        $reference = $row['reference'];
                         $updated_at = date('Y-m-d H:i:s', strtotime($row['updated_at']));  // Format date
                         $created_by = $row['first_name'] . ' ' . $row['last_name'];  // Created by
                         ?>
@@ -316,6 +318,12 @@ include '../user_query.php';
                             </td>
                             <td>
                                 ₱<?php echo htmlspecialchars($beginning_balance); ?>
+                            </td>
+                            <td>
+                                <a href="../budget_management/uploads/references/<?php echo $reference; ?>"
+                                        class='link-offset-2 link-underline link-underline-opacity-0' target="_blank">
+                                            <?php echo $reference; ?>
+                                </a>
                             </td>
                             <td>
                                 <?php echo htmlspecialchars($updated_at); ?>
@@ -342,6 +350,7 @@ include '../user_query.php';
                     <tr>
                         <th>Organization</th>
                         <th>Amount</th>
+                        <th>Reference</th>
                         <th>Updated At</th>
                         <th>Created By</th>
                     </tr>
@@ -350,7 +359,7 @@ include '../user_query.php';
                     <?php
                     // Fetch cash on hand history from the database
                     $query = "
-                        SELECT h.amount, h.updated_at, u.first_name, u.last_name, o.organization_name
+                        SELECT h.amount, h.updated_at, h.reference, u.first_name, u.last_name, o.organization_name
                         FROM cash_on_hand_history h
                         JOIN organizations o ON h.organization_id = o.organization_id
                         JOIN users u ON h.created_by = u.user_id
@@ -360,6 +369,7 @@ include '../user_query.php';
                     while ($row = mysqli_fetch_assoc($result)) {
                         $organization = $row['organization_name'];  // Organization name
                         $amount = number_format($row['amount'], 2);  // Format amount as currency
+                        $reference = $row['reference'];
                         $updated_at = date('Y-m-d H:i:s', strtotime($row['updated_at']));  // Format date
                         $created_by = $row['first_name'] . ' ' . $row['last_name'];  // User's full name
                         ?>
@@ -369,6 +379,12 @@ include '../user_query.php';
                             </td>
                             <td>
                                 ₱<?php echo htmlspecialchars($amount); ?>
+                            </td>
+                            <td>
+                                <a href="../budget_management/uploads/references/<?php echo $reference; ?>"
+                                        class='link-offset-2 link-underline link-underline-opacity-0' target="_blank">
+                                            <?php echo $reference; ?>
+                                </a>
                             </td>
                             <td>
                                 <?php echo htmlspecialchars($updated_at); ?>
@@ -395,6 +411,7 @@ include '../user_query.php';
                     <tr>
                         <th>Organization</th>
                         <th>Amount</th>
+                        <th>Reference</th>
                         <th>Updated At</th>
                         <th>Created By</th>
                     </tr>
@@ -403,7 +420,7 @@ include '../user_query.php';
                     <?php
                     // Fetch cash on bank history from the database
                     $query = "
-                        SELECT h.amount, h.updated_at, u.first_name, u.last_name, o.organization_name
+                        SELECT h.amount, h.updated_at, h.reference, u.first_name, u.last_name, o.organization_name
                         FROM cash_on_bank_history h
                         JOIN organizations o ON h.organization_id = o.organization_id
                         JOIN users u ON h.created_by = u.user_id
@@ -413,6 +430,7 @@ include '../user_query.php';
                     while ($row = mysqli_fetch_assoc($result)) {
                         $organization = $row['organization_name'];  // Organization name
                         $amount = number_format($row['amount'], 2);  // Format amount as currency
+                        $reference = $row['reference'];
                         $updated_at = date('Y-m-d H:i:s', strtotime($row['updated_at']));  // Format date
                         $created_by = $row['first_name'] . ' ' . $row['last_name'];  // User's full name
                         ?>
@@ -422,6 +440,12 @@ include '../user_query.php';
                             </td>
                             <td>
                                 ₱<?php echo htmlspecialchars($amount); ?>
+                            </td>
+                            <td>
+                                <a href="../budget_management/uploads/references/<?php echo $reference; ?>"
+                                        class='link-offset-2 link-underline link-underline-opacity-0' target="_blank">
+                                            <?php echo $reference; ?>
+                                </a>
                             </td>
                             <td>
                                 <?php echo htmlspecialchars($updated_at); ?>
@@ -443,7 +467,7 @@ include '../user_query.php';
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/admin_budget_approvals.js"></script>
+    <script src="js/account_logs.js"></script>
 </body>
 
 </html>

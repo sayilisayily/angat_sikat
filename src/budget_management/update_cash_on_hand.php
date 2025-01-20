@@ -24,8 +24,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Validate file upload (reference)
     if (isset($_FILES['reference']) && $_FILES['reference']['error'] === UPLOAD_ERR_OK) {
-        $uploaded_file_path = 'uploads/references' . basename($_FILES['reference']['name']);
-        move_uploaded_file($_FILES['reference']['tmp_name'], $uploaded_file_path);
+        $uploaded_file_name = uniqid('ref_') . '.' . pathinfo($_FILES['reference']['name'], PATHINFO_EXTENSION);
+        $uploaded_file_path = 'uploads/references/' . $uploaded_file_name;
+
+        if (move_uploaded_file($_FILES['reference']['tmp_name'], $uploaded_file_path)) {
+            $reference = $uploaded_file_name; // Only store the file name
+        } else {
+            $errors['reference'] = 'Failed to upload the file.';
+        }
     } else {
         $errors['reference'] = 'File upload failed or not provided.';
     }
@@ -40,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Sanitize and assign variables
     $organization_id = (int)$_POST['organization_id'];
-    $reference = $uploaded_file_path; // File path for reference
     $created_by = $user_id;
 
     // Fetch current cash_on_hand, cash_on_bank, and balance from the database
