@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         if ($insert_balance_stmt) {
                             $created_by = $user_id; // Assuming user_id from session
-                            $insert_balance_stmt->bind_param('idis', $organization_id, $new_beginning_balance, $reference_filename, $created_by);
+                            $insert_balance_stmt->bind_param('idsi', $organization_id, $new_beginning_balance, $reference_filename, $created_by);
                             $insert_balance_stmt->execute();
                             $insert_balance_stmt->close();
                         }
