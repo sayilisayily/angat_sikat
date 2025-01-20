@@ -44,7 +44,6 @@
     header {
       display: flex;
       justify-content: flex-end;
-      /* Align items to the right */
       align-items: center;
       padding: 20px;
       position: relative;
@@ -117,7 +116,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
-      background-color: #00bfff;
+      background-color: #4169E1;
       animation: fadeIn 2s ease-in-out, pulse 1.5s infinite;
       transition: background-color 0.3s ease;
       margin-top: 20px;
@@ -140,9 +139,9 @@
     /* Footer Styles */
     footer {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      background-color: #333;
+      background-color: rgba(0, 0, 0, 0);
+      /* Make footer background transparent */
       color: #ffffff;
       padding: 10px;
       /* Reduced padding */
@@ -163,10 +162,10 @@
     }
 
     .copyright {
-      flex: 1;
-      /* Allow copyright text to take available space */
-      text-align: center;
-      /* Center the copyright text */
+      text-align: left;
+      /* Align copyright text to the left */
+      margin-left: 10px;
+      /* Add some space from the logo */
     }
 
     @media (max-width: 768px) {
@@ -194,11 +193,11 @@
   <div class="container">
     <h1>
       <span style="color: #ffffff">Tatak</span>
-      <span style="color: #00bfff">CCAT</span>
+      <span style="color: #4169E1">CCAT</span>
       <br />
     </h1>
 
-    <span class="text1" style="color: #ffffff"><span style="color: #00bfff;">Angat</span> sa lahat</span>
+    <span class="text1" style="color: #ffffff"><span style="color: #4169E1;">Angat</span> sa lahat</span>
     <p>
       Empowering Campus Organizations Seamlessly Budget Management System
     </p>
@@ -206,9 +205,9 @@
   </div>
 
   <footer>
-    <img src="src/assets/images/logos/sikat.png" alt="Left Logo" class="logo" style="height: 30px;" />
+    <img src="src/assets/images/logos/angatsikat.png" alt="Left Logo" class="logo" style="height: 30px;" />
     <div class="copyright">
-      Copyright © 2025 Angat Sikat. All rights reserved.
+      Copyright © 2025 Angat Sikat. All Rights Reserved.
     </div>
   </footer>
 
@@ -216,7 +215,7 @@
     function redirectToLogin() {
       document.body.style.opacity = "0"; // Fade out effect
       setTimeout(() => {
-        window.location.href = "src/user/login.html"; // Redirect after fading out
+        window.location.href = "src/user/login.php"; // Redirect after fading out
       }, 500); // Match the timeout with the CSS transition duration
     }
   </script>

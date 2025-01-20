@@ -480,7 +480,7 @@ include '../organization_query.php';
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a class="text-nowrap logo-img">
-                        <img src="../assets/images/logos/neon_sikat.png" alt="Angat Sikat Logo" class="logo contain"
+                        <img src="../assets/images/logos/angatsikat.png" alt="Angat Sikat Logo" class="logo contain"
                             style="width: 60px; height: auto;" />
                     </a>
                     <span class="logo-text">ANGATSIKAT</span>
@@ -503,6 +503,120 @@ include '../organization_query.php';
                                 <i class="bx bxs-archive" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Archive Legend</span>
                             </a>
+                        </li>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="../activity_management/calendar.php" aria-expanded="false"
+                                data-tooltip="Manage Events">
+                                <i class="bx bx-calendar" style="color: #fff; font-size: 35px;"></i>
+                                <span class="hide-menu">Calendar</span>
+                            </a>
+                        </li>
+
+                        <style>
+                            .submenu {
+                                display: none;
+                                padding-left: 20px;
+                                background-color: #00542F;
+                            }
+
+                            .submenu a {
+                                display: block;
+                                padding: 5px 10px;
+                                text-decoration: none;
+                                color: #fff;
+                                background-color: #00542F;
+                            }
+
+                            .submenu a:hover {
+                                background-color: #FFB000;
+                            }
+
+                            .sidebar-link {
+                                position: relative;
+                                cursor: pointer;
+                                /* Ensure pointer cursor for better UX */
+                            }
+
+                            .sidebar-link:hover {
+                                background-color: #FFB000;
+                                /* Hover color */
+                            }
+
+                            .sidebar-link.active {
+                                background-color: #FFB000;
+                                /* Active color */
+                            }
+
+                            .scroll-sidebar {
+                                overflow: auto;
+                                /* Enable scrolling */
+                            }
+
+                            /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+                            .scroll-sidebar::-webkit-scrollbar {
+                                display: none;
+                                /* Hide scrollbar */
+                            }
+
+                            /* Hide scrollbar for IE, Edge, and Firefox */
+                            .scroll-sidebar {
+                                -ms-overflow-style: none;
+                                /* IE and Edge */
+                                scrollbar-width: none;
+                                /* Firefox */
+                            }
+                        </style>
+
+                        <script>
+                            document.querySelectorAll('.sidebar-link').forEach(link => {
+                                link.addEventListener('click', function () {
+                                    // Remove 'active' class from all links
+                                    document.querySelectorAll('.sidebar-link').forEach(item => {
+                                        item.classList.remove('active');
+                                    });
+
+                                    // Add 'active' class to the clicked link
+                                    this.classList.add('active');
+                                });
+                            });
+
+                            function toggleSubmenu(event) {
+                                event.preventDefault();
+                                const submenus = document.querySelectorAll('.submenu');
+                                const currentSubmenu = event.currentTarget.nextElementSibling;
+
+                                // Close all submenus
+                                submenus.forEach(submenu => {
+                                    if (submenu !== currentSubmenu) {
+                                        submenu.style.display = "none";
+                                    }
+                                });
+
+                                // Toggle the current submenu
+                                currentSubmenu.style.display = (currentSubmenu.style.display === "block") ? "none" : "block";
+                            }
+
+                            function closeSubmenus() {
+                                const submenus = document.querySelectorAll('.submenu');
+                                submenus.forEach(submenu => {
+                                    submenu.style.display = "none"; // Close all submenus
+                                });
+                            }
+                        </script>
+                        </style>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" aria-expanded="false" data-tooltip="Budget"
+                                onclick="toggleSubmenu(event)">
+                                <i class="bx bx-file-find" style="color: #fff; font-size: 35px;"></i>
+                                <span class="hide-menu">Audit Logs</span>
+                            </a>
+                            <div class="submenu">
+                                <a href="../audit_logs/account_logs.php">Account Logs</a>
+                                <a href="../audit_logs/balance_logs.php">Balance Logs</a>
+                                <a href="../audit_logs/report_logs.php">Report Logs</a>
+                            </div>
                         </li>
 
                         <li class="sidebar-item">
@@ -646,6 +760,58 @@ include '../organization_query.php';
                         <span class="text-warning fw-bold me-2">|</span>Hello,
                         <?php echo htmlspecialchars($user['first_name']); ?>!
                     </h1>
+
+                    <!-- CSS for styling -->
+                    <style>
+                        .card {
+                            height: 120px; /* Set equal height for the cards */
+                            text-decoration: none; /* Remove underline from links */
+                            margin-bottom:0px;
+                        }
+                        .icon {
+                            font-size: 70px; /* Adjust icon size */
+                            margin-right: 10px; /* Space between icon and text */
+                            color: #fff;
+                        }
+                        .text-center {
+                            text-align: center; /* Center text */
+                        }
+                    </style>
+
+                    <!-- Card Row -->
+                    <div class="row">
+                        <!-- Users Card -->
+                        <div class="col-md-4 mb-3">
+                            <a href="../user_management/users.php" class="card gradient-card-2 p-3 shadow-sm mx-2">
+                                <div class="d-flex align-items-center text-center">
+                                    <i class='bx bx-user-pin icon'></i>
+                                    <h1 class="fw-bold text-white">Users</h1>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Advisers Card -->
+                        <div class="col-md-4 mb-3">
+                            <a href="../adviser_management/advisers.php" class="card gradient-card-1 p-3 shadow-sm mx-2">
+                                <div class="d-flex align-items-center text-center">
+                                    <i class='bx bx-user-circle icon'></i>
+                                    <h1 class="fw-bold text-white">Advisers</h1>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Organization Card -->
+                        <div class="col-md-4 mb-3">
+                            <a href="../organization_management/organizations.php" class="card gradient-card-3 p-3 shadow-sm mx-2">
+                                <div class="d-flex align-items-center text-center">
+                                    <i class='bx bx-buildings icon'></i>
+                                    <h1 class="fw-bold text-white">Organization</h1>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- End of Cards Row -->
+
                     <?php
                     // Fetch the two nearest upcoming events
                     $query = "
@@ -672,7 +838,7 @@ include '../organization_query.php';
                         </h3>
                         <div class="mx-auto">
                             <!--event boxes-->
-                            <div class="container mt-5">
+                            <div class="container mt-2">
                                 <div class="row">
                                     <?php if (!empty($events)) : ?>
                                     <?php foreach ($events as $event) : ?>
@@ -1088,189 +1254,7 @@ include '../organization_query.php';
                                 $sql = "SELECT * FROM organizations WHERE archived = 0";
                                 $result = $conn->query($sql);
                             ?>
-                            <!-- Organizations Table -->
-                            <div>
-                                <h3 class="title h5 fw-bold mb-4 mt-5">
-                                    <span class="text-warning fw-bold me-2">|</span>Organizations
-                                </h3>
-                            </div>
-                            <div class="container">
-                                    <div id="tableContent" class="table-responsive">
-                                        <!-- Added table-responsive class -->
-                                        <table class="table table-bordered">
-                                            <thead class="thead-light fw-bold">
-                                                <tr class="fw-bold fs-4 text-dark">
-                                                    <th>Name</th>
-                                                    <th>Acronym</th>
-                                                    <th>Logo</th>
-                                                    <th>Members</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <?php if ($result->num_rows > 0): ?>
-                                                    <?php while ($row = $result->fetch_assoc()): ?>
-                                                        <?php
-                                                        $organization_logo = $row['organization_logo']; // Assuming the logo is stored as the file name
-                                                        // Check if logo exists and construct the path
-                                                        $logo_path = !empty($organization_logo) && file_exists('../organization_management/uploads/' . $organization_logo) 
-                                                                    ? '../organization_management/uploads/' . $organization_logo 
-                                                                    : '../organization_management/uploads/default_logo.png';
-
-                                                        // Get the organization color
-                                                        $organization_color = !empty($row['organization_color']) ? $row['organization_color'] : '#FFFFFF'; // Default to white if no color is set
-                                                        ?>
-                                                        <tr>
-                                                            <td><?php echo htmlspecialchars($row['organization_name']); ?></td>
-                                                            <td><?php echo htmlspecialchars($row['acronym']); ?></td>
-                                                            <td>
-                                                                <img src="<?php echo htmlspecialchars($logo_path); ?>" alt="Logo" 
-                                                                    style="width: 50px; height: 50px; object-fit: cover;">
-                                                            </td>
-                                                            <td><?php echo htmlspecialchars($row['organization_members']); ?></td>
-                                                            <td><?php echo htmlspecialchars($row['organization_status']); ?></td>
-                                                            
-                                                        </tr>
-                                                    <?php endwhile; ?>
-                                                <?php else: ?>
-                                                    <tr>
-                                                        <td colspan="7" class="text-center">No organizations found</td> <!-- Updated colspan to 7 -->
-                                                    </tr>
-                                                <?php endif; ?>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                            </div>
-
-
-                            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-                            <script
-                                src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-                            <script
-                                src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-                            <script
-                                src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-                            <!--Recent Transaction dashboard end-->
-
-                            <?php
-                            // Fetch the two nearest upcoming events
-                            $query = "
-                            SELECT e.title, e.event_start_date, e.event_end_date, e.event_venue, o.organization_name
-                            FROM events e
-                            JOIN organizations o ON e.organization_id = o.organization_id
-                            WHERE e.archived=0 AND e.event_start_date > CURDATE() 
-                            ORDER BY e.event_start_date ASC
-                            LIMIT 2
-                            ";
-                            $result = $conn->query($query);
-
-                            // Check if the query was successful and fetch the events
-                            if ($result->num_rows > 0) {
-                            $events = $result->fetch_all(MYSQLI_ASSOC);
-                            } else {
-                            $events = [];
-                            }
-                            ?>
                         </div>
-
-                        <style>
-                            @media (max-width: 768px) {
-                                .responsive-container {
-                                    overflow-x: auto;
-                                    /* Enable horizontal scrolling */
-                                    width: 100%;
-                                    /* Full width on smaller screens */
-                                }
-
-                                .balance-report {
-                                    width: 725px;
-                                    /* Maintain original width on larger screens */
-                                }
-                            }
-                        </style>
-
-
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function () {
-                                const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                                tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-                                    new bootstrap.Tooltip(tooltipTriggerEl);
-                                });
-                            });
-                        </script>
-
-                        <!-- Users start -->
-                        <div>
-                            <h3 class="title h5 fw-bold mb-10 mt-5">
-                                <span class="text-warning fw-bold me-2">|</span>Users
-                            </h3>
-
-                            <?php 
-                                    $sql = "SELECT * FROM users WHERE archived = 0";
-                                    $result = $conn->query($sql);
-                                ?>
-                            <div class="container">
-                                <div id="tableContent" class="table-responsive"> <!-- Added table-responsive class -->
-                                    <table class="table table-bordered">
-                                        <thead class="thead-light fw-bold">
-                                            <tr>
-                                                <th>First Name</th>
-                                                <th>Last Name</th>
-                                                <th>Organization</th>
-                                                <th>Position</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php
-                                            // Fetch users with role = 'officer' and join with organizations table to get organization name
-                                            $userQuery = "SELECT users.*, organizations.organization_name 
-                                                        FROM users 
-                                                        JOIN organizations ON users.organization_id = organizations.organization_id 
-                                                        WHERE users.role = 'officer' AND users.archived = 0";
-                                            $userResult = $conn->query($userQuery);
-
-                                            if ($userResult->num_rows > 0) {
-                                                while ($userRow = $userResult->fetch_assoc()) {
-                                                    echo "<tr>
-                                                            <td>{$userRow['first_name']}</td>
-                                                            <td>{$userRow['last_name']}</td>
-                                                            <td>{$userRow['organization_name']}</td>
-                                                            <td>{$userRow['position']}</td>
-                                                            
-                                                        </tr>";
-                                                }
-                                            } else {
-                                                echo "<tr><td colspan='7' class='text-center'>No users found</td></tr>";
-                                            }
-                                            ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Users end -->
-
-                        <style>
-                            .custom-btn {
-                                background-color: #00542F;
-                                border-color: #00542F;
-                                color: #ffffff;
-                                /* Text color */
-                            }
-
-                            .custom-btn:hover {
-                                background-color: #004026;
-                                /* Darker shade for hover */
-                                border-color: #004026;
-                            }
-                        </style>
-
-                        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-                        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-                        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-                        <script
-                            src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
                         <script>
                             // PDF download function
