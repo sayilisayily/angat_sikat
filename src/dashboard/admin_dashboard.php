@@ -615,7 +615,6 @@ include '../organization_query.php';
                             <div class="submenu">
                                 <a href="../audit_logs/account_logs.php">Account Logs</a>
                                 <a href="../audit_logs/balance_logs.php">Balance Logs</a>
-                                <a href="../audit_logs/report_logs.php">Report Logs</a>
                             </div>
                         </li>
 
