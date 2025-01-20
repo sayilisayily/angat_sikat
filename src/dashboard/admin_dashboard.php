@@ -763,7 +763,7 @@ include '../organization_query.php';
                     <!-- CSS for styling -->
                     <style>
                         .card {
-                            height: 120px; /* Set equal height for the cards */
+                            height: 150px; /* Set equal height for the cards */
                             text-decoration: none; /* Remove underline from links */
                             margin-bottom:0px;
                         }
@@ -775,6 +775,7 @@ include '../organization_query.php';
                         .text-center {
                             text-align: center; /* Center text */
                         }
+
                     </style>
 
                     <!-- Card Row -->
@@ -786,6 +787,14 @@ include '../organization_query.php';
                                     <i class='bx bx-user-pin icon'></i>
                                     <h1 class="fw-bold text-white">Users</h1>
                                 </div>
+                                <div>
+                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
+                                        No. of Users
+                                    </h1>
+                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
+                                        <?= htmlspecialchars($org_members) ?> <!-- Sample Backend -->
+                                    </h1>
+                                </div>
                             </a>
                         </div>
 
@@ -796,6 +805,14 @@ include '../organization_query.php';
                                     <i class='bx bx-user-circle icon'></i>
                                     <h1 class="fw-bold text-white">Advisers</h1>
                                 </div>
+                                <div>
+                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
+                                        No. of Advisers
+                                    </h1>
+                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
+                                        <?= htmlspecialchars($org_members) ?> <!-- Sample Backend -->
+                                    </h1>
+                                </div>
                             </a>
                         </div>
 
@@ -805,6 +822,14 @@ include '../organization_query.php';
                                 <div class="d-flex align-items-center text-center">
                                     <i class='bx bx-buildings icon'></i>
                                     <h1 class="fw-bold text-white">Organization</h1>
+                                </div>
+                                <div>
+                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
+                                        No. of Organizations
+                                    </h1>
+                                    <h1 class="fw-semibold h6" style="font-size: 0.95rem; margin-left: 83px; color: #fff;">
+                                        <?= htmlspecialchars($org_members) ?> <!--Sample Backend -->
+                                    </h1>
                                 </div>
                             </a>
                         </div>
