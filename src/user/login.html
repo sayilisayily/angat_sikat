@@ -1,249 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="../assets/images/logos/favicon_sikat.png"
+    />
+    <link rel="stylesheet" href="../assets/css/styles.min.css" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
 
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login</title>
-  <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png" />
-  <link rel="stylesheet" href="../assets/css/styles.min.css" />
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        position: relative;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      position: relative;
-      overflow: hidden;
-      font-family: Arial, sans-serif;
-    }
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url("../user/CCAT-Campus-Scaled.jpg");
+        background-size: cover;
+        background-position: center;
+        filter: blur(8px);
+        z-index: 1;
+      }
 
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: url("../user/CCAT-Campus-Scaled.jpg");
-      background-size: cover;
-      background-position: center;
-      filter: blur(8px);
-      z-index: 1;
-    }
+      .page-wrapper {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
 
-    .page-wrapper {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .form-container {
-      background-color: rgba(255, 255, 255, 0.9);
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      z-index: 2;
-      display: flex;
-      flex-direction: row;
-      max-width: 800px;
-      width: 90%;
-    }
-
-    .form-section {
-      flex: 1;
-      padding: 10px;
-    }
-
-    .input-group {
-      margin-bottom: 15px;
-      position: relative;
-    }
-
-    .input-group.password-input {
-      display: flex;
-      align-items: center;
-    }
-
-    .toggle-password {
-      border: none;
-      background: none;
-      cursor: pointer;
-      color: #8b6e04;
-      font-size: 1.5rem;
-      margin-left: 10px;
-    }
-
-    .btn {
-      background-color: #d6a906;
-      color: white;
-      border-radius: 8px;
-      padding: 12px;
-      width: 100%;
-    }
-
-    .image-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .image-container img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    @media (max-width: 768px) {
       .form-container {
-        flex-direction: column;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        z-index: 2;
+        display: flex;
+        flex-direction: row;
+        max-width: 800px;
+        width: 90%;
+      }
+
+      .form-section {
+        flex: 1;
+        padding: 10px;
+      }
+
+      .input-group {
+        margin-bottom: 15px;
+        position: relative;
+      }
+
+      .input-group.password-input {
+        display: flex;
+        align-items: center;
+      }
+
+      .toggle-password {
+        border: none;
+        background: none;
+        cursor: pointer;
+        color: #8b6e04;
+        font-size: 1.5rem;
+        margin-left: 10px;
+      }
+
+      .btn {
+        background-color: #d6a906;
+        color: white;
+        border-radius: 8px;
+        padding: 12px;
+        width: 100%;
       }
 
       .image-container {
-        display: none;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-    }
-  </style>
-</head>
 
-<body>
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
-    <div class="container d-flex align-items-center justify-content-center" style="max-width: 900px">
-      <div class="form-container shadow-lg rounded">
-        <div class="form-section text-center">
-          <a href="" class="d-block py-3">
-            <img src="../assets/images/logos/gold_sikat.png" alt="Logo" width="auto" height="80" />
-            <span style="
+      .image-container img {
+        max-width: 100%;
+        height: auto;
+      }
+
+      @media (max-width: 768px) {
+        .form-container {
+          flex-direction: column;
+        }
+
+        .image-container {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div
+      class="page-wrapper"
+      id="main-wrapper"
+      data-layout="vertical"
+      data-navbarbg="skin6"
+      data-sidebartype="full"
+      data-sidebar-position="fixed"
+      data-header-position="fixed"
+    >
+      <div
+        class="container d-flex align-items-center justify-content-center"
+        style="max-width: 900px"
+      >
+        <div class="form-container shadow-lg rounded">
+          <div class="form-section text-center">
+            <a href="" class="d-block py-3">
+              <img
+                src="../assets/images/logos/gold_sikat.png"
+                alt="Logo"
+                width="auto"
+                height="80"
+              />
+              <span
+                style="
                   font-weight: bold;
                   font-size: 18px;
                   color: #8b6e04;
                   display: block;
                   text-align: center;
-                ">ANGAT SIKAT</span>
-          </a>
-          <p class="mb-3" style="color: #6c757d; font-size: 0.8rem">
-            Budget and Expense Tracker for Organization in <br />
-            Cavite State University CCAT CAMPUS
-          </p>
+                "
+                >ANGAT SIKAT</span
+              >
+            </a>
+            <p class="mb-3" style="color: #6c757d; font-size: 0.8rem">
+              Budget and Expense Tracker for Organization in <br />
+              Cavite State University CCAT CAMPUS
+            </p>
 
-          <form id="loginForm">
-            <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-              Login successful!
-            </div>
-            <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
-              <ul id="errorList"></ul>
-            </div>
+            <form id="loginForm">
+              <div
+                id="successMessage"
+                class="alert alert-success d-none mt-3"
+                role="alert"
+              >
+                Login successful!
+              </div>
+              <div
+                id="errorMessage"
+                class="alert alert-danger d-none mt-3"
+                role="alert"
+              >
+                <ul id="errorList"></ul>
+              </div>
 
-            <div class="mb-3 input-group">
-              <span class="input-group-text"><i class="bx bx-user"></i></span>
-              <input type="email" name="email" id="email" class="form-control" placeholder="Email" required />
-            </div>
-            <div class="mb-4 input-group password-input">
-              <span class="input-group-text"><i class="bx bx-lock"></i></span>
-              <input type="password" class="form-control" name="password" id="password" placeholder="Password"
-                required />
-              <button type="button" class="toggle-password" id="togglePassword">
-                <i class="bx bx-show"></i>
-              </button>
-            </div>
-            <button type="submit" class="btn mb-4">Sign In</button>
-          </form>
-        </div>
+              <div class="mb-3 input-group">
+                <span class="input-group-text"><i class="bx bx-user"></i></span>
+                <input
+                  type="text"
+                  name="identifier"
+                  id="identifier"
+                  class="form-control"
+                  placeholder="Email or Username"
+                  required
+                />
+              </div>
+              <div class="mb-4 input-group password-input">
+                <span class="input-group-text"><i class="bx bx-lock"></i></span>
+                <input
+                  type="password"
+                  class="form-control"
+                  name="password"
+                  id="password"
+                  placeholder="Password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  id="togglePassword"
+                >
+                  <i class="bx bx-show"></i>
+                </button>
+              </div>
+              <button type="submit" class="btn mb-4">Sign In</button>
+            </form>
+          </div>
 
-        <div class="image-container">
-          <img src="../assets/images/logos/csg_logo-removebg.png" alt="Login Illustration" class="img-fluid rounded" />
+          <div class="image-container">
+            <img
+              src="../assets/images/logos/csg_logo-removebg.png"
+              alt="Login Illustration"
+              class="img-fluid rounded"
+            />
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-  <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Check if a session expiration message is in the URL
-      const params = new URLSearchParams(window.location.search);
-      const errorMessage = document.getElementById("errorMessage");
-      const errorList = document.getElementById("errorList");
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Check if a session expiration message is in the URL
+        const params = new URLSearchParams(window.location.search);
+        const errorMessage = document.getElementById("errorMessage");
+        const errorList = document.getElementById("errorList");
 
-      if (params.has("message")) {
-        const message = params.get("message");
-        // Display the session expiration message
-        const li = document.createElement("li");
-        li.textContent = message;
-        errorList.appendChild(li);
-        errorMessage.classList.remove("d-none");
+        if (params.has("message")) {
+          const message = params.get("message");
+          // Display the session expiration message
+          const li = document.createElement("li");
+          li.textContent = message;
+          errorList.appendChild(li);
+          errorMessage.classList.remove("d-none");
 
-        // Remove the query parameter from the URL
-        history.replaceState({}, document.title, window.location.pathname);
-      }
+          // Remove the query parameter from the URL
+          history.replaceState({}, document.title, window.location.pathname);
+        }
 
-      // Handle the login form submission
-      document
-        .getElementById("loginForm")
-        .addEventListener("submit", function (e) {
-          e.preventDefault(); // Prevent default form submission
+        // Handle the login form submission
+        document
+          .getElementById("loginForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault(); // Prevent default form submission
 
-          // Get form data
-          const formData = new FormData(this);
+            // Get form data
+            const formData = new FormData(this);
 
-          // Clear existing messages
-          document.getElementById("successMessage").classList.add("d-none");
-          errorMessage.classList.add("d-none");
-          errorList.innerHTML = "";
+            // Clear existing messages
+            document.getElementById("successMessage").classList.add("d-none");
+            errorMessage.classList.add("d-none");
+            errorList.innerHTML = "";
 
-          // Send AJAX request
-          fetch("login.php", {
-            method: "POST",
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.success) {
-                // Show success message
-                const successMessage =
-                  document.getElementById("successMessage");
-                successMessage.textContent = data.message;
-                successMessage.classList.remove("d-none");
-
-                // Redirect to the appropriate dashboard
-                setTimeout(() => {
-                  window.location.href = data.redirect_url;
-                }, 1500);
-              } else {
-                // Show error messages
-                data.errors.forEach((error) => {
-                  const li = document.createElement("li");
-                  li.textContent = error;
-                  errorList.appendChild(li);
-                });
-                errorMessage.classList.remove("d-none");
-              }
+            // Send AJAX request
+            fetch("login.php", {
+              method: "POST",
+              body: formData,
             })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
-        });
-    });
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  // Show success message
+                  const successMessage =
+                    document.getElementById("successMessage");
+                  successMessage.textContent = data.message;
+                  successMessage.classList.remove("d-none");
 
-    // Toggle password visibility
-    document
-      .getElementById("togglePassword")
-      .addEventListener("click", function () {
-        const passwordInput = document.getElementById("password");
-        const passwordType =
-          passwordInput.getAttribute("type") === "password"
-            ? "text"
-            : "password";
-        passwordInput.setAttribute("type", passwordType);
-        this.querySelector("i").classList.toggle("bx-show");
-        this.querySelector("i").classList.toggle("bx-hide");
+                  // Redirect to the appropriate dashboard
+                  setTimeout(() => {
+                    window.location.href = data.redirect_url;
+                  }, 1500);
+                } else {
+                  // Show error messages
+                  data.errors.forEach((error) => {
+                    const li = document.createElement("li");
+                    li.textContent = error;
+                    errorList.appendChild(li);
+                  });
+                  errorMessage.classList.remove("d-none");
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          });
       });
-  </script>
-</body>
 
+      // Toggle password visibility
+      document
+        .getElementById("togglePassword")
+        .addEventListener("click", function () {
+          const passwordInput = document.getElementById("password");
+          const passwordType =
+            passwordInput.getAttribute("type") === "password"
+              ? "text"
+              : "password";
+          passwordInput.setAttribute("type", passwordType);
+          this.querySelector("i").classList.toggle("bx-show");
+          this.querySelector("i").classList.toggle("bx-hide");
+        });
+    </script>
+  </body>
 </html>
