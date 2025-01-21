@@ -778,6 +778,29 @@ include '../organization_query.php';
 
                     </style>
 
+                    <?php
+                        // Fetch total advisers directly from the advisers table
+                        $query_user = "SELECT COUNT(*) AS total_users FROM users WHERE archived = 0 and role='officer'";
+
+                        if ($stmt_user = $conn->prepare($query_user)) {
+                            $stmt_user->execute();
+                            $result_user = $stmt_user->get_result();
+
+                            // Check if the query returned results
+                            if ($result_user && $user_data = $result_user->fetch_assoc()) {
+                                $total_users = $user_data['total_users'] ?? 0;
+                            } else {
+                                $total_users= 0; // Default to 0 if no results
+                            }
+
+                            $stmt_user->close();
+                        } else {
+                            // Error handling for query preparation
+                            error_log("Query Preparation Failed: " . $conn->error);
+                            $total_users = 0; // Default to 0 if query fails
+                        }
+                        ?>
+
                     <!-- Card Row -->
                     <div class="row">
                         <!-- Users Card -->
@@ -788,12 +811,34 @@ include '../organization_query.php';
                                     <h1 class="fw-bold text-white">Users</h1>
                                 </div>
                                 <div>
-                                    <h1 class="fw-semibold h6" style="font-size: 1.95rem; margin-left: 200px; color: #fff;">
-                                        40 <!-- Sample Backend -->
+                                    <h1 class="fw-bold text-white text-end"><?= $total_users;?>
                                     </h1>
                                 </div>
                             </a>
                         </div>
+
+                        <?php
+                        // Fetch total advisers directly from the advisers table
+                        $query_adviser = "SELECT COUNT(*) AS total_advisers FROM advisers WHERE archived = 0";
+
+                        if ($stmt_adviser = $conn->prepare($query_adviser)) {
+                            $stmt_adviser->execute();
+                            $result_adviser = $stmt_adviser->get_result();
+
+                            // Check if the query returned results
+                            if ($result_adviser && $adviser_data = $result_adviser->fetch_assoc()) {
+                                $total_advisers = $adviser_data['total_advisers'] ?? 0;
+                            } else {
+                                $total_advisers= 0; // Default to 0 if no results
+                            }
+
+                            $stmt_adviser->close();
+                        } else {
+                            // Error handling for query preparation
+                            error_log("Query Preparation Failed: " . $conn->error);
+                            $total_advisers = 0; // Default to 0 if query fails
+                        }
+                        ?>
 
                         <!-- Advisers Card -->
                         <div class="col-md-4 mb-3">
@@ -803,23 +848,44 @@ include '../organization_query.php';
                                     <h1 class="fw-bold text-white">Advisers</h1>
                                 </div>
                                 <div>
-                                    <h1 class="fw-semibold h6" style="font-size: 1.95rem; margin-left: 200px; color: #fff;">
-                                        40 <!-- Sample Backend -->
+                                    <h1 class="fw-bold text-white text-end"><?= $total_advisers;?>
                                     </h1>
                                 </div>
                             </a>
                         </div>
+
+                        <?php
+                        // Fetch total organizations directly from the organizations table
+                        $query_organization = "SELECT COUNT(*) AS total_organizations FROM organizations WHERE archived = 0";
+
+                        if ($stmt_organization = $conn->prepare($query_organization)) {
+                            $stmt_organization->execute();
+                            $result_organization = $stmt_organization->get_result();
+
+                            // Check if the query returned results
+                            if ($result_organization && $organization_data = $result_organization->fetch_assoc()) {
+                                $total_organizations = $organization_data['total_organizations'] ?? 0;
+                            } else {
+                                $total_organizations = 0; // Default to 0 if no results
+                            }
+
+                            $stmt_organization->close();
+                        } else {
+                            // Error handling for query preparation
+                            error_log("Query Preparation Failed: " . $conn->error);
+                            $total_organizations = 0; // Default to 0 if query fails
+                        }
+                        ?>
 
                         <!-- Organization Card -->
                         <div class="col-md-4 mb-3">
                             <a href="../organization_management/organizations.php" class="card gradient-card-3 p-3 shadow-sm mx-2">
                                 <div class="d-flex align-items-center text-center">
                                     <i class='bx bx-buildings icon'></i>
-                                    <h1 class="fw-bold text-white">Organization</h1>
+                                    <h1 class="fw-bold text-white">Organizations</h1>
                                 </div>
                                 <div>
-                                    <h1 class="fw-semibold h6" style="font-size: 1.95rem; margin-left: 200px; color: #fff;">
-                                        20 <!--Sample Backend -->
+                                    <h1 class="fw-bold text-white text-end"><?= $total_organizations;?>
                                     </h1>
                                 </div>
                             </a>
