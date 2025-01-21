@@ -687,7 +687,7 @@ include '../organization_query.php';
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
                             <li class="nav-item">
                                 <!-- Notification Icon -->
-                                    <div style="position: relative; display: inline-block;">
+                                <div style="position: relative; display: inline-block;">
                                     <button id="notificationBtn" style="background-color: transparent; border: none; padding: 0;">
                                         <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover" 
                                             colors="primary:#004024" style="width:30px; height:30px;">
@@ -1375,16 +1375,18 @@ include '../organization_query.php';
                                     // Add data-id attribute for the notification ID
                                     notificationItem.dataset.id = notification.id;
 
-                                    // Attach click event to visually mark as read
+                                    // Attach click event to mark as read
                                     notificationItem.addEventListener("click", () => {
-                                        markAsRead(notificationItem);
+                                        markAsRead(notification.id);
+                                        notificationItem.style.opacity = 0.5; // Visual indicator (optional)
                                     });
 
                                     notificationList.appendChild(notificationItem);
                                     });
 
-                                    // Set notification count in localStorage
-                                    updateNotificationCount(data.length);
+                                    notificationCount.textContent = data.length;
+                                    notificationCount.style.display = "inline-block";
+                                    noNotifications.style.display = "none";
                                 } else {
                                     noNotifications.style.display = "block";
                                     notificationCount.style.display = "none";
@@ -1393,6 +1395,17 @@ include '../organization_query.php';
                                 .catch((error) => {
                                 console.error("Error loading notifications:", error);
                                 });
+                            }
+
+                            function updateNotificationCount() {
+                            const currentCount = parseInt(notificationCount.textContent, 10) || 0;
+                            if (currentCount > 0) {
+                                notificationCount.textContent = currentCount - 1;
+                                if (currentCount - 1 === 0) {
+                                notificationCount.style.display = "none";
+                                noNotifications.style.display = "block";
+                                }
+                            }
                             }
 
                             // Initial Load
@@ -1411,45 +1424,24 @@ include '../organization_query.php';
                             }
                             });
 
-                            // Function to mark a notification as read visually
-                            function markAsRead(notificationItem) {
-                            // Change the styling to indicate the notification has been read
-                            notificationItem.style.opacity = 0.5; // Visual indicator
-                            notificationItem.style.textDecoration = "line-through"; // Optional: strike through text
-                            notificationItem.style.color = "#aaa"; // Optional: change text color
+                            // Function to mark a notification as read
+                            async function markAsRead(notificationId) {
+                            try {
+                                await fetch("../notification_read.php", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({ id: notificationId }),
+                                });
 
-                            // Update the notification count in localStorage
-                            updateNotificationCount(-1);
-                            }
-
-                            // Update notification count and localStorage
-                            function updateNotificationCount(change = 0) {
-                            let currentCount = parseInt(localStorage.getItem("notificationCount"), 10) || 0;
-                            currentCount += change;
-
-                            // Update localStorage
-                            localStorage.setItem("notificationCount", currentCount);
-
-                            // Update UI
-                            if (currentCount > 0) {
-                                notificationCount.textContent = currentCount;
-                                notificationCount.style.display = "inline-block";
-                                noNotifications.style.display = "none";
-                            } else {
-                                notificationCount.style.display = "none";
-                                noNotifications.style.display = "block";
+                                // Optional: update notification count after marking as read
+                                updateNotificationCount();
+                            } catch (error) {
+                                console.error("Error marking notification as read:", error);
                             }
                             }
 
-                            // On page load, set initial count from localStorage
-                            document.addEventListener("DOMContentLoaded", () => {
-                            const storedCount = localStorage.getItem("notificationCount");
-                            if (storedCount) {
-                                notificationCount.textContent = storedCount;
-                                notificationCount.style.display = storedCount > 0 ? "inline-block" : "none";
-                                noNotifications.style.display = storedCount > 0 ? "none" : "block";
-                            }
-                            });
                         </script>
                     </div>
                     <div class="py-6 px-6 text-center d-none d-sm-block">
