@@ -22,7 +22,7 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activities Table</title>
-    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png"/>
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/angatsikat.png"/>
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
     <!--Custom CSS for Activities-->
     <link rel="stylesheet" href="css/activities.css" />
@@ -99,14 +99,24 @@ $result = $conn->query($sql);
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a class="text-nowrap logo-img">
-                        <img src="../assets/images/logos/neon_sikat.png" alt="Angat Sikat Logo" class="logo contain"
-                            style="width: 60px; height: auto;" />
+                        <img src="../assets/images/logos/angatsikat.png" alt="Angat Sikat Logo" class="logo contain"
+                            style="width: 45px; height: auto;" />
+                            <span class="logo-text">ANGATSIKAT</span>
                     </a>
-                    <span class="logo-text">ANGATSIKAT</span>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
                     </div>
                 </div>
+
+                <style>
+                    .logo-text {
+                        font-size: 23px; /* Adjust font size */
+                        color: #fff; /* Set text color */
+                        font-weight: bold; /* Make text bold */
+                        text-transform: uppercase; /* Transform text to uppercase */
+                        margin-left: 10px;
+                    }
+                </style>
                 <!-- Sidebar navigation-->
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <ul id="sidebarnav">
