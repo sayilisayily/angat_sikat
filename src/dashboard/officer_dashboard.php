@@ -1667,7 +1667,6 @@ include '../organization_query.php';
 
                             <!-- JavaScript -->
                             <script>
-                                let currentDate = new Date();
 
                                 function renderCalendar() {
                                     const month = currentDate.getMonth();
