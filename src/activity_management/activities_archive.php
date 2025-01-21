@@ -495,8 +495,6 @@ $result = $conn->query($sql);
                                             </td>
                                         </tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='8' class='text-center'>No events found</td></tr>";
                             }
                             ?>
                         </tbody>
