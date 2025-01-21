@@ -18,7 +18,7 @@ include '../user_query.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Budget Approvals</title>
-    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon_sikat.png" />
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/angatsikat.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
     <!--Custom CSS for Budget Overview-->
     <link rel="stylesheet" href="../budget_management/css/budget.css" />
