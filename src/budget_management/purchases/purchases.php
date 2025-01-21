@@ -521,8 +521,6 @@ $result = $conn->query($sql);
                                             </td>
                                             </tr>";
                                     }
-                                } else {
-                                    echo "<tr><td colspan='5' class='text-center'>No purchases found</td></tr>";
                                 }
                                 ?>
                             </tbody>

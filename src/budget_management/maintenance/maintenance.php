@@ -518,9 +518,7 @@ $result = $conn->query($sql);
                                         </td>
                                         </tr>";
                                 }
-                            } else {
-                                echo "<tr><td colspan='5' class='text-center'>No maintenance or operating expenses found</td></tr>";
-                            }
+                            } 
                             ?>
                         </tbody>
                     </table>
