@@ -26,9 +26,10 @@ class CustomPDF extends TCPDF {
 
     // Footer Method
     public function Footer() {
-        $this->SetY(-25.4); // Position 1 inch from the bottom
-        $this->SetFont('play', '', 10); // Set font
         global $acronym;
+        global $play;
+        $this->SetY(-25.4); // Position 1 inch from the bottom
+        $this->SetFont($play, '', 10); // Set font
 
         $this->SetLineWidth(0.5); // Set line width
         $this->Line(10, $this->GetY() - 5, 200, $this->GetY() - 5); // Draw line (x1, y1, x2, y2)
@@ -42,6 +43,7 @@ class CustomPDF extends TCPDF {
 }
 
 $pdf = new CustomPDF();
+
 
 // Register fonts
 $bookmanOldStyle = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/bookman-old-style_j4eZ5/Bookman Old Style/Bookman Old Style Bold/Bookman Old Style Bold.ttf', 'TrueTypeUnicode', '', 96);
@@ -79,7 +81,7 @@ $pdf->writeHTMLCell(30, 40, 165, 15, $htmlRightLogo, 0, 0, false, true, 'R', tru
 $pdf->SetFont($centurygothic, 'B', 11);
 $pdf->SetY(15); // Adjust Y to align with logos
 $pdf->Cell(0, 5, 'Republic of the Philippines', 0, 1, 'C');
-$pdf->SetFont('Bookman Old Style', 'B', 11);
+$pdf->SetFont($bookmanOldStyle, 'B', 11);
 $pdf->Cell(0, 5, 'CAVITE STATE UNIVERSITY', 0, 1, 'C');
 $pdf->SetFont($centuryGothicBold, 'B', 11);
 $pdf->Cell(0, 5, 'CCAT Campus', 0, 1, 'C');
@@ -92,7 +94,6 @@ $pdf->Cell(0, 5, 'cvsurosario@cvsu.edu.ph', 0, 1, 'C');
 $pdf->Cell(0, 5, 'www.cvsu-rosario.edu.ph', 0, 1, 'C');
 
 $pdf->Ln(10); // Add space after header
-
 
 // Function to convert numbers to words
 function convertNumberToWord($number = false)

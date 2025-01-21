@@ -25,9 +25,10 @@ class CustomPDF extends TCPDF {
 
     // Footer Method
     public function Footer() {
-        $this->SetY(-25.4); // Position 1 inch from the bottom
-        $this->SetFont('play', '', 10); // Set font
         global $acronym;
+        global $play;
+        $this->SetY(-25.4); // Position 1 inch from the bottom
+        $this->SetFont($play, '', 10); // Set font
 
         $this->SetLineWidth(0.5); // Set line width
         $this->Line(10, $this->GetY() - 5, 200, $this->GetY() - 5); // Draw line (x1, y1, x2, y2)
@@ -42,6 +43,7 @@ class CustomPDF extends TCPDF {
 
 $pdf = new CustomPDF();
 
+
 // Register fonts
 $bookmanOldStyle = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/bookman-old-style_j4eZ5/Bookman Old Style/Bookman Old Style Bold/Bookman Old Style Bold.ttf', 'TrueTypeUnicode', '', 96);
 $arialBold = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/arial-font/arial_bold13.ttf', 'TrueTypeUnicode', '', 96);
@@ -51,9 +53,8 @@ $centurygothic = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/cent
 $play = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/play/Play-Regular.ttf"', 'TrueTypeUnicode', '', 96);
 
 $pdf->AddPage();
-$pdf->SetMargins(25.4, 25.4, 25.4); // Set 1-inch margins (top, left, right)
-$pdf->SetAutoPageBreak(true, 31.75); // Set 1.25-inch bottom margin (31.75mm)
-
+$pdf->SetMargins(25.4, 25.4, 25.4); // 1-inch margins (25.4mm)
+$pdf->SetAutoPageBreak(true, 30.48); // 1.2-inch bottom margin
 
 // Set left logo using HTML
 $htmlLeftLogo = '
@@ -79,7 +80,7 @@ $pdf->writeHTMLCell(30, 40, 165, 15, $htmlRightLogo, 0, 0, false, true, 'R', tru
 $pdf->SetFont($centurygothic, 'B', 11);
 $pdf->SetY(15); // Adjust Y to align with logos
 $pdf->Cell(0, 5, 'Republic of the Philippines', 0, 1, 'C');
-$pdf->SetFont('Bookman Old Style', 'B', 11);
+$pdf->SetFont($bookmanOldStyle, 'B', 11);
 $pdf->Cell(0, 5, 'CAVITE STATE UNIVERSITY', 0, 1, 'C');
 $pdf->SetFont($centuryGothicBold, 'B', 11);
 $pdf->Cell(0, 5, 'CCAT Campus', 0, 1, 'C');

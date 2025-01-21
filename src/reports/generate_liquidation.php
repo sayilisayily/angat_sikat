@@ -19,16 +19,18 @@ $org_query = "SELECT organization_name, acronym FROM organizations WHERE organiz
 
 class CustomPDF extends TCPDF {
     public function Header() {
-        $this->SetFont('play', 'I', 10); // Set font to Arial, size 11
+        global $play;
+        $this->SetFont($play, 'I', 10); // Set font to Arial, size 11
         $this->Cell(0, 10, 'SGOA FORM 07', 0, 1, 'R'); // Right-aligned header text
     }
 
     // Footer Method
    public function Footer() {
-        $this->SetY(-25.4); // Position 1 inch from the bottom
-        $this->SetFont('play', '', 10); // Set font
         global $acronym;
-
+        global $play;
+        $this->SetY(-25.4); // Position 1 inch from the bottom
+        $this->SetFont($play, '', 10); // Set font
+        
         $this->SetLineWidth(0.5); // Set line width
         $this->Line(10, $this->GetY() - 5, 200, $this->GetY() - 5); // Draw line (x1, y1, x2, y2)
 
@@ -78,7 +80,7 @@ $pdf->writeHTMLCell(30, 40, 165, 15, $htmlRightLogo, 0, 0, false, true, 'R', tru
 $pdf->SetFont($centurygothic, 'B', 11);
 $pdf->SetY(15); // Adjust Y to align with logos
 $pdf->Cell(0, 5, 'Republic of the Philippines', 0, 1, 'C');
-$pdf->SetFont('Bookman Old Style', 'B', 11);
+$pdf->SetFont($bookmanOldStyle, 'B', 11);
 $pdf->Cell(0, 5, 'CAVITE STATE UNIVERSITY', 0, 1, 'C');
 $pdf->SetFont($centuryGothicBold, 'B', 11);
 $pdf->Cell(0, 5, 'CCAT Campus', 0, 1, 'C');
