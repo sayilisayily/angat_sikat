@@ -11,7 +11,7 @@ include '../organization_query.php';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Profile</title>
-    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/angat sikat.png" />
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/angatsikat.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
     <!--Custom CSS for Sidebar-->
     <link rel="stylesheet" href="../html/sidebar.css" />
@@ -87,7 +87,7 @@ include '../organization_query.php';
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a class="text-nowrap logo-img">
-                        <img src="../assets/images/logos/neon_sikat.png" alt="Angat Sikat Logo" class="logo contain"
+                        <img src="../assets/images/logos/angatsikat.png" alt="Angat Sikat Logo" class="logo contain"
                             style="width: 60px; height: auto;" />
                     </a>
                     <span class="logo-text">ANGATSIKAT</span>
@@ -113,6 +113,119 @@ include '../organization_query.php';
                         </li>
 
                         <li class="sidebar-item">
+                            <a class="sidebar-link" href="../activity_management/admin_calendar.php" aria-expanded="false"
+                                data-tooltip="Manage Events">
+                                <i class="bx bx-calendar" style="color: #fff; font-size: 35px;"></i>
+                                <span class="hide-menu">Calendar</span>
+                            </a>
+                        </li>
+
+                        <style>
+                            .submenu {
+                                display: none;
+                                padding-left: 20px;
+                                background-color: #00542F;
+                            }
+
+                            .submenu a {
+                                display: block;
+                                padding: 5px 10px;
+                                text-decoration: none;
+                                color: #fff;
+                                background-color: #00542F;
+                            }
+
+                            .submenu a:hover {
+                                background-color: #FFB000;
+                            }
+
+                            .sidebar-link {
+                                position: relative;
+                                cursor: pointer;
+                                /* Ensure pointer cursor for better UX */
+                            }
+
+                            .sidebar-link:hover {
+                                background-color: #FFB000;
+                                /* Hover color */
+                            }
+
+                            .sidebar-link.active {
+                                background-color: #FFB000;
+                                /* Active color */
+                            }
+
+                            .scroll-sidebar {
+                                overflow: auto;
+                                /* Enable scrolling */
+                            }
+
+                            /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
+                            .scroll-sidebar::-webkit-scrollbar {
+                                display: none;
+                                /* Hide scrollbar */
+                            }
+
+                            /* Hide scrollbar for IE, Edge, and Firefox */
+                            .scroll-sidebar {
+                                -ms-overflow-style: none;
+                                /* IE and Edge */
+                                scrollbar-width: none;
+                                /* Firefox */
+                            }
+                        </style>
+
+                        <script>
+                            document.querySelectorAll('.sidebar-link').forEach(link => {
+                                link.addEventListener('click', function () {
+                                    // Remove 'active' class from all links
+                                    document.querySelectorAll('.sidebar-link').forEach(item => {
+                                        item.classList.remove('active');
+                                    });
+
+                                    // Add 'active' class to the clicked link
+                                    this.classList.add('active');
+                                });
+                            });
+
+                            function toggleSubmenu(event) {
+                                event.preventDefault();
+                                const submenus = document.querySelectorAll('.submenu');
+                                const currentSubmenu = event.currentTarget.nextElementSibling;
+
+                                // Close all submenus
+                                submenus.forEach(submenu => {
+                                    if (submenu !== currentSubmenu) {
+                                        submenu.style.display = "none";
+                                    }
+                                });
+
+                                // Toggle the current submenu
+                                currentSubmenu.style.display = (currentSubmenu.style.display === "block") ? "none" : "block";
+                            }
+
+                            function closeSubmenus() {
+                                const submenus = document.querySelectorAll('.submenu');
+                                submenus.forEach(submenu => {
+                                    submenu.style.display = "none"; // Close all submenus
+                                });
+                            }
+                        </script>
+                        </style>
+
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" aria-expanded="false" data-tooltip="Budget"
+                                onclick="toggleSubmenu(event)">
+                                <i class="bx bx-file-find" style="color: #fff; font-size: 35px;"></i>
+                                <span class="hide-menu">Audit Logs</span>
+                            </a>
+                            <div class="submenu">
+                                <a href="../audit_logs/account_logs.php">Account Logs</a>
+                                <a href="../audit_logs/balance_logs.php">Balance Logs</a>
+                            </div>
+                        </li>
+
+                        <li class="sidebar-item">
                             <a class="sidebar-link" href="../user_management/users.php" aria-expanded="false"
                                 data-tooltip="Users">
                                 <i class="bx bx-user" style="color: #fff; font-size: 35px;"></i>
@@ -120,8 +233,8 @@ include '../organization_query.php';
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="../organization_management/organizations.php" aria-expanded="false"
-                                data-tooltip="Organizations">
+                            <a class="sidebar-link" href="../organization_management/organizations.php"
+                                aria-expanded="false" data-tooltip="Organizations">
                                 <i class="bx bx-group" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Organizations</span>
                             </a>
@@ -136,8 +249,8 @@ include '../organization_query.php';
                         </li>
 
                         <li class="sidebar-item">
-                            <a class="sidebar-link" href="../budget_management/admin_budget_approval_table.php" aria-expanded="false"
-                                data-tooltip="Events">
+                            <a class="sidebar-link" href="../budget_management/admin_budget_approval_table.php"
+                                aria-expanded="false" data-tooltip="Events">
                                 <i class="bx bx-book-content" style="color: #fff; font-size: 35px;"></i>
                                 <span class="hide-menu">Approval</span>
                             </a>
@@ -180,23 +293,33 @@ include '../organization_query.php';
                     <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
                             <li class="nav-item">
-                                <button id="notificationBtn"
-                                    style="background-color: transparent; border: none; padding: 0; position: relative;">
-                                    <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover"
-                                        colors="primary:#004024" style="width:30px; height:30px;">
-                                    </lord-icon>
-                                    <!-- Notification Count Badge -->
-                                    <span id="notificationCount" style="
-                                    position: absolute;
-                                    top: -5px;
-                                    right: -5px;
-                                    background-color: red;
-                                    color: white;
-                                    font-size: 12px;
-                                    padding: 2px 6px;
-                                    border-radius: 50%;
-                                    display: none;">0</span>
-                                </button>
+                                <!-- Notification Icon -->
+                                <div style="position: relative; display: inline-block;">
+                                    <button id="notificationBtn" style="background-color: transparent; border: none; padding: 0;">
+                                        <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover" 
+                                            colors="primary:#004024" style="width:30px; height:30px;">
+                                        </lord-icon>
+                                        <!-- Notification Count Badge -->
+                                        <span id="notificationCount" style="position: absolute; top: -5px; right: -5px; 
+                                            background-color: red; color: white; font-size: 12px; padding: 2px 6px; 
+                                            border-radius: 50%; display: none;">0</span>
+                                    </button>
+
+                                    <!-- Notification Dropdown -->
+                                    <div id="notificationDropdown" class="dropdown-menu p-2 shadow" 
+                                        style="display: none; position: absolute; right: 0; top: 35px; width: 300px; max-height: 400px; 
+                                        overflow-y: auto; background-color: white; border-radius: 5px; z-index: 1000;">
+                                        <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                                            Notifications
+                                        </p>
+                                        <div id="notificationList">
+                                            <!-- Notifications will be dynamically loaded here -->
+                                        </div>
+                                        <p id="noNotifications" style="text-align: center; margin-top: 10px; color: gray; display: none;">
+                                            No new notifications
+                                        </p>
+                                    </div>
+                                </div>
                             </li>
                             <li class="nav-item dropdown">
                                 <!-- Profile Dropdown -->
@@ -205,7 +328,8 @@ include '../organization_query.php';
                                         data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
                                         <img class="border border-dark rounded-circle"
                                             src="<?php echo !empty($profile_picture) ? '../user/' . $profile_picture : '../user/uploads/default.png'; ?>"
-                                            alt="Profile" style="width: 40px; height: 40px; margin-left: 10px;">
+                                            alt="Profile"
+                                            style="width: 40px; height: 40px; margin-left: 10px; object-fit: cover;">
                                         <span class="visually-hidden">
                                             <?php echo htmlspecialchars($user['username']); ?>
                                         </span>
@@ -219,7 +343,7 @@ include '../organization_query.php';
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="../user/profile.php"><i
+                                        <li><a class="dropdown-item" href="../user/admin_profile.php"><i
                                                     class="bx bx-user"></i> My Profile</a>
                                         </li>
                                         <li><a class="dropdown-item" href="../user/logout.php"><i

@@ -86,7 +86,7 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Purchase Details</title>
-    <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/favicon_sikat.png"/>
+    <link rel="shortcut icon" type="image/png" href="../../assets/images/logos/angatsikat.png"/>
     <link rel="stylesheet" href="../../assets/css/styles.min.css" />
     <!--Custom CSS for Activities-->
     <link rel="stylesheet" href="../../activity_management/css/activities.css" />
@@ -163,14 +163,24 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
             <div>
                 <div class="brand-logo d-flex align-items-center justify-content-between">
                     <a class="text-nowrap logo-img">
-                        <img src="../../assets/images/logos/neon_sikat.png" alt="Angat Sikat Logo" class="logo contain"
-                            style="width: 60px; height: auto;" />
+                        <img src="../../assets/images/logos/angatsikat.png" alt="Angat Sikat Logo" class="logo contain"
+                            style="width: 45px; height: auto;" />
+                            <span class="logo-text">ANGATSIKAT</span>
                     </a>
-                    <span class="logo-text">ANGATSIKAT</span>
                     <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
                         <i class="ti ti-x fs-8"></i>
                     </div>
                 </div>
+
+                <style>
+                    .logo-text {
+                        font-size: 23px; /* Adjust font size */
+                        color: #fff; /* Set text color */
+                        font-weight: bold; /* Make text bold */
+                        text-transform: uppercase; /* Transform text to uppercase */
+                        margin-left: 10px;
+                    }
+                </style>
                 <!-- Sidebar navigation-->
                 <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                     <ul id="sidebarnav">
@@ -368,7 +378,7 @@ if (isset($_GET['purchase_id']) && !empty($_GET['purchase_id'])) {
                                 data-tooltip="Profile" style="display: flex; align-items: center; padding: 0.5rem;">
                                 <div class="profile-pic-border"
                                     style="height: 4rem; width: 4rem; display: flex; justify-content: center; align-items: center; overflow: hidden; border-radius: 50%; border: 2px solid #ccc;">
-                                    <img src="<?php echo !empty($profile_picture) ? '../../user/' . htmlspecialchars($profile_picture) : '../user/uploads/default.png'; ?>"
+                                    <img src="<?php echo !empty($profile_picture) ? '../../user/' . htmlspecialchars($profile_picture) : '../../user/uploads/default.png'; ?>"
                                         alt="Profile Picture" class="profile-pic"
                                         style="height: 100%; width: 100%; object-fit: cover;" />
                                 </div>
