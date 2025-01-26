@@ -529,7 +529,6 @@ $result = $conn->query($sql);
                                     <select name="title" id="title" class="form-control" required>
                                         <option value="">Select Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></option>
                                         <?php
-                                        include 'connection.php';
 
                                         // Fetch events
                                         $event_query = "SELECT title, summary_id, total_amount FROM events_summary WHERE type = 'Expense' AND archived = 0 AND organization_id = $organization_id";
