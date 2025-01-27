@@ -19,17 +19,15 @@ $org_query = "SELECT organization_name, acronym FROM organizations WHERE organiz
 
 class CustomPDF extends TCPDF {
     public function Header() {
-        global $play;
-        $this->SetFont($play, 'I', 10); // Set font to Arial, size 11
+        $this->SetFont('play', 'I', 10); // Set font to Arial, size 11
         $this->Cell(0, 10, 'SGOA FORM 07', 0, 1, 'R'); // Right-aligned header text
     }
 
     // Footer Method
    public function Footer() {
         global $acronym;
-        global $play;
         $this->SetY(-25.4); // Position 1 inch from the bottom
-        $this->SetFont($play, '', 10); // Set font
+        $this->SetFont('play', '', 10); // Set font
         
         $this->SetLineWidth(0.5); // Set line width
         $this->Line(10, $this->GetY() - 5, 200, $this->GetY() - 5); // Draw line (x1, y1, x2, y2)
@@ -43,14 +41,6 @@ class CustomPDF extends TCPDF {
 }
 
 $pdf = new CustomPDF();
-
-// Register fonts
-$bookmanOldStyle = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/bookman-old-style_j4eZ5/Bookman Old Style/Bookman Old Style Bold/Bookman Old Style Bold.ttf', 'TrueTypeUnicode', '', 96);
-$arialBold = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/arial-font/arial_bold13.ttf', 'TrueTypeUnicode', '', 96);
-$arial = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/arial-font/arial.ttf', 'TrueTypeUnicode', '', 96);
-$centuryGothicBold = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/century-gothic/GOTHICB.TTF""', 'TrueTypeUnicode', '', 96);
-$centurygothic = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/century-gothic/Century Gothic.ttf', 'TrueTypeUnicode', '', 96);
-$play = TCPDF_FONTS::addTTFfont('../../libs/tcpdf/TCPDF-main/fonts/play/Play-Regular.ttf"', 'TrueTypeUnicode', '', 96);
 
 $pdf->AddPage();
 $pdf->SetMargins(25.4, 25.4, 25.4); // 1-inch margins (25.4mm)
@@ -77,14 +67,14 @@ $pdf->writeHTMLCell(30, 40, 15, 15, $htmlLeftLogo, 0, 0, false, true, 'L', true)
 $pdf->writeHTMLCell(30, 40, 165, 15, $htmlRightLogo, 0, 0, false, true, 'R', true);
 
 // Center-align the header text
-$pdf->SetFont($centurygothic, 'B', 11);
+$pdf->SetFont('centurygothic', 'B', 11);
 $pdf->SetY(15); // Adjust Y to align with logos
 $pdf->Cell(0, 5, 'Republic of the Philippines', 0, 1, 'C');
-$pdf->SetFont($bookmanOldStyle, 'B', 11);
+$pdf->SetFont('bookmanoldstyleb', 'B', 11);
 $pdf->Cell(0, 5, 'CAVITE STATE UNIVERSITY', 0, 1, 'C');
-$pdf->SetFont($centuryGothicBold, 'B', 11);
+$pdf->SetFont('gothicb', 'B', 11);
 $pdf->Cell(0, 5, 'CCAT Campus', 0, 1, 'C');
-$pdf->SetFont($centurygothic, 'B', 11);
+$pdf->SetFont('centurygothic', 'B', 11);
 $pdf->Cell(0, 5, 'Rosario, Cavite', 0, 1, 'C');
 
 $pdf->Ln(2);
@@ -187,7 +177,7 @@ foreach ($disbursements as $disbursement) {
 $amountToBeRemitted = $cashReceived - $totalDisbursement;
 
 // Add titles
-$pdf->SetFont($arialBold, '', 12);
+$pdf->SetFont('arial_b13', '', 12);
 $pdf->Cell(0, 0, strtoupper($organization_name), 0, 1, 'C', 0, '', 1);
 $pdf->Cell(0, 0, "LIQUIDATION REPORT", 0, 1, 'C', 0, '', 1);
 $pdf->Ln(10);
@@ -286,7 +276,7 @@ $pdf->writeHTML($html, true, false, true, false, '');
 $pdf->Ln(10); // Space for signatures above names
 
 // Prepared By Section
-$pdf->SetFont($arial, '', 11); 
+$pdf->SetFont('arial', '', 11); 
 $pdf->Cell(0, 0, "Prepared by:", 0, 1, 'L', 0, '', 1);
 $pdf->Ln(10); // Space for signatures above names
 // Query to fetch the President and Treasurer of the organization
@@ -324,16 +314,16 @@ if (!$treasurer) {
 }
 
 // Add the fetched names to the PDF
-$pdf->SetFont($arialBold, '', 11);
+$pdf->SetFont('arial_b13', '', 11);
 $pdf->Cell(80, 10, strtoupper($treasurer), 0, 0, 'L', 0); // Treasurer's name
 $pdf->Cell(80, 10, strtoupper($president), 0, 1, 'L', 0); // President's name
-$pdf->SetFont($arial, 'B', 11);
+$pdf->SetFont('arial', 'B', 11);
 $pdf->Cell(80, 10, "Treasurer, ".$acronym, 0, 0, 'L', 0);
 $pdf->Cell(80, 10, "President, ".$acronym, 0, 1, 'L', 0);
 $pdf->Ln(10); // Add spacing between sections
 
 // Recommending Approval Section
-$pdf->SetFont($arial, '', 11);
+$pdf->SetFont('arial', '', 11);
 $pdf->Cell(0, 0, "Recommending Approval:", 0, 1, 'L', 0, '', 1);
 $pdf->Ln(10); // Space for signatures above names
 // Query to fetch the Junior and Senior Advisers of the organization
@@ -371,10 +361,10 @@ if (!$seniorAdviser) {
 }
 
 // Add the fetched names to the Recommending Approval Table in the PDF
-$pdf->SetFont($arialBold, '', 11);
+$pdf->SetFont('arial_b13', '', 11);
 $pdf->Cell(80, 10, strtoupper($juniorAdviser), 0, 0, 'L', 0); // Junior Adviser name
 $pdf->Cell(80, 10, strtoupper($seniorAdviser), 0, 1, 'L', 0); // Senior Adviser name
-$pdf->SetFont($arial, 'B', 11);
+$pdf->SetFont('arial', 'B', 11);
 $pdf->Cell(80, 10, "Junior Adviser, " . $acronym, 0, 0, 'L', 0);
 $pdf->Cell(80, 10, "Senior Adviser, " . $acronym, 0, 1, 'L', 0);
 $pdf->Ln(10); // Add spacing between sections
@@ -383,23 +373,23 @@ $pdf->Ln(10); // Add spacing between sections
 
 
 // Example Names for Signatures
-$pdf->SetFont($arialBold, '', 11);
+$pdf->SetFont('arial_b13', '', 11);
 $pdf->Ln(10); // Space for signatures above names
 $pdf->Cell(80, 10, "GUILLIER E. PARULAN", 0, 0, 'L', 0);
 $pdf->Cell(80, 10, "MICHAEL EDWARD T. ARMINTIA, REE", 0, 1, 'L', 0);
-$pdf->SetFont($arial, 'B', 11);
+$pdf->SetFont('arial', 'B', 11);
 $pdf->Cell(80, 10, "President, CSG", 0, 0, 'L', 0);
 $pdf->Cell(80, 10, "In-charge, SGOA", 0, 1, 'L', 0);
 $pdf->Ln(10); // Final spacing
 
 
 // Approved Section
-$pdf->SetFont($arial, 'B', 11); // Arial and Bold for the "Approved" title
+$pdf->SetFont('arial', 'B', 11); // Arial and Bold for the "Approved" title
 $pdf->Cell(0, 0, "APPROVED:", 0, 1, 'C', 0, '', 1);
 $pdf->Ln(10);
-$pdf->SetFont($arialBold, 'B', 11);
+$pdf->SetFont('arial_b13', 'B', 11);
 $pdf->Cell(0, 0, "JIMPLE JAY R. MALIGRO", 0, 1, 'C', 0, '', 1);
-$pdf->SetFont($arial, 'B', 11);
+$pdf->SetFont('arial', 'B', 11);
 $pdf->Cell(0, 0, "Coordinator, SDS", 0, 1, 'C', 0, '', 1);
 
 // Add new page for detailed disbursements
