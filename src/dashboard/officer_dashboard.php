@@ -693,7 +693,7 @@ include '../organization_query.php';
 
                                     <!-- Notification Dropdown -->
                                     <div id="notificationDropdown" class="dropdown-menu p-2 shadow" 
-                                        style="display: none; position: absolute; right: 0; top: 35px; width: 300px; max-height: 400px; 
+                                        style="display: none; position: absolute; right: 0; top: 35px; max-height: 400px; 
                                         overflow-y: auto; background-color: white; border-radius: 5px; z-index: 1000;">
                                         <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
                                             Notifications
@@ -705,6 +705,23 @@ include '../organization_query.php';
                                             No new notifications
                                         </p>
                                     </div>
+
+                                    <style>
+                                        /* Default styles for larger screens */
+                                        #notificationDropdown {
+                                            width: 300px; /* Fixed width for larger screens */
+                                            right: 0;     /* Align to the right */
+                                        }
+
+                                        /* Responsive styles */
+                                        @media (max-width: 700px) {
+                                            #notificationDropdown {
+                                                width: 90%;  /* Full width on smaller screens */
+                                                left: 20px;  /* Prevent any conflict with left alignment */
+                                                top: 30px;   /* Adjust top position */
+                                            }
+                                        }
+                                    </style>
                                 </div>
                             </li>
                             <li class="nav-item dropdown">
