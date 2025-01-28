@@ -23,28 +23,36 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
 
     <!-- Title and Favicon -->
     <title>Budget Approvals & Activities Table</title>
-    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/angatsikat.png"/>
-
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="../assets/css/styles.min.css">
-    <link rel="stylesheet" href="../budget_management/css/budget.css">
-    <link rel="stylesheet" href="../activity_management/css/activities.css" />
-    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/angatsikat.png" />
+    <link rel="stylesheet" href="../assets/css/styles.min.css" />
+    <!--Custom CSS for Budget Overview-->
+    <link rel="stylesheet" href="../budget_management/css/budget.css" />
+    <!--Custom CSS for Activities-->
+    <link rel="stylesheet" href="css/activities.css" />
+    <!--Boxicon-->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+    <!--Font Awesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.7/css/dataTables.bootstrap.min.css" />
-
-    <!-- JavaScript Libraries -->
-    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Lordicon (for animated icons) -->
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+    <!--Bootstrap Script-->
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/sidebarmenu.js"></script>
     <script src="../assets/js/app.min.js"></script>
     <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    
+    <!-- solar icons -->
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+    <!--Bootstrap JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JavaScript for responsive components and modals -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JavaScript for table interactions and pagination -->
+    <script src="https://cdn.datatables.net/2.1.7/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.7/js/dataTables.bootstrap5.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.7/css/dataTables.bootstrap.min.css" />
 
     <style>
         #sidebar > div > div > span {

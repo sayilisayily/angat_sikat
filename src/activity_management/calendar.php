@@ -23,7 +23,7 @@ include '../organization_query.php';
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
     <!--Custom CSS for Activities-->
     <link rel="stylesheet" href="../activity_management/activities.css" />
-    <!--Boxicon-->
+        <!--Boxicon-->
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
     <!--Font Awesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -35,8 +35,7 @@ include '../organization_query.php';
     <script src="../assets/js/sidebarmenu.js"></script>
     <script src="../assets/js/app.min.js"></script>
     <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
-    <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
-    <script src="../assets/js/dashboard.js"></script>
+    
     <!-- solar icons -->
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
     <!--Bootstrap JS-->
@@ -456,6 +455,124 @@ include '../organization_query.php';
 <script>
     $(document).ready(function () {
         display_events();
+
+    // JavaScript to handle the modal data population
+    document.addEventListener("DOMContentLoaded", function () {
+    const confirmationModal = document.getElementById("confirmationModal");
+    const confirmIdInput = document.getElementById("confirmId");
+    const confirmActionInput = document.getElementById("confirmAction");
+    const actionText = document.getElementById("actionText");
+
+    confirmationModal.addEventListener("show.bs.modal", function (event) {
+        const button = event.relatedTarget; // Button that triggered the modal
+        const action = button.getAttribute("data-action"); // Extract action from data attributes
+        const id = button.getAttribute("data-id"); // Extract ID from data attributes
+
+        // Set the form values
+        confirmIdInput.value = id;
+        confirmActionInput.value = action;
+
+        // Update modal text
+        actionText.textContent = action === "approve" ? "approve" : "disapprove";
+    });
+
+    const notificationBtn = document.getElementById("notificationBtn");
+    const notificationDropdown = document.getElementById("notificationDropdown");
+    const notificationList = document.getElementById("notificationList");
+    const notificationCount = document.getElementById("notificationCount");
+    const noNotifications = document.getElementById("noNotifications");
+
+    // Toggle Dropdown Visibility
+    notificationBtn.addEventListener("click", () => {
+        const isVisible = notificationDropdown.style.display === "block";
+        notificationDropdown.style.display = isVisible ? "none" : "block";
+    });
+
+    // Load Notifications Dynamically
+    function loadNotifications() {
+        fetch("../get_notifications.php")
+        .then((response) => response.json())
+        .then((data) => {
+            notificationList.innerHTML = ""; // Clear existing notifications
+            if (data.length > 0) {
+            data.forEach((notification) => {
+                const notificationItem = document.createElement("div");
+                notificationItem.classList.add("notification-item");
+                notificationItem.style.padding = "10px";
+                notificationItem.style.borderBottom = "1px solid #ccc";
+                notificationItem.textContent = notification.message;
+
+                // Add data-id attribute for the notification ID
+                notificationItem.dataset.id = notification.id;
+
+                // Attach click event to mark as read
+                notificationItem.addEventListener("click", () => {
+                markAsRead(notification.id);
+                notificationItem.style.opacity = 0.5; // Visual indicator (optional)
+                });
+
+                notificationList.appendChild(notificationItem);
+            });
+
+            notificationCount.textContent = data.length;
+            notificationCount.style.display = "inline-block";
+            noNotifications.style.display = "none";
+            } else {
+            noNotifications.style.display = "block";
+            notificationCount.style.display = "none";
+            }
+        })
+        .catch((error) => {
+            console.error("Error loading notifications:", error);
+        });
+    }
+
+    function updateNotificationCount() {
+        const currentCount = parseInt(notificationCount.textContent, 10) || 0;
+        if (currentCount > 0) {
+        notificationCount.textContent = currentCount - 1;
+        if (currentCount - 1 === 0) {
+            notificationCount.style.display = "none";
+            noNotifications.style.display = "block";
+        }
+        }
+    }
+
+    // Initial Load
+    loadNotifications();
+
+    // Optionally, refresh notifications periodically (e.g., every 30 seconds)
+    setInterval(loadNotifications, 30000);
+
+    // Close dropdown if clicked outside
+    document.addEventListener("click", (e) => {
+        if (
+        !notificationBtn.contains(e.target) &&
+        !notificationDropdown.contains(e.target)
+        ) {
+        notificationDropdown.style.display = "none";
+        }
+    });
+
+    // Function to mark a notification as read
+    async function markAsRead(notificationId) {
+        try {
+        await fetch("../notification_read.php", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id: notificationId }),
+        });
+
+        // Optional: update notification count after marking as read
+        updateNotificationCount();
+        } catch (error) {
+        console.error("Error marking notification as read:", error);
+        }
+    }
+    });
+
     });
 
     function display_events() {
