@@ -150,7 +150,7 @@ foreach ($inflows as $inflow) {
     <tr>
         <td>'. htmlspecialchars($inflow['title']) .'</td>
         <td>' . number_format($inflow['amount'], 2) . '</td>
-        <td>' . htmlspecialchars($inflow['reference']) . '</td>
+        <td>' . htmlspecialchars(pathinfo(($inflow['reference']), PATHINFO_FILENAME)) . '</td>
     </tr>';
 }
 $html1 .= '
@@ -211,6 +211,8 @@ foreach ($outflows as $outflow) {
         preg_match('/(.*)\s\((.*)\)/', $detail, $matches);
         $title = $matches[1];
         $reference = $matches[2];
+
+        $reference = pathinfo($reference, PATHINFO_FILENAME);
 
         $html2 .= '
         <tr>
@@ -428,7 +430,7 @@ $pdf->SetFont('arial', 'B', 11);
 $pdf->Cell(0, 0, "Coordinator, SDS", 0, 1, 'C', 0, '', 1);
 
 // Generate the file name
-    $file_name = "Permit_to_Withdraw_". $eventTitle . date("F j, Y") . ".pdf";
+    $file_name = "Financial_Statement_". $eventTitle . date("F j, Y") . ".pdf";
 
     // Use the 'D' parameter to force download
     $pdf->Output($file_name, 'I'); 

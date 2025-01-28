@@ -260,7 +260,20 @@ foreach ($disbursements as $disbursement) {
 }
 
 // Add total disbursement and amount to be remitted
-$html .= '
+
+if ($amountToBeRemitted < 0) {
+    $html .= '
+        <tr>
+            <td><b>Total Disbursement</b></td>
+            <td colspan="2">' . number_format($totalDisbursement, 2) . '</td>
+        </tr>
+        <tr>
+            <td><b>Amount Overspent</b></td>
+            <td colspan="2">' . number_format(abs($amountToBeRemitted), 2) . '</td>
+        </tr>
+    </table>';
+} else {
+    $html .= '
         <tr>
             <td><b>Total Disbursement</b></td>
             <td colspan="2">' . number_format($totalDisbursement, 2) . '</td>
@@ -270,6 +283,8 @@ $html .= '
             <td colspan="2">' . number_format($amountToBeRemitted, 2) . '</td>
         </tr>
     </table>';
+}
+
 
 $pdf->writeHTML($html, true, false, true, false, '');
 

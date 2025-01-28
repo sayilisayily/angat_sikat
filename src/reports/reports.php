@@ -562,7 +562,7 @@
             <!-- Project Proposal Modal -->
             <div class="modal fade" id="projectProposalModal" tabindex="-1" role="dialog"
                 aria-labelledby="projectProposalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <form id="projectProposalForm" action="generate_proposal.php" method="POST" target="_blank">
                             <div class="modal-header">
@@ -598,14 +598,14 @@
 
                                 <input type="hidden" class="form-control" id="proposal_id" name="event_id" required>
 
+                                <div class="form-group row mb-3">
                                 <!-- Collaborators -->
-                                <div class="form-group mb-3">
+                                <div class="col-md-6">
                                     <label for="collaborators" class="form-label">Collaborator(s) <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <div id="collaborators" class="form-check">
                                         <!-- Add an N/A option -->
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="collaborator_na"
-                                                name="collaborators[]" value="0">
+                                            <input class="form-check-input" type="checkbox" id="collaborator_na" name="collaborators[]" value="0">
                                             <label class="form-check-label" for="collaborator_na">None</label>
                                         </div>
                                         <?php
@@ -627,10 +627,8 @@
                                     </div>
                                 </div>
 
-
-
                                 <!-- Agenda -->
-                                <div class="form-group mb-3">
+                                <div class="col-md-6">
                                     <label for="agenda" class="form-label">Agenda (Select SDG Goals) <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <div class="form-check">
                                         <?php
@@ -662,6 +660,8 @@
                                         ?>
                                     </div>
                                 </div>
+                            </div>
+
 
                                 <!-- Rationale -->
                                 <div class="form-group mb-3">

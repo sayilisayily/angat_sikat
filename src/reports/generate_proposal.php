@@ -157,7 +157,7 @@ if (in_array('0', $collaborators) || empty($collaborators)) {
         while ($row = mysqli_fetch_assoc($collab_result)) {
             $collab_names[] = $row['organization_name'];
         }
-        $collaborator_list = implode(', ', $collab_names);
+        $collaborator_list = implode("\n", $collab_names);
     } else {
         $collaborator_list = 'None';
     }
@@ -308,7 +308,7 @@ $html .= '</tr>';
 foreach ($implementationPlan as $row) {
     $html .= '<tr>';
     $html .= '<td style="text-align: left;">' . $row['activity'] . '</td>';
-    $html .= '<td style="text-align: left;">' . $row['date'] . '</td>';
+    $html .= '<td style="text-align: center;">' . date("F j, Y", strtotime($row['date'])) . '</td>';
     $html .= '</tr>';
 }
 
