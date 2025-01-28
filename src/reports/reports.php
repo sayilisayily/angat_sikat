@@ -18,7 +18,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Reports</title>
-    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/angatsikat.png" />
+    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/angatsikat.png"/>
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
     <!--Custom CSS for Budget Overview-->
     <link rel="stylesheet" href="../budget_management/css/budget.css" />
@@ -28,10 +28,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <!-- Lordicon (for animated icons) -->
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
-    <!-- Google Charts -->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!--Bootstrap Script-->
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/sidebarmenu.js"></script>
+    <script src="../assets/js/app.min.js"></script>
+    <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    
+    <!-- solar icons -->
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
     <!--Bootstrap JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JavaScript for responsive components and modals -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JavaScript for table interactions and pagination -->
+    <script src="https://cdn.datatables.net/2.1.7/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.1.7/js/dataTables.bootstrap5.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.7/css/dataTables.bootstrap.min.css" />
 
     <style>
         #sidebar>div>div>span {
@@ -915,16 +929,14 @@
                 </div>
             </div>
 
-            <script src="js/reports.js">
-
-            </script>
+            
 
         </div>
         <!-- End of 2nd Body Wrapper -->
     </div>
     <!-- End of Overall Body Wrapper -->
 
-    <!-- Include this script in the modal's page -->
+    <script src="js/reports.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             <?php if (isset($_SESSION['budget_request_success'])): ?>
@@ -999,17 +1011,6 @@
         });
     </script>
 
-
-
-    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/sidebarmenu.js"></script>
-    <script src="../assets/js/app.min.js"></script>
-    <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
-    <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
-    <script src="../assets/js/dashboard.js"></script>
-    <!-- solar icons -->
-    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
 </body>
 
 </html>
