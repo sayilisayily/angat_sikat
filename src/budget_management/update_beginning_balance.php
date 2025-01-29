@@ -74,60 +74,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $total_expenses = $total_expenses ?? 0;
 
     // Calculate new balances
-    $new_beginning_balance = $current_beginning_balance_db + $add_amount - $subtract_amount;
-    $new_balance = $current_balance + $add_amount - $subtract_amount;
-    $adjusted_balance = $new_balance - $total_expenses;
+    if ($title === 'Balance from Previous Term')  {
+        $new_beginning_balance = $current_beginning_balance_db + $add_amount - $subtract_amount;
+        $new_balance = $current_balance + $add_amount - $subtract_amount;
+        $adjusted_balance = $new_balance - $total_expenses;
 
-    // Ensure balance does not go negative
-    if ($adjusted_balance < 0) {
-        $data['success'] = false;
-        $data['errors'] = ['balance' => 'The resulting balance cannot be negative.'];
-        echo json_encode($data);
-        exit;
-    }
+        // Ensure balance does not go negative
+        if ($adjusted_balance < 0) {
+            $data['success'] = false;
+            $data['errors'] = ['balance' => 'The resulting balance cannot be negative.'];
+            echo json_encode($data);
+            exit;
+        }
 
-    // Update the organization balances
-    $update_query = "UPDATE organizations SET beginning_balance = ?, balance = ? WHERE organization_id = ?";
-    $update_stmt = $conn->prepare($update_query);
+        // Update the organization balances
+        $update_query = "UPDATE organizations SET beginning_balance = ?, balance = ? WHERE organization_id = ?";
+        $update_stmt = $conn->prepare($update_query);
 
-    if (!$update_stmt) {
-        $data['success'] = false;
-        $data['errors'] = ['database' => 'Failed to prepare update statement.'];
-        echo json_encode($data);
-        exit;
-    }
+        if (!$update_stmt) {
+            $data['success'] = false;
+            $data['errors'] = ['database' => 'Failed to prepare update statement.'];
+            echo json_encode($data);
+            exit;
+        }
 
-    $update_stmt->bind_param('ddi', $new_beginning_balance, $adjusted_balance, $organization_id);
+        $update_stmt->bind_param('ddi', $new_beginning_balance, $adjusted_balance, $organization_id);
 
-    if (!$update_stmt->execute()) {
-        $data['success'] = false;
-        $data['errors'] = ['database' => 'Failed to update organization balance.'];
-        echo json_encode($data);
-        exit;
-    }
+        if (!$update_stmt->execute()) {
+            $data['success'] = false;
+            $data['errors'] = ['database' => 'Failed to update organization balance.'];
+            echo json_encode($data);
+            exit;
+        }
 
-    $update_stmt->close();
+        $update_stmt->close();
+        
 
-    // Insert into beginning_balance_history
-    $insert_balance_query = "INSERT INTO beginning_balance_history (organization_id, amount, reference, created_by) VALUES (?, ?, ?, ?)";
-    $insert_balance_stmt = $conn->prepare($insert_balance_query);
+        // Insert into beginning_balance_history
+        $insert_balance_query = "INSERT INTO beginning_balance_history (organization_id, amount, reference, created_by) VALUES (?, ?, ?, ?)";
+        $insert_balance_stmt = $conn->prepare($insert_balance_query);
 
-    if ($insert_balance_stmt) {
-        $insert_balance_stmt->bind_param('idsi', $organization_id, $new_beginning_balance, $reference_filename, $created_by);
-        $insert_balance_stmt->execute();
-        $insert_balance_stmt->close();
-    }
+        if ($insert_balance_stmt) {
+            $insert_balance_stmt->bind_param('idsi', $organization_id, $new_beginning_balance, $reference_filename, $created_by);
+            $insert_balance_stmt->execute();
+            $insert_balance_stmt->close();
+        }
+        
+        // Insert into balance_history
+        $insert_balance_history_query = "INSERT INTO balance_history (organization_id, balance, updated_at, created_by) VALUES (?, ?, NOW(), ?)";
+        $insert_balance_history_stmt = $conn->prepare($insert_balance_history_query);
 
-    // Insert into balance_history
-    $insert_balance_history_query = "INSERT INTO balance_history (organization_id, balance, updated_at, created_by) VALUES (?, ?, NOW(), ?)";
-    $insert_balance_history_stmt = $conn->prepare($insert_balance_history_query);
-
-    if ($insert_balance_history_stmt) {
-        $insert_balance_history_stmt->bind_param('idi', $organization_id, $adjusted_balance, $created_by);
-        $insert_balance_history_stmt->execute();
-        $insert_balance_history_stmt->close();
-    }
-
+        if ($insert_balance_history_stmt) {
+            $insert_balance_history_stmt->bind_param('idi', $organization_id, $adjusted_balance, $created_by);
+            $insert_balance_history_stmt->execute();
+            $insert_balance_history_stmt->close();
+        }
+    } else {
     // Check if a record exists in beginning_balance_summary
     $check_query = "SELECT summary_id, total_profit FROM beginning_balance_summary WHERE organization_id = ? AND title = ?";
     $stmt_check = $conn->prepare($check_query);
@@ -169,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt_insert->close();
     }
-
+}
     $data['success'] = true;
     $data['message'] = 'Beginning balance updated successfully!';
 }
