@@ -745,6 +745,15 @@
                                     </div>
                                 </div>
                                 <div class="form-group mb-3">
+                                            <label for="title" class="form-label">Title</label>
+                                            <select class="form-control" id="title" name="title" required>
+                                                <option value="">Select Title</option>
+                                                <option value="Membership Fee (First Semester)">Membership Fee (First Semester)</option>
+                                                <option value="Membership Fee (Second Semester)">Membership Fee (Second Semester)</option>
+                                                <option value="Balance from Previous Term">Balance from Previous Term</option>
+                                            </select>
+                                </div>
+                                <div class="form-group mb-3">
                                             <label for="beginning_balance_reference" class="form-label">Reference</label>
                                             <input type="file" class="form-control" id="beginning_balance_reference" name="reference" required>
                                 </div>

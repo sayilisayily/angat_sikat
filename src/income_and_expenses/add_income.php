@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Insert a record into the income_history table
-        $incomeHistoryQuery = "INSERT INTO income_history (organization_id, income, updated_at, created_at) 
+        $incomeHistoryQuery = "INSERT INTO income_history (organization_id, income, updated_at, created_by) 
                                VALUES (?, ?, NOW(), ?)";
         $incomeHistoryStmt = $conn->prepare($incomeHistoryQuery);
 

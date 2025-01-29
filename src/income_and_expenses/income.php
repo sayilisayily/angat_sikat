@@ -534,12 +534,16 @@ $result = $conn->query($sql);
 
                                 <!-- Title Selector -->
                                 <div class="form-group mt-3">
-                                    <label for="titleSelector">Select Event Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
+                                    <label for="titleSelector">Select Title <span style="color: red;">*</span> <small style="color: red; font-style: italic;">Required</small></label>
                                     <select class="form-control" id="titleSelector" name="titleSelector">
-                                    <option value="">Select Event Title</option>
+                                    <option value="">Select Title</option>
                                     <?php
 
-                                    $query = "SELECT summary_id, title, total_profit FROM events_summary WHERE type = 'Income' AND archived = 0 AND organization_id = $organization_id";
+                                    $query = "SELECT summary_id, title, total_profit FROM events_summary WHERE type = 'Income' AND archived = 0 AND organization_id = $organization_id
+                                    UNION
+                                    SELECT summary_id, title, total_profit FROM beginning_balance_summary
+                                    WHERE organization_id = $organization_id
+                                    ";
                                     $result = mysqli_query($conn, $query);
 
                                     if ($result && mysqli_num_rows($result) > 0) {
