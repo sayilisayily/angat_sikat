@@ -249,6 +249,11 @@ if (!empty($specificObjectives)) {
         $pdf->MultiCell(0, 10, $formattedObjective, 0, 'L', false, 1, '', '', true);
     }
 }
+
+$pdf->AddPage();
+$pdf->SetMargins(25.4, 25.4, 25.4); // 1-inch margins (25.4mm)
+$pdf->SetAutoPageBreak(true, 30.48); 
+
 // IX. IMPLEMENTATION PLAN
 $pdf->SetFont('arial_b13', '', 11);
 $pdf->Cell(0, 10, 'IX. IMPLEMENTATION PLAN:', 0, 1);
@@ -347,70 +352,35 @@ foreach ($guidelines as $index => $guideline) {
     $pdf->MultiCell(0, 10, $formattedGuideline, 0, 'L', false, 1, '', '', true);
 }
 
+// Initialize HTML variable
+$html = '';
+
 // IX. FINANCIAL PLAN
 $pdf->SetFont('arial_b13', '', 11);
 $pdf->Cell(0, 10, 'XI. FINANCIAL PLAN:', 0, 1);
 $pdf->Ln(5); // Add some space
 $pdf->SetFont('arial', '', 11);
 
-// Query the database for event items (e.g., revenue or expense items) based on event_id
-
+// Query event items
 $sql = "SELECT description, quantity, amount, type FROM event_items WHERE event_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $event_id);
-$stmt->execute();
-$result = $stmt->get_result();
 
-// Initialize arrays for revenue and expense items
-$revenueItems = [];
+if (!$stmt->execute()) {
+    die("Query Error: " . $stmt->error);
+}
+
+$result = $stmt->get_result();
 $expenseItems = [];
 
-// Assuming event_items have a "type" column (e.g., "revenue" or "expense")
 while ($row = $result->fetch_assoc()) {
-    if ($row['type'] == 'revenue') {
-        $revenueItems[] = $row;
-    } elseif ($row['type'] == 'expense') {
+    if ($row['type'] == 'expense') {
         $expenseItems[] = $row;
     }
 }
 
-// HTML content for the table, dynamically populated
-$html = '
-
-<h4>PROJECTED REVENUE</h4>
-<table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">
-    <thead>
-        <tr style="background-color: #E6E6E6; text-align: center;">
-            <th>Description</th>
-            <th>QTY</th>
-            <th>UNIT PRICE</th>
-            <th>TOTAL</th>
-        </tr>
-    </thead>
-    <tbody>';
-
-// Loop through the revenue items and create rows
-$totalRevenue = 0;
-foreach ($revenueItems as $item) {
-    $totalAmount = $item['quantity'] * $item['amount']; // Calculate total amount
-    $html .= '<tr>';
-    $html .= '<td>' . $item['description'] . '</td>';
-    $html .= '<td style="text-align: center;">' . $item['quantity'] . '</td>';
-    $html .= '<td style="text-align: center;">' . number_format($item['amount'], 2) . '</td>';
-    $html .= '<td style="text-align: center;">' . number_format($totalAmount, 2) . '</td>';
-    $html .= '</tr>';
-    $totalRevenue += $totalAmount;
-}
-
+// Table Structure
 $html .= '
-        <tr>
-            <td colspan="3" style="text-align: right;"><strong>Subtotal</strong></td>
-            <td style="text-align: center;">' . number_format($totalRevenue, 2) . '</td>
-        </tr>
-    </tbody>
-</table>
-
-<br>
 <h4>PROJECTED EXPENSES</h4>
 <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">
     <thead>
@@ -423,19 +393,24 @@ $html .= '
     </thead>
     <tbody>';
 
-// Loop through the expense items and create rows
+// Loop through expense items
 $totalExpenses = 0;
 foreach ($expenseItems as $item) {
-    $totalAmount = $item['quantity'] * $item['amount']; // Calculate total amount
+    $quantity = (int)$item['quantity'];
+    $amount = (float)$item['amount'];
+    $totalAmount = $quantity * $amount;
+
     $html .= '<tr>';
-    $html .= '<td>' . $item['description'] . '</td>';
-    $html .= '<td style="text-align: center;">' . $item['quantity'] . '</td>';
-    $html .= '<td style="text-align: center;">' . number_format($item['amount'], 2) . '</td>';
+    $html .= '<td>' . htmlspecialchars($item['description']) . '</td>';
+    $html .= '<td style="text-align: center;">' . $quantity . '</td>';
+    $html .= '<td style="text-align: center;">' . number_format($amount, 2) . '</td>';
     $html .= '<td style="text-align: center;">' . number_format($totalAmount, 2) . '</td>';
     $html .= '</tr>';
+    
     $totalExpenses += $totalAmount;
 }
 
+// Subtotal row
 $html .= '
         <tr>
             <td colspan="3" style="text-align: right;"><strong>Subtotal</strong></td>
@@ -447,15 +422,18 @@ $html .= '
 <br>
 <table border="1" cellpadding="5" cellspacing="0" style="width: 100%; border-collapse: collapse;">
     <tr>
-        <td colspan="3" style="text-align: right; font-weight: bold;">Projected Income</td>
-        <td style="text-align: center;">' . number_format($totalRevenue - $totalExpenses, 2) . '</td>
+        <td colspan="3" style="text-align: right; font-weight: bold;">Projected Expense</td>
+        <td style="text-align: center;">' . number_format($totalExpenses, 2) . '</td>
     </tr>
 </table>
 ';
 
-// Output the HTML content to the PDF using TCPDF
+// Output HTML to TCPDF
 $pdf->writeHTML($html, true, false, true, false, '');
 
+$pdf->AddPage();
+$pdf->SetMargins(25.4, 25.4, 25.4); // 1-inch margins (25.4mm)
+$pdf->SetAutoPageBreak(true, 30.48); 
 
 // VI. RATIONALE
 $pdf->SetFont('arial_b13', '', 11);
