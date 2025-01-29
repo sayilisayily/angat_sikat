@@ -490,7 +490,10 @@ $result = $conn->query($sql);
                                             <td>{$row['category']}</td>
                                             <td>{$row['title']}</td>
                                             <td>{$row['amount']}</td>
-                                            <td>{$row['reference']}</td>
+                                            <td><a href='uploads/references/{$row['reference']}' class='link-offset-2 link-underline link-underline-opacity-0' target='_blank'>
+                                                {$row['reference']}
+                                                </a>
+                                            </td>
                                             <td>
                                                 <button class='btn btn-primary btn-sm edit-btn' 
                                                         data-bs-toggle='modal' 
