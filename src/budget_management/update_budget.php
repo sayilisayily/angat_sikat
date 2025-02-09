@@ -85,6 +85,15 @@ $budget_stmt->close();
 // Calculate the new budget value
 $new_budget = $current_allocated_budget + $add_budget - $subtract_budget;
 
+// Ensure new budget is not negative
+if ($new_budget < 0) {
+    $errors['allocated_budget'] = 'Allocated budget cannot be negative.';
+    $data['success'] = false;
+    $data['errors'] = $errors;
+    echo json_encode($data);
+    exit;
+}
+
 // Add the new or updated allocation to the total
 $total_allocated += $new_budget;
 
