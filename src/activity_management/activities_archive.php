@@ -496,12 +496,6 @@ $result = $conn->query($sql);
                                                         data-id='{$row['event_id']}'>
                                                     <i class='fa-solid fa-hammer'></i> Recover
                                                 </button>
-                                                <button class='btn btn-danger btn-sm delete-btn mb-3' 
-                                                        data-bs-toggle='modal' 
-                                                        data-bs-target='#deleteModal'
-                                                        data-id='{$row['event_id']}'>
-                                                    <i class='fa-solid fa-trash'></i> Delete
-                                                </button>
                                             </td>
                                         </tr>";
                                 }
