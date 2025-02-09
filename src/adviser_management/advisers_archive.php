@@ -1,6 +1,7 @@
 <?php
 include '../connection.php';
-include '../session_check.php';
+include '../session_check.php'; 
+include '../user_query.php';
 
 // Check if user is logged in and has officer role
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -8,18 +9,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit();
 }
 
-include '../user_query.php';
-$sql = "SELECT * FROM organizations WHERE archived = 0";
-$result = $conn->query($sql);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Organizations Management</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advisers Archive</title>
     <link rel="shortcut icon" type="image/png" href="../assets/images/logos/angatsikat.png" />
     <link rel="stylesheet" href="../assets/css/styles.min.css" />
     <!--Custom CSS for Activities-->
@@ -37,7 +36,6 @@ $result = $conn->query($sql);
     <script src="../assets/js/app.min.js"></script>
     <script src="../assets/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="../assets/libs/simplebar/dist/simplebar.js"></script>
-    <script src="../assets/js/dashboard.js"></script>
     <!-- solar icons -->
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
     <!--Bootstrap JS-->
@@ -60,34 +58,6 @@ $result = $conn->query($sql);
 
         #sidebarnav>li>a>span {
             color: #fff;
-        }
-    
-        .sidebar-link {
-            position: relative;
-            cursor: pointer; /* Ensure pointer cursor for better UX */
-        }
-    
-        .sidebar-link:hover {
-            background-color: #FFB000; /* Hover color */
-        }
-    
-        .sidebar-link.active {
-            background-color: #FFB000; /* Active color */
-        }
-
-        .scroll-sidebar {
-            overflow: auto; /* Enable scrolling */
-        }
-    
-        /* Hide scrollbar for WebKit browsers (Chrome, Safari) */
-        .scroll-sidebar::-webkit-scrollbar {
-            display: none; /* Hide scrollbar */
-        }
-    
-        /* Hide scrollbar for IE, Edge, and Firefox */
-        .scroll-sidebar {
-            -ms-overflow-style: none; /* IE and Edge */
-            scrollbar-width: none; /* Firefox */
         }
         .body-wrapper {
             height: 100vh; /* Ensures the element has a height */
@@ -117,9 +87,8 @@ $result = $conn->query($sql);
 </head>
 
 <body>
-    
-     <!--  Body Wrapper -->
-     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
         data-sidebar-position="fixed" data-header-position="fixed">
         <!-- Sidebar Start -->
         <aside class="left-sidebar" id="sidebar">
@@ -334,7 +303,7 @@ $result = $conn->query($sql);
                         <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
                             <li class="nav-item">
                                 <!-- Notification Icon -->
-                                    <div style="position: relative; display: inline-block;">
+                                <div style="position: relative; display: inline-block;">
                                     <button id="notificationBtn" style="background-color: transparent; border: none; padding: 0;">
                                         <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover" 
                                             colors="primary:#004024" style="width:30px; height:30px;">
@@ -383,7 +352,7 @@ $result = $conn->query($sql);
                                         </div>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="../user/admin_profile.php"><i
+                                        <li><a class="dropdown-item" href="../user/profile.php"><i
                                                     class="bx bx-user"></i> My Profile</a>
                                         </li>
                                         <li><a class="dropdown-item" href="../user/logout.php"><i
@@ -396,251 +365,115 @@ $result = $conn->query($sql);
                 </nav>
             </header>
             <!--  Header End -->
-              
+
+            <style>
+                .table-responsive {
+                    max-height: 400px;
+                    overflow-y: auto; /* Enable vertical scrolling */
+                    overflow-x: auto; /* Enable horizontal scrolling */
+                }
+
+                .table-responsive::-webkit-scrollbar {
+                    width: 8px; /* Width of the scrollbar */
+                }
+
+                .table-responsive::-webkit-scrollbar-track {
+                    background: transparent; /* Background of the scrollbar track */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb {
+                    background: rgba(0, 0, 0, 0.2); /* Color of the scrollbar thumb */
+                    border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+                }
+
+                .table-responsive::-webkit-scrollbar-thumb:hover {
+                    background: rgba(0, 0, 0, 0.5); /* Darker thumb on hover */
+                }
+            </style>
+
             <div class="container mt-5 p-5">
-                <h2 class="mb-4 d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-warning fw-bold me-2">|</span>Organizations
-                        <button class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addOrganizationModal"
-                            style="height: 40px; width: 200px; border-radius: 8px; font-size: 12px;">
-                            <i class="fa-solid fa-plus"></i> Add Organization
-                        </button>
-                    </div>
-                    <a href="organizations_archive.php" class="text-gray text-decoration-none fw-bold" 
-                        style="font-size: 14px;">
-                        View Archive
-                    </a>
-                </h2>
+                <h2 class="mb-4"><span class="text-warning fw-bold me-2">|</span> Advisers Archive</h2>
                 
                 <div class="table-responsive">
-                    <table id="organizationsTable" class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Acronym</th>
-                                <th>Logo</th>
-                                <th>Members</th>
-                                <th>Status</th>
-                                <th>Color</th> <!-- Added column for organization color -->
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if ($result->num_rows > 0) {
-                                while($row = $result->fetch_assoc()) {
-                                    $organization_logo = $row['organization_logo']; // Assuming the logo is stored as the file name
-                                    // Check if logo exists and construct the path
-                                    $logo_path = !empty($organization_logo) && file_exists('uploads/' . $organization_logo) 
-                                                ? 'uploads/' . $organization_logo 
-                                                : 'uploads/default_logo.png';
+                    <table id="archiveAdvisersTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>Picture</th> <!-- New Column for Picture -->
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Position</th>
+                            <th>Organization</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Fetch advisers and join with organizations table to get organization name
+                        $adviserQuery = "SELECT advisers.*, organizations.organization_name 
+                                        FROM advisers
+                                        JOIN organizations ON advisers.organization_id = organizations.organization_id WHERE advisers.archived = 1";
+                        $adviserResult = $conn->query($adviserQuery);
 
-                                    // Get the organization color
-                                    $organization_color = !empty($row['organization_color']) ? $row['organization_color'] : '#FFFFFF'; // Default to white if no color is set
-                                    
-                                    // Display the organization data in the table
-                                    echo "<tr>
-                                            <td>{$row['organization_name']}</td>
-                                            <td>{$row['acronym']}</td>
-                                            <td><img src='$logo_path' alt='Logo' style='width: 50px; height: 50px; object-fit: cover;'></td>
-                                            <td>{$row['organization_members']}</td>
-                                            <td>{$row['organization_status']}</td>
-                                            <td style='background-color: {$organization_color}; color: white; text-align: center;'> <!-- Display color -->
-                                                {$organization_color}
-                                            </td>
-                                            <td>
-                                                <button class='btn btn-primary btn-sm edit-btn mb-3' 
-                                                        data-bs-toggle='modal' 
-                                                        data-bs-target='#editOrganizationModal' 
-                                                        data-id='{$row['organization_id']}'>
-                                                    <i class='fa-solid fa-pen'></i> Edit
-                                                </button>
-                                                <button class='btn btn-danger btn-sm archive-btn mb-3' 
-                                                        data-id='{$row['organization_id']}'>
-                                                    <i class='fa-solid fa-box-archive'></i> Archive
-                                                </button>
-                                            </td>
-                                        </tr>";
-                                }
+                        if ($adviserResult->num_rows > 0) {
+                            while ($adviserRow = $adviserResult->fetch_assoc()) {
+                                // Check if there's a picture and display it, or use a placeholder image
+                                $picture = !empty($adviserRow['picture']) ? "uploads/" . $adviserRow['picture'] : "path/to/default-image.jpg";
+                                echo "<tr>
+                                        <td>
+                                            <img src='$picture' alt='Adviser Picture' class='img-fluid' style='width: 50px; height: 50px; object-fit: cover; border-radius: 50%;'>
+                                        </td>
+                                        <td>{$adviserRow['first_name']}</td>
+                                        <td>{$adviserRow['last_name']}</td>
+                                        <td>{$adviserRow['position']}</td>
+                                        <td>{$adviserRow['organization_name']}</td>
+                                        <td>
+                                            <button class='btn btn-primary btn-sm recover-btn mb-3' 
+                                                    data-bs-toggle='modal' 
+                                                    data-bs-target='#recoverModal' 
+                                                    data-id='{$adviserRow['organization_id']}'>
+                                                <i class='fa-solid fa-hammer'></i> Recover
+                                            </button>
+                                        </td>
+                                    </tr>";
                             }
-                            ?>
-                        </tbody>
-                    </table>
+                        }
+                        ?>
+                    </tbody>
+                </table>
                 </div>
             </div>
-    <!-- Add Organization Modal -->
-    <div class="modal fade" id="addOrganizationModal" tabindex="-1" role="dialog" aria-labelledby="addOrganizationLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <form id="addOrganizationForm" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="addOrganizationLabel">Add New Organization</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Form fields -->
-                        <div class="form-group mb-3">
-                            <label for="organization_name">Organization Name</label>
-                            <input type="text" class="form-control" id="organization_name" name="organization_name"
-                                required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="acronym">Organization Acronym</label>
-                            <input type="text" class="form-control" id="acronym" name="acronym"
-                                required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="organization_logo">Logo</label>
-                            <input type="file" class="form-control" id="organization_logo" name="organization_logo"
-                                required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="organization_members">Members</label>
-                            <input type="number" class="form-control" id="organization_members"
-                                name="organization_members" min="1" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="organization_status">Status</label>
-                            <select class="form-control" id="organization_status" name="organization_status">
-                                <option value="Probationary">Probationary</option>
-                                <option value="Level I">Level I</option>
-                                <option value="Level II">Level II</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3">
-                            <div class="col-sm-3">
-                                <label for="organization_color">Color</label>
-                                <input type="color" class="form-control" id="organization_color" 
-                                    name="organization_color" value="#FFFFFF" required>
-                            </div>
 
-                            <div class="col-sm-3">
-                            </div>
+            <!-- Recover Adviser Modal -->
+            <div class="modal fade" id="recoverModal" tabindex="-1" aria-labelledby="recoverLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Recover Adviser</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-
-                        <!-- Success Message Alert -->
-                        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-                            Organization added successfully!
+                        <!-- Success message -->
+                        <div id="recoverSuccessMessage" class="alert alert-success d-none"></div>
+                        <!-- Error message -->
+                        <div id="recoverErrorMessage" class="alert alert-danger d-none">
+                            <ul id="recoverErrorList"></ul>
                         </div>
-                        <!-- Error Message Alert -->
-                        <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                            <ul id="errorList"></ul> <!-- List for showing validation errors -->
+                        <div class="modal-body">
+                            <p>Are you sure you want to recover this adviser?</p>
+                            <!-- Hidden form for item and adviser IDs -->
+                            <form id="recoverForm">
+                                <input type="hidden" name="adviser_id" id="recover_adviser_id"> <!-- Adviser ID -->
+                            </form>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Add Organization</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Organization Modal -->
-    <div class="modal fade" id="editOrganizationModal" tabindex="-1" role="dialog"
-        aria-labelledby="editOrganizationLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <form id="editOrganizationForm" enctype="multipart/form-data">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editOrganizationLabel">Edit Organization</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Hidden field for organization ID -->
-                        <input type="hidden" id="editOrganizationId" name="organization_id">
-                        <!-- Existing logo hidden field -->
-                        <input type="hidden" id="existingLogo" name="existing_logo" value="">
-
-                        <!-- Other form fields -->
-                        <div class="form-group mb-3">
-                            <label for="editOrganizationName">Organization Name</label>
-                            <input type="text" class="form-control" id="editOrganizationName" name="organization_name"
-                                required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="acronym">Organization Acronym</label>
-                            <input type="text" class="form-control" id="editAcronym" name="acronym"
-                                required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="editOrganizationLogo">Logo</label>
-                            <input type="file" class="form-control" id="editOrganizationLogo" name="organization_logo"
-                                accept="image/*">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="editOrganizationMembers">Members</label>
-                            <input type="number" class="form-control" id="editOrganizationMembers"
-                                name="organization_members" min="1" required>
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="editOrganizationStatus">Status</label>
-                            <select class="form-control" id="editOrganizationStatus" name="organization_status">
-                                <option value="Probationary">Probationary</option>
-                                <option value="Level I">Level I</option>
-                                <option value="Level II">Level II</option>
-                            </select>
-                        </div>
-                        <div class="form-group mb-3">
-                            <div class="col-sm-3">
-                                <label for="organization_color">Color</label>
-                                <input type="color" class="form-control" id="editOrganizationColor"
-                                    name="organization_color" required>
-                            </div>
-                            <div class="col-sm-3">
-                            </div>
-                        </div>
-                        <!-- Success Message Alert -->
-                        <div id="editSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                            Organization updated successfully!
-                        </div>
-                        <!-- Error Message Alert -->
-                        <div id="editErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                            <ul id="editErrorList"></ul> <!-- List for showing validation errors -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger" id="confirmRecoverBtn">Recover</button>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Archive Confirmation Modal -->
-    <div class="modal fade" id="archiveModal" tabindex="-1" aria-labelledby="archiveModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="archiveModalLabel">Archive Event</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to archive this organization?
-                    <input type="hidden" id="archiveId">
-                    <!-- Success Message Alert -->
-                    <div id="archiveSuccessMessage" class="alert alert-success d-none mt-3" role="alert">
-                            Organization archived successfully!
-                        </div>
-                        <!-- Error Message Alert -->
-                        <div id="archiveErrorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                            <ul id="archiveErrorList"></ul> <!-- List for showing validation errors -->
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" id="confirmArchiveBtn" class="btn btn-danger">Archive</button>
                 </div>
             </div>
-        </div>
-    </div>
-    </div>
-    </div>
 
-    <!-- Backend Scripts -->
-    <script src="js/organizations.js"></script>
+            <!-- BackEnd -->
+            <script src="js/advisers_archive.js"></script>
 </body>
 
 </html>
