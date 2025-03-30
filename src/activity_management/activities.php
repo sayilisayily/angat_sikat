@@ -471,7 +471,7 @@ $result = $conn->query($sql);
                             if ($result->num_rows > 0) {
                                 while ($row = $result->fetch_assoc()) {
                                     $checked = $row['accomplishment_status'] ? 'checked' : '';
-                                    $disabled = ($row['event_status'] !== 'Approved') ? 'disabled' : '';
+                                    $disabled = ($row['event_status'] !== 'Approved'  || $row['accomplishment_status']) ? 'disabled' : '';
                                     echo "<tr>
                                             <td><a class='link-offset-2 link-underline link-underline-opacity-0' href='event_details.php?event_id={$row['event_id']}'>{$row['title']}</a></td>
                                             <td>{$row['event_venue']}</td>
@@ -511,7 +511,7 @@ $result = $conn->query($sql);
                 </div>
             </div>
 
-            <!-- Confirmation Modal -->
+            <!-- First Confirmation Modal -->
             <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -519,14 +519,6 @@ $result = $conn->query($sql);
                             <h5 class="modal-title" id="confirmationModalLabel">Confirm Accomplishment Status Change</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <!-- Success Message Alert -->
-                        <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-                                Status updated successfully!
-                            </div>
-                            <!-- Error Message Alert -->
-                            <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                                <ul id="errorList"></ul> <!-- List for showing validation errors -->
-                            </div>
                         <div class="modal-body">
                             Are you sure you want to change the accomplishment status of this event?
                         </div>
@@ -534,10 +526,29 @@ $result = $conn->query($sql);
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="button" class="btn btn-primary" id="confirmUpdateBtn">Confirm</button>
                         </div>
-                        
                     </div>
                 </div>
             </div>
+
+            <!-- Second "Double Confirmation" Modal -->
+            <div class="modal fade" id="doubleConfirmModal" tabindex="-1" aria-labelledby="doubleConfirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="doubleConfirmModalLabel">Final Confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            This action cannot be undone. Are you sure?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" id="doubleConfirmBtn">Yes, Proceed</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- Add Event Modal -->
             <div class="modal fade" id="addEventModal" tabindex="-1" role="dialog" aria-labelledby="addEventLabel" aria-hidden="true">
