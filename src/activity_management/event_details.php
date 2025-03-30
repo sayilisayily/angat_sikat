@@ -495,6 +495,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                 </p>
                                 <h4>Items<?php if ($event['accomplishment_status'] === 0): ?>
                                     <button class="btn btn-sm btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addItemModal"><i class="fa-solid fa-plus"></i> Add Item</button>
+                                    <button class="btn btn-sm btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#addItemModal"><i class="fa-solid fa-plus"></i> Add Funding Source</button>
                                 <?php endif; ?></h4>
                                 
                                 <div class="table-responsive">
@@ -989,16 +990,23 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                         aria-label="Close"></button>
                                 </div>
-                                    <div id="successMessage5" class="alert alert-success d-none mt-3"
-                                        role="alert">Item updated successfully!</div>
-                                    <div id="errorMessage5" class="alert alert-danger d-none mt-3"
-                                        role="alert">
-                                        <ul id="editErrorList5"></ul>
-                                    </div>
+                                <div id="successMessage5" class="alert alert-success d-none mt-3"
+                                    role="alert">Item updated successfully!</div>
+                                <div id="errorMessage5" class="alert alert-danger d-none mt-3"
+                                    role="alert">
+                                    <ul id="editErrorList5"></ul>
+                                </div>
                                 <div class="modal-body">
                                     <input type="hidden" id="summary_edit_item_id" name="summary_item_id">
                                     <input type="hidden" id="summary_edit_event_id" name="event_id"
                                         value="<?php echo $event_id; ?>">
+
+                                    <!-- Edit Date Field -->
+                                    <div class="form-group mb-2">
+                                        <label for="summary_edit_date">Date</label>
+                                        <input type="date" class="form-control" id="summary_edit_date" name="edit_date" required>
+                                    </div>
+
                                     <div class="form-group mb-2">
                                         <label for="summary_edit_description">Description</label>
                                         <input type="text" class="form-control" id="summary_edit_description"
@@ -1019,18 +1027,17 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                                         </div>
                                         <?php if ($event['event_type'] === 'Income') {
                                         echo "<div class='col'>
-                                                    <label for='profit'>Profit</label>
+                                                    <label for='summary_edit_profit'>Profit</label>
                                                     <input type='number' step='0.01' class='form-control' id='summary_edit_profit' name='profit' required>            
                                             </div>";
-                                    }
-                                    
-                                    ?>
+                                        }
+                                        ?>
                                     </div>
                                     
                                     <div class="form-group">
-                                            <label for="reference">Reference</label>
-                                            <input type="file" class="form-control" id="edit_reference" name="reference">
-                                            <div id="currentAttachment" class="mt-2"></div>
+                                        <label for="edit_reference">Reference</label>
+                                        <input type="file" class="form-control" id="edit_reference" name="reference">
+                                        <div id="currentAttachment" class="mt-2"></div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -1040,6 +1047,7 @@ if (isset($_GET['event_id']) && !empty($_GET['event_id'])) {
                         </div>
                     </div>
                 </div>
+
 
                 <!-- Delete Item Modal for Summary -->
                 <div class="modal fade" id="summaryDeleteItemModal" tabindex="-1" aria-labelledby="summaryDeleteItemModalLabel" aria-hidden="true">

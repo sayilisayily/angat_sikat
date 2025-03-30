@@ -285,6 +285,7 @@ $(document).ready(function () {
         if (response.success) {
           // Populate the modal fields with the item data
           $("#summary_edit_item_id").val(response.data.summary_item_id);
+          $("#summary_edit_date").val(response.data.date);
           $("#summary_edit_description").val(response.data.description);
           $("#summary_edit_quantity").val(response.data.quantity);
           $("#summary_edit_amount").val(response.data.amount);
@@ -398,6 +399,38 @@ $(document).ready(function () {
       },
     });
   });
+
+  // Function to restrict date selection to the past year up to today
+  function restrictDateRange(inputId) {
+    let today = new Date();
+    let pastYear = new Date();
+    pastYear.setFullYear(today.getFullYear() - 1); // Set min date to one year ago
+
+    let minDate = pastYear.toISOString().split("T")[0];
+    let maxDate = today.toISOString().split("T")[0];
+
+    document.getElementById(inputId).setAttribute("min", minDate);
+    document.getElementById(inputId).setAttribute("max", maxDate);
+  }
+
+  // Apply restrictions to Add Item modal fields
+  restrictDateRange("date");
+
+  // Apply restrictions to Edit Item modal fields
+  restrictDateRange("summary_edit_date");
+
+  // Ensure restrictions apply dynamically when modals are opened
+  document
+    .getElementById("summaryAddItemModal")
+    .addEventListener("shown.bs.modal", function () {
+      restrictDateRange("date");
+    });
+
+  document
+    .getElementById("summaryEditItemModal")
+    .addEventListener("shown.bs.modal", function () {
+      restrictDateRange("summary_edit_date");
+    });
 
   // JavaScript for the delete button click event
   $(document).on("click", ".summary-delete-btn", function () {

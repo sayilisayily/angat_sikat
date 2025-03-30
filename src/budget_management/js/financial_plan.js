@@ -95,6 +95,31 @@ $(document).ready(function () {
     }
   }
 
+  // Function to set min date to today
+  function restrictPastDates(inputId) {
+    let today = new Date().toISOString().split("T")[0];
+    document.getElementById(inputId).setAttribute("min", today);
+  }
+
+  // Apply restrictions to Add Plan modal fields
+  restrictPastDates("date");
+
+  // Apply restrictions to Edit Plan modal fields
+  restrictPastDates("editDate");
+
+  // Ensure the restriction is applied when the modals are opened
+  document
+    .getElementById("addPlanModal")
+    .addEventListener("shown.bs.modal", function () {
+      restrictPastDates("date");
+    });
+
+  document
+    .getElementById("editPlanModal")
+    .addEventListener("shown.bs.modal", function () {
+      restrictPastDates("editDate");
+    });
+
   document.getElementById("type").addEventListener("change", function () {
     const categoryField = document.getElementById("category");
     if (this.value === "Expense") {

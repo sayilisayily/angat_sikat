@@ -122,60 +122,48 @@ document.getElementById("title").addEventListener("change", function () {
   }
 });
 
-// Add Budget Approval Form Submission via AJAX
-$("#addBudgetApprovalForm").on("submit", function (e) {
-  e.preventDefault();
+// Function to set min date to today
+function restrictPastDates(inputId) {
+  let today = new Date().toISOString().split("T")[0];
+  document.getElementById(inputId).setAttribute("min", today);
+}
 
-  // Create FormData object to include file uploads
-  let formData = new FormData(this);
+// Apply restrictions to Add Event modal fields
+restrictPastDates("start_date");
+restrictPastDates("end_date");
 
-  $.ajax({
-    url: "add_budget_approval.php", // Add form submission PHP file
-    type: "POST",
-    data: formData, // Use formData object
-    contentType: false, // Important for file upload
-    processData: false, // Important for file upload
-    success: function (response) {
-      try {
-        response = JSON.parse(response);
-        console.log(response);
-        if (response.success) {
-          // Hide any existing error messages
-          $("#errorMessage").addClass("d-none");
+// Apply restrictions to Edit Event modal fields
+restrictPastDates("editEventStartDate");
+restrictPastDates("editEventEndDate");
 
-          // Show success message
-          $("#successMessage").removeClass("d-none");
-
-          setTimeout(function () {
-            $("#budgetApprovalModal").modal("hide"); // Hide modal after success
-
-            // Reset the form and hide the success message
-            $("#addBudgetApprovalForm")[0].reset();
-            $("#successMessage").addClass("d-none");
-
-            location.reload();
-          }, 2000); // Reload after 2 seconds
-        } else {
-          // Hide any existing success messages
-          $("#successMessage").addClass("d-none");
-
-          // Show error messages
-          $("#errorMessage").removeClass("d-none");
-          let errorHtml = "";
-          for (let field in response.errors) {
-            errorHtml += `<li>${response.errors[field]}</li>`;
-          }
-          $("#errorList").html(errorHtml);
-        }
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-      }
-    },
-    error: function (xhr, status, error) {
-      console.error("Error adding event:", error);
-    },
+// Ensure the restriction is applied when the modals are opened
+document
+  .getElementById("addEventModal")
+  .addEventListener("shown.bs.modal", function () {
+    restrictPastDates("start_date");
+    restrictPastDates("end_date");
   });
-});
+
+document
+  .getElementById("editEventModal")
+  .addEventListener("shown.bs.modal", function () {
+    restrictPastDates("editEventStartDate");
+    restrictPastDates("editEventEndDate");
+  });
+
+// Ensure End Date cannot be earlier than Start Date
+function validateEndDate(startDateId, endDateId) {
+  document.getElementById(startDateId).addEventListener("change", function () {
+    let startDate = this.value;
+    document.getElementById(endDateId).setAttribute("min", startDate);
+  });
+}
+
+// Apply validation for Add Event modal
+validateEndDate("start_date", "end_date");
+
+// Apply validation for Edit Event modal
+validateEndDate("editEventStartDate", "editEventEndDate");
 
 // Global variables to store event details
 let eventIdToUpdate;
