@@ -523,25 +523,33 @@ include '../user_query.php';
                 </div>
                 <!-- Success Message Alert -->
                 <div id="successMessage" class="alert alert-success d-none mt-3" role="alert">
-                            Event added successfully!
-                        </div>
-                        <!-- Error Message Alert -->
-                        <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
-                            <ul id="errorList"></ul> <!-- List for showing validation errors -->
-                        </div>
+                    Event added successfully!
+                </div>
+                <!-- Error Message Alert -->
+                <div id="errorMessage" class="alert alert-danger d-none mt-3" role="alert">
+                    <ul id="errorList"></ul>
+                </div>
                 <div class="modal-body">
                     Are you sure you want to <span id="actionText"></span> this budget request?
+                    <div id="reasonContainer" class="mt-3 d-none">
+                        <label for="disapprovalReason" class="form-label">Reason for Disapproval:</label>
+                        <textarea class="form-control" id="disapprovalReason" name="disapproval_reason" rows="3"></textarea>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <form id="confirmationForm" action="admin_budget_approval.php" method="POST">
                         <input type="hidden" name="id" id="confirmId">
                         <input type="hidden" name="action" id="confirmAction">
+                        <input type="hidden" name="disapproval_reason" id="confirmDisapprovalReason">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-primary">Confirm</button>
                     </form>
                 </div>
             </div>
         </div>
+    </div>
+
+
     </div>
     </div>
     </div>

@@ -15,19 +15,98 @@ document.addEventListener("DOMContentLoaded", function () {
   const confirmationModal = document.getElementById("confirmationModal");
   const confirmIdInput = document.getElementById("confirmId");
   const confirmActionInput = document.getElementById("confirmAction");
+  const confirmDisapprovalReason = document.getElementById(
+    "confirmDisapprovalReason"
+  );
   const actionText = document.getElementById("actionText");
+  const reasonContainer = document.getElementById("reasonContainer");
+  const disapprovalReasonInput = document.getElementById("disapprovalReason");
 
   confirmationModal.addEventListener("show.bs.modal", function (event) {
-    const button = event.relatedTarget; // Button that triggered the modal
-    const action = button.getAttribute("data-action"); // Extract action from data attributes
-    const id = button.getAttribute("data-id"); // Extract ID from data attributes
+    const button = event.relatedTarget;
+    const action = button.getAttribute("data-action");
+    const id = button.getAttribute("data-id");
 
-    // Set the form values
     confirmIdInput.value = id;
     confirmActionInput.value = action;
-
-    // Update modal text
     actionText.textContent = action === "approve" ? "approve" : "disapprove";
+
+    // Show or hide reason input based on action
+    if (action === "disapprove") {
+      reasonContainer.classList.remove("d-none");
+    } else {
+      reasonContainer.classList.add("d-none");
+      disapprovalReasonInput.value = ""; // Clear the field when not used
+    }
+  });
+
+  // Handle confirmation form submission
+  $("#confirmationForm").on("submit", function (e) {
+    e.preventDefault();
+
+    var formData = $(this).serialize(); // Serialize the form data
+    var actionType = $("#confirmAction").val(); // Get action type
+
+    // Add disapproval reason if applicable
+    if (actionType === "disapprove") {
+      var disapprovalReason = $("#disapprovalReason").val().trim(); // Get textarea value
+
+      if (!disapprovalReason) {
+        alert("Please provide a reason for disapproval."); // Ensure reason is not empty
+        return;
+      }
+
+      // Append disapproval reason to form data
+      formData +=
+        "&disapproval_reason=" + encodeURIComponent(disapprovalReason);
+    }
+
+    // AJAX request to process approval/disapproval
+    $.ajax({
+      url: "update_approval_status.php",
+      type: "POST",
+      data: formData,
+      dataType: "json",
+      success: function (response) {
+        try {
+          if (response.success) {
+            $("#successMessage")
+              .removeClass("d-none")
+              .text(
+                actionType === "approve"
+                  ? "Request successfully approved."
+                  : "Request has been disapproved."
+              );
+
+            $("#errorMessage").addClass("d-none");
+
+            // Refresh notifications immediately
+            loadNotifications();
+
+            // Close modal and reload page
+            setTimeout(function () {
+              $("#confirmationModal").modal("hide");
+              $("#successMessage").addClass("d-none");
+              location.reload();
+            }, 2000);
+          } else {
+            // Display validation errors
+            $("#errorMessage").removeClass("d-none");
+            let errorHtml = "";
+            for (let field in response.errors) {
+              errorHtml += `<li>${response.errors[field]}</li>`;
+            }
+            $("#errorList").html(errorHtml);
+          }
+        } catch (error) {
+          console.error("Error parsing JSON:", error);
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error("Error processing approval/disapproval:", error);
+        console.log(xhr.responseText);
+      },
+    });
   });
 
   const notificationBtn = document.getElementById("notificationBtn");
@@ -125,51 +204,4 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error("Error marking notification as read:", error);
     }
   }
-});
-
-// Handle confirmation when "Confirm" button in modal is clicked
-$("#confirmationForm").on("submit", function (e) {
-  e.preventDefault(); // Prevent default form submission
-
-  var formData = $(this).serialize(); // Serialize the form data
-
-  // Send an AJAX request to process the approval/disapproval
-  $.ajax({
-    url: "update_approval_status.php", // PHP file to handle the action
-    type: "POST",
-    data: formData,
-    dataType: "json",
-    success: function (response) {
-      try {
-        if (response.success) {
-          // Show success message
-          $("#successMessage").removeClass("d-none").text(response.message);
-
-          // Hide the error message if previously shown
-          $("#errorMessage").addClass("d-none");
-
-          // Close the modal and reload the table after a delay
-          setTimeout(function () {
-            $("#confirmationModal").modal("hide");
-            $("#successMessage").addClass("d-none");
-            location.reload(); // Reload the page to reflect changes
-          }, 2000);
-        } else {
-          // Show validation or other errors
-          $("#errorMessage").removeClass("d-none");
-          let errorHtml = "";
-          for (let field in response.errors) {
-            errorHtml += `<li>${response.errors[field]}</li>`;
-          }
-          $("#errorList").html(errorHtml);
-        }
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-      }
-    },
-    error: function (xhr, status, error) {
-      console.error("Error processing approval/disapproval:", error);
-      console.log(xhr.responseText);
-    },
-  });
 });

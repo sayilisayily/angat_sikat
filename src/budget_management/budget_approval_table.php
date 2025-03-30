@@ -500,13 +500,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                                 <th>Category</th>
                                 <th>Attachment</th>
                                 <th>Status</th>
+                                <th>Remarks</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             // Fetch data from budget_approvals table for non-admin users
-                            $approvalsQuery = "SELECT * FROM budget_approvals WHERE organization_id = $organization_id AND archived = 0"; // Hardcoded for testing
+                            $approvalsQuery = "SELECT * FROM budget_approvals WHERE organization_id = $organization_id AND archived = 0"; 
                             $approvalsResult = mysqli_query($conn, $approvalsQuery);
                             
                             while ($row = mysqli_fetch_assoc($approvalsResult)) {
@@ -534,6 +535,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'officer') {
                                         ?>
                                         </span>
                                     </td>
+                                    <td><?php echo $row['disapproval_message']; ?></td>
                                     <td>
                                         <!-- Non-admin users can edit other fields except status -->
                                         <button class='btn btn-primary btn-sm edit-btn mb-3' data-bs-toggle='modal'

@@ -6,17 +6,17 @@ $response = ['success' => false, 'errors' => []];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
     $action = $_POST['action'];
+    $disapproval_reason = isset($_POST['disapproval_reason']) ? trim($_POST['disapproval_reason']) : null;
 
     if (empty($id) || empty($action)) {
         $response['errors'][] = 'Invalid request data.';
     } else {
-        // Determine the new status based on the action
         $new_status = ($action === 'approve') ? 'approved' : 'disapproved';
 
-        // Fetch the title, category, and organization_id associated with this approval
+        // Fetch title, category, and organization_id
         $title_query = "SELECT title, category, organization_id FROM budget_approvals WHERE approval_id = ?";
         $stmt = $conn->prepare($title_query);
-
+        
         if ($stmt) {
             $stmt->bind_param('i', $id);
             $stmt->execute();
@@ -26,38 +26,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($row) {
                 $title = $row['title'];
                 $category = $row['category'];
-                $organization_id = $row['organization_id']; // Added organization_id
+                $organization_id = $row['organization_id'];
                 $stmt->close();
 
-                // Update the status in the relevant table based on the category
+                // Update the related table based on category
                 if ($category === 'Activities') {
-                    $update_event_query = "UPDATE events SET event_status = ? WHERE title = ?";
-                    $event_stmt = $conn->prepare($update_event_query);
-                    $event_stmt->bind_param('ss', $new_status, $title);
-                    $event_stmt->execute();
-                    $event_stmt->close();
+                    $update_query = "UPDATE events SET event_status = ? WHERE title = ?";
                 } elseif ($category === 'Purchases') {
-                    $update_purchase_query = "UPDATE purchases SET purchase_status = ? WHERE title = ?";
-                    $purchase_stmt = $conn->prepare($update_purchase_query);
-                    $purchase_stmt->bind_param('ss', $new_status, $title);
-                    $purchase_stmt->execute();
-                    $purchase_stmt->close();
+                    $update_query = "UPDATE purchases SET purchase_status = ? WHERE title = ?";
                 } elseif ($category === 'Maintenance') {
-                    $update_maintenance_query = "UPDATE maintenance SET maintenance_status = ? WHERE title = ?";
-                    $maintenance_stmt = $conn->prepare($update_maintenance_query);
-                    $maintenance_stmt->bind_param('ss', $new_status, $title);
-                    $maintenance_stmt->execute();
-                    $maintenance_stmt->close();
+                    $update_query = "UPDATE maintenance SET maintenance_status = ? WHERE title = ?";
+                }
+                
+                if (isset($update_query)) {
+                    $status_stmt = $conn->prepare($update_query);
+                    $status_stmt->bind_param('ss', $new_status, $title);
+                    $status_stmt->execute();
+                    $status_stmt->close();
                 }
 
                 // Update the budget approval status
-                $update_approval_query = "UPDATE budget_approvals SET status = ? WHERE approval_id = ?";
+                $update_approval_query = "UPDATE budget_approvals SET status = ?, disapproval_message = ? WHERE approval_id = ?";
                 $approval_stmt = $conn->prepare($update_approval_query);
-                $approval_stmt->bind_param('si', $new_status, $id);
+                $approval_stmt->bind_param('ssi', $new_status, $disapproval_reason, $id);
 
                 if ($approval_stmt->execute()) {
-                    // Insert notification for users in the organization
+                    // Insert notification for users
                     $notification_message = "Your budget request for '$title' has been $new_status.";
+                    
+                    if ($new_status === 'disapproved' && !empty($disapproval_reason)) {
+                        $notification_message .= " Reason: $disapproval_reason";
+                    }
+
                     $insert_notification_query = "
                         INSERT INTO notifications (recipient_id, organization_id, message, is_read, created_at)
                         SELECT user_id, ?, ?, 0, NOW()
@@ -67,12 +67,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $notification_stmt = $conn->prepare($insert_notification_query);
                     if ($notification_stmt) {
                         $notification_stmt->bind_param('isi', $organization_id, $notification_message, $organization_id);
-
+                        
                         if ($notification_stmt->execute()) {
                             $response['success'] = true;
-                            $response['message'] = $action === 'approve'
+                            $response['message'] = ($action === 'approve')
                                 ? 'Budget request approved successfully!'
-                                : 'Budget request disapproved successfully!';
+                                : 'Budget request disapproved successfully with a reason.';
                         } else {
                             $response['errors'][] = 'Failed to send notifications: ' . $conn->error;
                         }
