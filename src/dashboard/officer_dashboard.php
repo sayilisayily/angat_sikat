@@ -669,94 +669,97 @@ include '../organization_query.php';
             <!--  Header Start -->
             <header class="app-header">
                 <nav class="navbar navbar-expand-lg navbar-light">
-                    <ul class="navbar-nav">
-                        <li class="nav-item d-block d-xl-none">
-                            <a class="nav-link sidebartoggler " id="headerCollapse" href="javascript:void(0)">
-                                <i class="ti ti-menu-2"></i>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
-                        <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
-                            <li class="nav-item">
-                                <!-- Notification Icon -->
-                                <div style="position: relative; display: inline-block;">
-                                    <button id="notificationBtn" style="background-color: transparent; border: none; padding: 0;">
-                                        <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover" 
-                                            colors="primary:#004024" style="width:30px; height:30px;">
-                                        </lord-icon>
-                                        <!-- Notification Count Badge -->
-                                        <span id="notificationCount" style="position: absolute; top: -5px; right: -5px; 
-                                            background-color: red; color: white; font-size: 12px; padding: 2px 6px; 
-                                            border-radius: 50%; display: none;">0</span>
-                                    </button>
-
-                                    <!-- Notification Dropdown -->
-                                    <div id="notificationDropdown" class="dropdown-menu p-2 shadow" 
-                                        style="display: none; position: absolute; right: 0; top: 35px; max-height: 400px; 
-                                        overflow-y: auto; background-color: white; border-radius: 5px; z-index: 1000;">
-                                        <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
-                                            Notifications
-                                        </p>
-                                        <div id="notificationList">
-                                            <!-- Notifications will be dynamically loaded here -->
-                                        </div>
-                                        <p id="noNotifications" style="text-align: center; margin-top: 10px; color: gray; display: none;">
-                                            No new notifications
-                                        </p>
-                                    </div>
-
-                                    <style>
-                                        /* Default styles for larger screens */
-                                        #notificationDropdown {
-                                            width: 300px; /* Fixed width for larger screens */
-                                            right: 0;     /* Align to the right */
-                                        }
-
-                                        /* Responsive styles */
-                                        @media (max-width: 700px) {
-                                            #notificationDropdown {
-                                                width: 90%;  /* Full width on smaller screens */
-                                                left: 20px;  /* Prevent any conflict with left alignment */
-                                                top: 30px;   /* Adjust top position */
-                                            }
-                                        }
-                                    </style>
-                                </div>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <!-- Profile Dropdown -->
-                                <div class="dropdown">
-                                    <a href="#" class="dropdown-toggle d-flex align-items-center"
-                                        data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
-                                        <img class="border border-dark rounded-circle"
-                                            src="<?php echo !empty($profile_picture) ? '../user/' . $profile_picture : '../user/uploads/default.png'; ?>"
-                                            alt="Profile"
-                                            style="width: 40px; height: 40px; margin-left: 10px; object-fit: cover;">
-                                        <span class="visually-hidden">
-                                            <?php echo htmlspecialchars($user['username']); ?>
-                                        </span>
-                                        <div class="d-flex flex-column align-items-start ms-2">
-                                            <span style="font-weight: bold; color: #004024;">
-                                                <?php echo htmlspecialchars($fullname); ?>
-                                            </span>
-                                            <span style="font-size: 0.85em; color: #6c757d;">
-                                                <?php echo htmlspecialchars($email); ?>
-                                            </span>
-                                        </div>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="../user/profile.php"><i
-                                                    class="bx bx-user"></i> My Profile</a>
-                                        </li>
-                                        <li><a class="dropdown-item" href="../user/logout.php"><i
-                                                    class="bx bx-log-out"></i> Logout</a></li>
-                                    </ul>
-                                </div>
+                        <ul class="navbar-nav">
+                            <!-- Sidebar Toggler (for small screens) -->
+                            <li class="nav-item d-block d-xl-none">
+                                <a class="nav-link sidebartoggler" id="headerCollapse" href="javascript:void(0)">
+                                    <i class="ti ti-menu-2"></i>
+                                </a>
                             </li>
                         </ul>
-                    </div>
-                </nav>
+
+                        <div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+                            <ul class="navbar-nav flex-row align-items-center ms-auto">
+
+                                <!-- Help Button -->
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#helpModal" style="font-size: 0.9rem;">
+                                        <i class="fas fa-question-circle me-1"></i>Help
+                                    </a>
+                                </li>
+
+                                <!-- Notification Icon -->
+                                <li class="nav-item">
+                                    <div style="position: relative; display: inline-block;">
+                                        <button id="notificationBtn" style="background-color: transparent; border: none; padding: 0;">
+                                            <lord-icon src="https://cdn.lordicon.com/lznlxwtc.json" trigger="hover"
+                                                colors="primary:#004024" style="width:30px; height:30px;">
+                                            </lord-icon>
+                                            <span id="notificationCount"
+                                                style="position: absolute; top: -5px; right: -5px; background-color: red; color: white; font-size: 12px; padding: 2px 6px; border-radius: 50%; display: none;">0</span>
+                                        </button>
+
+                                        <!-- Notification Dropdown -->
+                                        <div id="notificationDropdown" class="dropdown-menu p-2 shadow"
+                                            style="display: none; position: absolute; right: 0; top: 35px; max-height: 400px;
+                                            overflow-y: auto; background-color: white; border-radius: 5px; z-index: 1000;">
+                                            <p style="margin: 0; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 5px;">
+                                                Notifications
+                                            </p>
+                                            <div id="notificationList"></div>
+                                            <p id="noNotifications"
+                                                style="text-align: center; margin-top: 10px; color: gray; display: none;">
+                                                No new notifications
+                                            </p>
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <!-- Profile Dropdown -->
+                                <li class="nav-item dropdown ms-3">
+                                    <div class="dropdown">
+                                        <a href="#" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
+                                            aria-expanded="false" style="text-decoration: none;">
+                                            <img class="border border-dark rounded-circle"
+                                                src="<?php echo !empty($profile_picture) ? '../user/' . $profile_picture : '../user/uploads/default.png'; ?>"
+                                                alt="Profile"
+                                                style="width: 40px; height: 40px; object-fit: cover;">
+                                            <span class="visually-hidden"><?php echo htmlspecialchars($user['username']); ?></span>
+                                            <div class="d-flex flex-column align-items-start ms-2">
+                                                <span style="font-weight: bold; color: #004024;">
+                                                    <?php echo htmlspecialchars($fullname); ?>
+                                                </span>
+                                                <span style="font-size: 0.85em; color: #6c757d;">
+                                                    <?php echo htmlspecialchars($email); ?>
+                                                </span>
+                                            </div>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="../user/profile.php"><i class="bx bx-user"></i> My Profile</a></li>
+                                            <li><a class="dropdown-item" href="../user/logout.php"><i class="bx bx-log-out"></i> Logout</a></li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+
+                    <!-- Styles for Notification Dropdown -->
+                    <style>
+                        #notificationDropdown {
+                            width: 300px;
+                            right: 0;
+                        }
+
+                        @media (max-width: 700px) {
+                            #notificationDropdown {
+                                width: 90%;
+                                left: 20px;
+                                top: 30px;
+                            }
+                        }
+                    </style>
+
             </header>
             <!--  Header End -->
 
@@ -1551,6 +1554,129 @@ include '../organization_query.php';
                                     <!-- Days Container -->
                                     <div id="days" class="days transparent-days"></div>
                                 </div>
+                            </div>
+                            
+                            <!-- Help Modal -->
+                            <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="helpModalLabel">System Walkthrough</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <!-- Carousel -->
+                                    <div id="helpCarousel" class="carousel slide" data-bs-interval="false">
+                                    <div class="carousel-inner">
+
+                                        <!-- Slide 1 -->
+                                        <div class="carousel-item active text-center">
+                                        <img src="placeholder1.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">1</span> In <strong>Budget > Overview</strong>, set up your beginning balance, cash on hand, and cash on bank. You can update this regularly with a scanned copy of your organization's bankbook.</p>
+                                        </div>
+
+                                        <!-- Slide 2 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder2.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">2</span> Below, allocate your overall budget for the categories: <strong>Activities, Purchases</strong>, and <strong>Maintenance and Other Operating Expenses</strong>.</p>
+                                        </div>
+
+                                        <!-- Slide 3 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder3.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">3</span> Proceed to <strong>Budget > Financial Plan</strong> to set up your organization’s projected income and expense plans for the academic year.</p>
+                                        </div>
+
+                                        <!-- Slide 4 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder4.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">4</span> To further manage your organization’s projects under each category, you can access them from their individual tables.</p>
+                                        </div>
+
+                                        <!-- Slide 5 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder5.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">5</span> In each table, you can add a project from your organization's financial plan.</p>
+                                        </div>
+
+                                        <!-- Slide 6 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder6.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">6</span> After adding your project, click on its title to access its own allocation table. Here, you can list and break down all projected expenses or income items for the project.</p>
+                                        </div>
+
+                                        <!-- Slide 7 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder7.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">7</span> Once you have your breakdown, go to the <strong>Reports</strong> tab to generate a <strong>Budget Request Letter or Project Proposal</strong>.</p>
+                                        </div>
+
+                                        <!-- Slide 8 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder8.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">8</span> Your document will automatically download. Print it and have it signed at the campus. If revisions are needed, update the data in your tables and reupload to the <strong>Budget Approval</strong> table.</p>
+                                        </div>
+
+                                        <!-- Slide 9 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder9.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">9</span> Wait for approval in the system before generating a <strong>Request to Withdraw</strong>.</p>
+                                        </div>
+
+                                        <!-- Slide 10 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder10.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">10</span> Once the project is completed, mark it as done. This will allow you to access its <strong>Financial Summary</strong> table for liquidation.</p>
+                                        </div>
+
+                                        <!-- Slide 11 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder11.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">11</span> Add liquidation details to the summary table just like the financial plan. Then generate your <strong>Liquidation Report</strong> in the <strong>Reports</strong> tab.</p>
+                                        </div>
+
+                                        <!-- Slide 12 -->
+                                        <div class="carousel-item text-center">
+                                        <img src="placeholder12.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
+                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">12</span> For accomplished projects, add records to the <strong>Income/Expenses</strong> tab with supporting attachments like a sales or liquidation report. You can also generate a <strong>Financial Statement</strong> from the Reports tab to see your org’s full record.</p>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Carousel Controls -->
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#helpCarousel" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#helpCarousel" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+
+                                    <!-- Step Indicators -->
+                                    <div class="d-flex justify-content-center mt-3">
+                                        <div class="carousel-indicators">
+                                        <!-- 12 indicators for 12 slides -->
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="1"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="2"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="3"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="4"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="5"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="6"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="7"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="8"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="9"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="10"></button>
+                                        <button type="button" data-bs-target="#helpCarousel" data-bs-slide-to="11"></button>
+                                        </div>
+                                    </div>
+
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
                             </div>
 
 
