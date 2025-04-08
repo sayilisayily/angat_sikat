@@ -1558,7 +1558,7 @@ include '../organization_query.php';
                             
                             <!-- Help Modal -->
                             <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="helpModalLabel">System Walkthrough</h5>
@@ -1572,74 +1572,155 @@ include '../organization_query.php';
 
                                         <!-- Slide 1 -->
                                         <div class="carousel-item active text-center">
-                                        <img src="placeholder1.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">1</span> In <strong>Budget > Overview</strong>, set up your beginning balance, cash on hand, and cash on bank. You can update this regularly with a scanned copy of your organization's bankbook.</p>
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step1.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">1</span>
+                                            In <strong>Budget > Overview</strong>, set up your beginning balance, cash on hand, and cash on bank. You can update this regularly with a scanned copy of your organization's bankbook.
+                                        </p>
                                         </div>
 
+
                                         <!-- Slide 2 -->
-                                        <div class="carousel-item text-center">
-                                        <img src="placeholder2.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">2</span> Below, allocate your overall budget for the categories: <strong>Activities, Purchases</strong>, and <strong>Maintenance and Other Operating Expenses</strong>.</p>
+                                         <div class="carousel-item text-center">
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step2.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">2</span> Below, allocate your overall budget for the categories: <strong>Activities, Purchases</strong>, and <strong>Maintenance and Other Operating Expenses</strong>.
+                                        </p>
                                         </div>
 
                                         <!-- Slide 3 -->
                                         <div class="carousel-item text-center">
-                                        <img src="placeholder3.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">3</span> Proceed to <strong>Budget > Financial Plan</strong> to set up your organization’s projected income and expense plans for the academic year.</p>
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step3.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
                                         </div>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">3</span> Proceed to <strong>Budget > Financial Plan</strong> to set up your organization’s projected income and expense plans for the academic year.
+                                        </p>
+                                        </div>
+                                        
 
                                         <!-- Slide 4 -->
-                                        <div class="carousel-item text-center">
-                                        <img src="placeholder4.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">4</span> To further manage your organization’s projects under each category, you can access them from their individual tables.</p>
+                                         <div class="carousel-item text-center">
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step4.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">4</span> To further manage your organization’s projects under each category, you can access them from their individual tables. In each table, you can add a project from your organization's financial plan.
+                                        </p>
                                         </div>
 
                                         <!-- Slide 5 -->
                                         <div class="carousel-item text-center">
-                                        <img src="placeholder5.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">5</span> In each table, you can add a project from your organization's financial plan.</p>
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step5.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">5</span> After adding your project, click on its title to access its own allocation table. Here, you can list and break down all projected expenses or income items for the project.
+                                        </p>
                                         </div>
 
                                         <!-- Slide 6 -->
                                         <div class="carousel-item text-center">
-                                        <img src="placeholder6.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">6</span> After adding your project, click on its title to access its own allocation table. Here, you can list and break down all projected expenses or income items for the project.</p>
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step6.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">6</span> Once you have your breakdown, go to the <strong>Reports</strong> tab to generate a <strong>Budget Request Letter or Project Proposal</strong>. Your document can be downloaded and printed. Have it signed at the campus. If revisions are needed, update the data in your tables and reupload to the <strong>Budget Approval</strong> table.
+                                        </p>
                                         </div>
 
                                         <!-- Slide 7 -->
+                                    
+
+                                        
                                         <div class="carousel-item text-center">
-                                        <img src="placeholder7.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">7</span> Once you have your breakdown, go to the <strong>Reports</strong> tab to generate a <strong>Budget Request Letter or Project Proposal</strong>.</p>
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step7.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">7</span> Wait for approval in the system before generating a <strong>Permit to Withdraw</strong>.
+                                        </p>
                                         </div>
 
                                         <!-- Slide 8 -->
+                                        
                                         <div class="carousel-item text-center">
-                                        <img src="placeholder8.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">8</span> Your document will automatically download. Print it and have it signed at the campus. If revisions are needed, update the data in your tables and reupload to the <strong>Budget Approval</strong> table.</p>
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step8.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
+                                        </div>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">8</span> Once the project is completed, mark it as done. This will allow you to access its </strong>Financial Summary
+                                        </p>
                                         </div>
 
                                         <!-- Slide 9 -->
+                                        
                                         <div class="carousel-item text-center">
-                                        <img src="placeholder9.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">9</span> Wait for approval in the system before generating a <strong>Request to Withdraw</strong>.</p>
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step9.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
                                         </div>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">9</span> Add liquidation details to the summary table just like the financial plan. You can edit details if there were changes to costs or quantities.
+                                        </p>
+                                        </div>
+                                        
 
                                         <!-- Slide 10 -->
-                                        <div class="carousel-item text-center">
-                                        <img src="placeholder10.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">10</span> Once the project is completed, mark it as done. This will allow you to access its <strong>Financial Summary</strong> table for liquidation.</p>
+                                         <div class="carousel-item text-center">
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step10.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
                                         </div>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">10</span> After completing the financial summary, you can generate your <strong>Liquidation Report</strong> in the <strong>Reports</strong> tab.
+                                        </p>
+                                        </div>
+                                        
 
                                         <!-- Slide 11 -->
-                                        <div class="carousel-item text-center">
-                                        <img src="placeholder11.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">11</span> Add liquidation details to the summary table just like the financial plan. Then generate your <strong>Liquidation Report</strong> in the <strong>Reports</strong> tab.</p>
+                                         <div class="carousel-item text-center">
+                                        <div class="ratio ratio-16x9">
+                                            <video autoplay muted loop controls>
+                                            <source src="help/step11.mp4" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                            </video>
                                         </div>
-
-                                        <!-- Slide 12 -->
-                                        <div class="carousel-item text-center">
-                                        <img src="placeholder12.jpg" class="img-fluid" style="aspect-ratio: 3 / 4; object-fit: cover; max-height: 600px;">
-                                        <p class="mt-3"><span class="badge bg-primary rounded-circle">12</span> For accomplished projects, add records to the <strong>Income/Expenses</strong> tab with supporting attachments like a sales or liquidation report. You can also generate a <strong>Financial Statement</strong> from the Reports tab to see your org’s full record.</p>
+                                        <p class="mt-3">
+                                            <span class="badge bg-primary rounded-circle">11</span> For accomplished projects, add records to the <strong>Income/Expenses</strong> tab with supporting attachments like a sales or liquidation report. You can also generate a <strong>Financial Statement</strong> from the Reports tab to see your organization’s full record.
+                                        </p>
                                         </div>
 
                                     </div>
